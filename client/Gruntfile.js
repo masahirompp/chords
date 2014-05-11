@@ -373,6 +373,7 @@ module.exports = function(grunt) {
     }
 
     grunt.task.run([
+      'jshint',
       'clean:server',
       'concurrent:server',
       'connect:livereload',
@@ -382,6 +383,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test', [
+    'jshint',
     'clean:server',
     'concurrent:test',
     'connect:test',
@@ -389,6 +391,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'jshint',
     'clean:dist',
     'useminPrepare',
     'concurrent:dist',
@@ -402,12 +405,17 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'jshint',
     'test',
     'build'
   ]);
 
+  grunt.registerTask('sc', function(target) {
+    grunt.log.warn('grunt screenshots');
+    grunt.task.run(['screenshots:' + target]);
+  });
+
   grunt.registerTask('screenshots', [
+    'jshint',
     'clean:server',
     'concurrent:server',
     'connect:livereload',
