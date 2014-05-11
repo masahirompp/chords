@@ -1,10 +1,11 @@
 {
   "name": "chords",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
-    "topcoat": "latest",
+    "pure": "latest",
     "requirejs": "latest",
     "modernizr": "latest",
     "jquery": "latest"
-  }
+  },
+  "devDependencies": {}
 }

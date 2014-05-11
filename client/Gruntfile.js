@@ -332,14 +332,6 @@ module.exports = function(grunt) {
           src: [
             'generated/*'
           ]
-        }, {
-          expand: true,
-          cwd: '<%= yeoman.app %>',
-          dest: '<%= yeoman.dist %>',
-          src: [
-            'styles/vendor/topcoat/img/{,*/}*',
-            'styles/vendor/topcoat/css/{,*/}*'
-          ]
         }]
       }
     },
