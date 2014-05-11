@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
 
   require.config({
     paths: {
@@ -13,7 +14,6 @@
   });
 
   require(['app', 'jquery', 'side-menu'], function(app, $) {
-    'use strict';
     // use app here
     console.log('Running jQuery %s', $()
       .jquery);

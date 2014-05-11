@@ -1,8 +1,8 @@
-(function() {
+(function(global) {
   'use strict';
 
-  define([], function() {
+  global.define([], function() {
     return '\'Allo \'Allo!';
   });
 
-})()
+})(this);
