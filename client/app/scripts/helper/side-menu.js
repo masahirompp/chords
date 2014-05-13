@@ -1,7 +1,7 @@
 (function(window, document, define) {
   'use strict';
 
-  define(function() {
+  define([], function() {
 
     var layout = document.getElementById('layout'),
       menu = document.getElementById('menu'),

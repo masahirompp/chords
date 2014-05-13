@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  console.log('main');
+  console.log('songlist');
 
   require.config({
     paths: {
