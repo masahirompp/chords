@@ -1,10 +1,11 @@
 (function() {
   'use strict';
-  console.log('main');
+  console.log('song');
 
   require.config({
+    baseUrl: '/scripts',
     paths: {
-      jquery: '../bower_components/jquery/dist/jquery'
+      jquery: '/bower_components/jquery/dist/jquery'
     }
   });
 
