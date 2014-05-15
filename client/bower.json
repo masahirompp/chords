@@ -4,6 +4,7 @@
   "dependencies": {
     "pure": "latest",
     "requirejs": "latest",
+    "modernizr": "latest",
     "jquery": "latest"
   },
   "devDependencies": {}
