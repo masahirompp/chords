@@ -1,13 +1,10 @@
-(function(define) {
+define(['jquery'], function($) {
   'use strict';
 
-  define(['jquery'], function($) {
+  console.log('Running jQuery %s', $()
+    .jquery);
+  console.log('song.js');
 
-    console.log('Running jQuery %s', $()
-      .jquery);
-    console.log('song.js');
+  return false;
 
-    return false;
-
-  });
-})(this.define);
+});
