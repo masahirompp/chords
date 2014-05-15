@@ -10,27 +10,7 @@
 
 <body>
   <div id="mocha"></div>
-  <script src="bower_components/mocha/mocha.js"></script>
-  <script>
-  mocha.setup('bdd')
-  </script>
-  <script src="bower_components/chai/chai.js"></script>
-  <script>
-  var assert = chai.assert;
-  var expect = chai.expect;
-  var should = chai.should();
-  </script>
-  <script src="bower_components/requirejs/require.js"></script>
-
-  <!-- include source files here... -->
-  <script src="../app/scripts/model/staffHeight.js"></script>
-
-  <!-- include spec files here... -->
-  <script src="spec/test.js"></script>
-
-  <script>
-  mocha.run()
-  </script>
+  <script data-main="spec.js" src="bower_components/requirejs/require.js"></script>
 </body>
 
 </html>
