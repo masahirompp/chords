@@ -27,7 +27,7 @@
       require(['app/songlist'], function() {});
       break;
     default:
-      alert('page initialize error!!');
+      window.alert('page initialize error!!');
       //location.href = location.origin + '/404.html';
       break;
   }
