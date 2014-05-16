@@ -9,7 +9,7 @@
   });
 
   // view
-  require(['helper/side-menu'], function() {});
+  require(['view/side-menu'], function() {});
 
   // page initialize
   switch (location.pathname) {

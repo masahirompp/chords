@@ -1,17 +1,6 @@
 define([], function() {
   'use strict';
 
-  /**
-   * [StaffHeight description]
-   * @param {Number}  height         [description]
-   * @param {Number}  staffSpace     [description]
-   * @param {Number}  lineSpace      [description]
-   * @param {Number}  underlineSpace [description]
-   * @param {String}  staffType      [description]
-   * @param {Boolean} hasTitle       [description]
-   * @param {Boolean} hasPageNo      [description]
-   */
-
   function StaffHeight(height, staffSpace, lineSpace, underlineSpace, staffType, hasTitle, hasPageNo) {
     this._height = height;
     this._staffSpace = staffSpace;
