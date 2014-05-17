@@ -1,81 +1,117 @@
 define(['model/paper',
   'model/staffHeight',
   'model/staffWidth',
-  'model/svgClefDefs',
-  'model/svgStaffDefs'
-], function(Paper, Height, Width, ClefDefs, StaffDefs) {
+  'model/svgClefDef',
+  'model/svgStaffDef'
+], function(Paper, Height, Width, ClefDef, StaffDef) {
   'use strict';
 
-  function StaffManager(songSettings, staffSettings, textSettings, printMode) {
+  // module pattern
+  var StaffManager = function(staffSettings, printMode) {
 
+    //=====================
     // readonly
-    this._settings = {
-      song: songSettings,
-      staff: staffSettings,
-      text: textSettings
-    };
-    this._printMode = printMode;
-    this._paper = new Paper(staffSettings.margin);
-    this._clefDefs = new ClefDefs(staffSettings.lineSpace);
+    //=====================
+    var paper = new Paper(staffSettings.margin);
+    var clefDef = new ClefDef(staffSettings.lineSpace);
 
-    this._height = new Height(
-      this._paper.height,
+    var height = new Height(
+      paper.height,
       staffSettings.staffSpace,
       staffSettings.lineSpace,
       staffSettings.underlineSpace,
-      staffSettings.printMode,
+      printMode,
       staffSettings.hasPageNo,
       staffSettings.staffType);
 
-    this._width = new Width(
-      this._paper.width,
-      this._clefDefs.width,
+    var width = new Width(
+      paper.width,
+      clefDef.width,
       staffSettings.barCount,
       staffSettings.musicalTime,
       staffSettings.hasClef,
       staffSettings.hasKey,
       staffSettings.hasBarNo);
 
-    this._staffDefs = new StaffDefs(
+    var staffDef = new StaffDef(
       staffSettings.lineSpace,
-      this._width.firstBarWidth,
-      this._width.barWidth,
+      width.firstBarWidth,
+      width.barWidth,
       staffSettings.staffType);
 
-    // variable
-    this._index = 0;
+    //=====================
+    // private variable
+    //=====================
+    var _barIndex = 1; //[1,2, ... , barCount]
+    var _lineIndex = 0;
 
-    // initialize
-    init();
-  }
+    //=====================
+    // function
+    //=====================
+    var isFirstBar = function() {
+      return _barIndex === 1;
+    };
 
-  //=====================
-  // public property
-  //=====================
-  Object.defineProperty(StaffManager.prototype, 'clefDefs', {
-    get: function() {
-      return this._clefDefs;
-    }
-  });
+    var next = function() {
+      console.log(next);
+      if (_barIndex % width.barCount === 0) {
+        _barIndex = 1;
+        _lineIndex++;
+      } else {
+        _barIndex++;
+      }
+    };
 
-  Object.defineProperty(StaffManager.prototype, 'staffDefs', {
-    get: function() {
-      return this._staffDefs;
-    }
-  });
+    var nextLine = function() {
+      if (_barIndex !== 1) {
+        _barIndex = 1;
+        _lineIndex++;
+      }
+    };
 
-  //=====================
-  // public function
-  //=====================
-  StaffManager.prototype.next = function() {};
-  StaffManager.prototype.nextLine = function() {};
-  StaffManager.prototype.getStaffPoint = function() {};
-  StaffManager.prototype.getChordPoint = function() {};
+    var getStaffPoint = function() {
+      return {
+        x: getStaffPointX(),
+        y: getStaffPointY()
+      };
+    };
 
-  //=====================
-  // private
-  //=====================
-  var init = function() {};
+    var getChordPoint = function() {
+      return {
+        xs: getChordPointXs(),
+        y: getChordPointY()
+      };
+    };
+
+    var getStaffPointX = function() {
+      if (isFirstBar()) {
+        return 0;
+      }
+      return width.firstBarWidth + (width.barWidth * (_barIndex - 2));
+    };
+
+    var getStaffPointY = function() {
+      return height.offsetTop + (height.staffLineHeight * _lineIndex);
+    };
+
+    var getChordPointXs = function() {};
+    var getChordPointY = function() {};
+
+    return {
+      getClefDef: function() {
+        return clefDef;
+      },
+      getStaffDef: function() {
+        return staffDef;
+      },
+      isFirstBar: isFirstBar,
+      next: next,
+      nextLine: nextLine,
+      getStaffPoint: getStaffPoint,
+      getChordPoint: getChordPoint
+    };
+
+  };
 
   return StaffManager;
 

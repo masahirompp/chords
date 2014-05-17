@@ -10,7 +10,7 @@ define([], function() {
     this._hasKey = hasKey;
     this._hasBarNo = hasBarNo;
 
-    // const nownow
+    // nownow
     this._keyWidth = 0;
     this._barNoWidth = 1;
 
@@ -38,30 +38,6 @@ define([], function() {
     }
   });
 
-  Object.defineProperty(StaffWidth.prototype, 'hasClef', {
-    get: function() {
-      return this._hasClef;
-    }
-  });
-
-  Object.defineProperty(StaffWidth.prototype, 'hasKey', {
-    get: function() {
-      return this._hasKey;
-    }
-  });
-
-  Object.defineProperty(StaffWidth.prototype, 'hasBarNo', {
-    get: function() {
-      return this._hasBarNo;
-    }
-  });
-
-  Object.defineProperty(StaffWidth.prototype, 'paddingLeft', {
-    get: function() {
-      return this._paddingLeft;
-    }
-  });
-
   Object.defineProperty(StaffWidth.prototype, 'barWidth', {
     get: function() {
       return this._barWidth;
@@ -71,12 +47,6 @@ define([], function() {
   Object.defineProperty(StaffWidth.prototype, 'firstBarWidth', {
     get: function() {
       return this._firstBarWidth;
-    }
-  });
-
-  Object.defineProperty(StaffWidth.prototype, 'chordWidth', {
-    get: function() {
-      return this._chordWidth;
     }
   });
 
