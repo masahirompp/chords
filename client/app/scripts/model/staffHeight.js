@@ -1,14 +1,14 @@
 define([], function() {
   'use strict';
 
-  function StaffHeight(height, staffSpace, lineSpace, underlineSpace, staffType, hasTitle, hasPageNo) {
+  function StaffHeight(height, staffSpace, lineSpace, underlineSpace, printMode, hasPageNo, staffType) {
     this._height = height;
     this._staffSpace = staffSpace;
     this._lineSpace = lineSpace;
     this._underlineSpace = underlineSpace;
-    this._staffType = staffType;
-    this._hasTitle = hasTitle;
+    this._printMode = printMode;
     this._hasPageNo = hasPageNo;
+    this._staffType = staffType ? staffType : 'staff';
   }
 
   Object.defineProperty(StaffHeight.prototype, 'height', {
@@ -35,15 +35,15 @@ define([], function() {
     }
   });
 
-  Object.defineProperty(StaffHeight.prototype, 'staffType', {
+  Object.defineProperty(StaffHeight.prototype, 'printMode', {
     get: function() {
-      return this._staffType;
+      return this._printMode;
     }
   });
 
-  Object.defineProperty(StaffHeight.prototype, 'hasTitle', {
+  Object.defineProperty(StaffHeight.prototype, 'staffType', {
     get: function() {
-      return this._hasTitle;
+      return this._staffType;
     }
   });
 
