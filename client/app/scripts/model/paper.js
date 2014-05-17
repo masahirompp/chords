@@ -1,25 +1,14 @@
-define(['const/const'], function(CONST) {
+define([], function() {
   'use strict';
 
-  /**
-   * [Paper description]
-   * @param {Number} marginTopMilli    [description]
-   * @param {Number} marginBottomMilli [description]
-   * @param {Number} marginLeftMilli   [description]
-   * @param {Number} marginRightMilli  [description]
-   */
+  // const
+  var PAPER_HEIGHT_MILLI = 297;
+  var PAPER_WIDTH_MILLI = 210;
 
-  function Paper(marginTopMilli, marginBottomMilli, marginLeftMilli, marginRightMilli) {
-
-    this._margin = {
-      top: marginTopMilli,
-      bottom: marginBottomMilli,
-      left: marginLeftMilli,
-      right: marginRightMilli
-    };
-
-    this._height = CONST.PAPER_HEIGHT_MILLI - this._margin.top - this._margin.bottom;
-    this._width = CONST.PAPER_WIDTH_MILLI - this._margin.left - this._margin.right;
+  function Paper(margin) {
+    this._margin = margin;
+    this._height = PAPER_HEIGHT_MILLI - this._margin.top - this._margin.bottom;
+    this._width = PAPER_WIDTH_MILLI - this._margin.left - this._margin.right;
   }
 
   Object.defineProperty(Paper.prototype, 'margin', {
