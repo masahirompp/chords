@@ -1,8 +1,9 @@
 define([], function() {
   'use strict';
 
-  function StaffWidth(width, barCount, musicalTime, hasClef, hasKey, hasBarNo) {
+  function StaffWidth(width, clefWidth, barCount, musicalTime, hasClef, hasKey, hasBarNo) {
     this._width = width;
+    this._clefWidth = clefWidth;
     this._barCount = barCount;
     this._musicalTime = musicalTime;
     this._hasClef = hasClef;
@@ -10,7 +11,6 @@ define([], function() {
     this._hasBarNo = hasBarNo;
 
     // const nownow
-    this._clefWidth = 10;
     this._keyWidth = 0;
     this._barNoWidth = 1;
 
@@ -19,7 +19,6 @@ define([], function() {
     this._barWidth = (width - this._paddingLeft) / barCount;
     this._firstBarWidth = this._paddingLeft + this._barWidth;
     this._chordWidth = this._barWidth / musicalTime;
-
   }
 
   /**
@@ -54,6 +53,30 @@ define([], function() {
   Object.defineProperty(StaffWidth.prototype, 'hasBarNo', {
     get: function() {
       return this._hasBarNo;
+    }
+  });
+
+  Object.defineProperty(StaffWidth.prototype, 'paddingLeft', {
+    get: function() {
+      return this._paddingLeft;
+    }
+  });
+
+  Object.defineProperty(StaffWidth.prototype, 'barWidth', {
+    get: function() {
+      return this._barWidth;
+    }
+  });
+
+  Object.defineProperty(StaffWidth.prototype, 'firstBarWidth', {
+    get: function() {
+      return this._firstBarWidth;
+    }
+  });
+
+  Object.defineProperty(StaffWidth.prototype, 'chordWidth', {
+    get: function() {
+      return this._chordWidth;
     }
   });
 

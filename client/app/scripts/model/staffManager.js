@@ -1,4 +1,9 @@
-define(['model/paper', 'model/staffHeight', 'model/staffWidth', 'model/svgDefs'], function(Paper, Height, Width, Defs) {
+define(['model/paper',
+  'model/staffHeight',
+  'model/staffWidth',
+  'model/svgClefDefs',
+  'model/svgStaffDefs'
+], function(Paper, Height, Width, ClefDefs, StaffDefs) {
   'use strict';
 
   function StaffManager(songSettings, staffSettings, textSettings, printMode) {
@@ -11,9 +16,31 @@ define(['model/paper', 'model/staffHeight', 'model/staffWidth', 'model/svgDefs']
     };
     this._printMode = printMode;
     this._paper = new Paper(staffSettings.margin);
-    this._height = new Height(this._paper.height, staffSettings.staffSpace, staffSettings.lineSpace, staffSettings.underlineSpace, staffSettings.printMode, staffSettings.hasPageNo, staffSettings.staffType);
-    this._width = new Width(this._paper.width, staffSettings.barCount, staffSettings.musicalTime, staffSettings.hasClef, staffSettings.hasKey, staffSettings.hasBarNo);
-    this._svgDefs = new Defs();
+    this._clefDefs = new ClefDefs(staffSettings.lineSpace);
+
+    this._height = new Height(
+      this._paper.height,
+      staffSettings.staffSpace,
+      staffSettings.lineSpace,
+      staffSettings.underlineSpace,
+      staffSettings.printMode,
+      staffSettings.hasPageNo,
+      staffSettings.staffType);
+
+    this._width = new Width(
+      this._paper.width,
+      this._clefDefs.width,
+      staffSettings.barCount,
+      staffSettings.musicalTime,
+      staffSettings.hasClef,
+      staffSettings.hasKey,
+      staffSettings.hasBarNo);
+
+    this._staffDefs = new StaffDefs(
+      staffSettings.lineSpace,
+      this._width.firstBarWidth,
+      this._width.barWidth,
+      staffSettings.staffType);
 
     // variable
     this._index = 0;
@@ -25,9 +52,15 @@ define(['model/paper', 'model/staffHeight', 'model/staffWidth', 'model/svgDefs']
   //=====================
   // public property
   //=====================
-  Object.defineProperty(StaffManager.prototype, 'svgDefs', {
+  Object.defineProperty(StaffManager.prototype, 'clefDefs', {
     get: function() {
-      return this._svgDefs;
+      return this._clefDefs;
+    }
+  });
+
+  Object.defineProperty(StaffManager.prototype, 'staffDefs', {
+    get: function() {
+      return this._staffDefs;
     }
   });
 
@@ -42,7 +75,7 @@ define(['model/paper', 'model/staffHeight', 'model/staffWidth', 'model/svgDefs']
   //=====================
   // private
   //=====================
-  var init = function() {}
+  var init = function() {};
 
   return StaffManager;
 

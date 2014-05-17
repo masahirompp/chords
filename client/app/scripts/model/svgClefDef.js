@@ -16,35 +16,35 @@ define([], function() {
     SCALE: 1.5
   };
 
-  function SvgDefs(lineSpace) {
+  function SvgClefDef(lineSpace) {
     this._scale = lineSpace / BASE_LINE_SPACE;
     this._clefWidth = BASE_CLEF_WIDTH * this._scale;
   }
 
-  Object.defineProperty(SvgDefs.prototype, 'G_CLEF', {
+  Object.defineProperty(SvgClefDef.prototype, 'G_CLEF', {
     get: function() {
       return G_CLEF;
     }
   });
 
-  Object.defineProperty(SvgDefs.prototype, 'F_CLEF', {
+  Object.defineProperty(SvgClefDef.prototype, 'F_CLEF', {
     get: function() {
       return F_CLEF;
     }
   });
 
-  Object.defineProperty(SvgDefs.prototype, 'scale', {
+  Object.defineProperty(SvgClefDef.prototype, 'scale', {
     get: function() {
       return this._scale;
     }
   });
 
-  Object.defineProperty(SvgDefs.prototype, 'clefWidth', {
+  Object.defineProperty(SvgClefDef.prototype, 'width', {
     get: function() {
       return this._clefWidth;
     }
   });
 
-  return SvgDefs;
+  return SvgClefDef;
 
 });
