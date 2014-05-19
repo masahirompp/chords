@@ -42,7 +42,7 @@ define(['model/paper',
     //=====================
     // private variable
     //=====================
-    var _barIndex = 1; //[1,2, ... , barCount]
+    var _barIndex = 1; // 1...barCount
     var _lineIndex = 0;
 
     //=====================
