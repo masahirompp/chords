@@ -1,8 +1,9 @@
 define(['jquery',
   'model/chords',
   'model/staffSettings',
-  'model/staffManager'
-], function($, Chords, StaffSettings, StaffManager) {
+  'model/staffManager',
+  'viewmodel/staffDrawer'
+], function($, Chords, StaffSettings, StaffManager, StaffDrawer) {
   'use strict';
 
   var songId = 20; // urlからsongIdを取得する
@@ -10,6 +11,7 @@ define(['jquery',
 
   var chords = new Chords(songId);
   var manager = new StaffManager(settings, true);
+  var drawer = new StaffDrawer(chords, manager);
 
   return false;
 

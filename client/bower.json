@@ -5,7 +5,8 @@
     "pure": "latest",
     "requirejs": "latest",
     "modernizr": "latest",
-    "jquery": "latest"
+    "jquery": "latest",
+    "d3": "latest"
   },
   "devDependencies": {}
 }
