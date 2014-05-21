@@ -5,6 +5,9 @@ define(['jquery'], function($) {
     .jquery);
   console.log('songlist.js');
 
+
+
+
   return false;
 
 });
