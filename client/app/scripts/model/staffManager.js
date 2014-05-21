@@ -97,6 +97,9 @@ define(['model/paper',
     var getChordPointY = function() {};
 
     return {
+      getPaper: function() {
+        return paper;
+      },
       getClefDef: function() {
         return clefDef;
       },

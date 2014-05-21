@@ -7,11 +7,12 @@ define(['jquery',
   'use strict';
 
   var songId = 20; // urlからsongIdを取得する
-  var settings = StaffSettings(); //nownow
+  var settings = new StaffSettings(); //nownow
 
   var chords = new Chords(songId);
-  var manager = new StaffManager(settings, true);
+  var manager = new StaffManager(settings.getDefault(), true);
   var drawer = new StaffDrawer(chords, manager);
+  drawer.Init();
 
   return false;
 

@@ -7,80 +7,81 @@
 <!--<![endif]-->
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>MusicChords</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.4.2/pure-min.css">
-    <link rel="stylesheet" href="styles/main.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MusicChords</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.4.2/pure-min.css">
+  <link rel="stylesheet" href="styles/main.css">
 
-    <!-- build:css -->
-    <link rel="stylesheet" href="styles/side-menu.css">
-    <!-- endbuild -->
+  <!-- build:css -->
+  <link rel="stylesheet" href="styles/side-menu.css">
+  <!-- endbuild -->
 </head>
 
 <body>
-    <!--[if lt IE 9]>
+  <!--[if lt IE 9]>
     <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
   <![endif]-->
 
-    <div id="layout">
-        <!-- Menu toggle -->
-        <a href="#menu" id="menuLink" class="menu-link">
-            <!-- Hamburger icon -->
-            <span></span>
-        </a>
+  <div id="layout">
+    <!-- Menu toggle -->
+    <a href="#menu" id="menuLink" class="menu-link">
+      <!-- Hamburger icon -->
+      <span></span>
+    </a>
 
-        <div id="menu">
-            <div class="pure-menu pure-menu-open">
-                <!-- <a class="pure-menu-heading" href="#">COMPANY</a>
+    <div id="menu">
+      <div class="pure-menu pure-menu-open">
+        <!-- <a class="pure-menu-heading" href="#">COMPANY</a>
  -->
 
-                <ul>
-                    <li><a href="./index.html">Home</a>
-                    </li>
-                    <li><a href="#">About</a>
-                    </li>
-                    <li><a href="./songlist.html">SongList</a>
-                    </li>
-                    <li><a href="./song.html">Song</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div id="main">
-            <div class="header">
-                <h1>Music Chords</h1>
-                <h2>コード譜共有サイト sharing music chords</h2>
-            </div>
-
-            <div class="content">
-
-            </div>
-        </div>
+        <ul>
+          <li><a href="./index.html">Home</a>
+          </li>
+          <li><a href="#">About</a>
+          </li>
+          <li><a href="./songlist.html">SongList</a>
+          </li>
+          <li><a href="./song.html">Song</a>
+          </li>
+        </ul>
+      </div>
     </div>
 
+    <div id="main">
+      <div class="header">
+        <h1>Music Chords</h1>
+        <h2>コード譜共有サイト sharing music chords</h2>
+      </div>
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-    <script>
-    var _gaq = [
-        ['_setAccount', 'UA-XXXXX-X'],
-        ['_trackPageview']
-    ];
-    (function(d, t) {
-        var g = d.createElement(t),
-            s = d.getElementsByTagName(t)[0];
-        g.src = '//www.google-analytics.com/ga.js';
-        s.parentNode.insertBefore(g, s)
-    }(document, 'script'));
-    </script>
+      <div class="content">
+        <div id="score"></div>
 
-    <!-- build:js scripts/main.js -->
-    <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
-    <!-- endbuild -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+  <script>
+  var _gaq = [
+    ['_setAccount', 'UA-XXXXX-X'],
+    ['_trackPageview']
+  ];
+  (function(d, t) {
+    var g = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    g.src = '//www.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g, s)
+  }(document, 'script'));
+  </script>
+
+  <!-- build:js scripts/main.js -->
+  <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+  <!-- endbuild -->
 </body>
 
 </html>

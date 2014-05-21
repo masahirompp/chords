@@ -1,7 +1,9 @@
 define([], function() {
   'use strict';
 
-  function StaffSettings() {
+  var StaffSettings = function() {};
+
+  StaffSettings.prototype.getDefault = function() {
     return {
       margin: {
         top: 10,
@@ -20,7 +22,7 @@ define([], function() {
       hasKey: false,
       hasBarNo: false
     };
-  }
+  };
 
   return StaffSettings;
 
