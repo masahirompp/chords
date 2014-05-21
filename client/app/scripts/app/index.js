@@ -1,10 +1,5 @@
-define(['jquery'], function($) {
+define([], function() {
   'use strict';
 
-  console.log('Running jQuery %s', $()
-    .jquery);
-  console.log('index.js');
-
   return false;
-
 });

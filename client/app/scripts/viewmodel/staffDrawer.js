@@ -1,5 +1,6 @@
-define(['d3'], function(d3) {
+define([], function() {
   'use strict';
+  var d3 = window.d3;
 
   function StaffDrawer(chords, staff) {
     this._chords = chords;
