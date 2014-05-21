@@ -1,13 +1,15 @@
-define(['jquery', 'model/chords'], function($, Chords) {
+define(['jquery',
+  'model/chords',
+  'model/staffSettings',
+  'model/staffManager'
+], function($, Chords, StaffSettings, StaffManager) {
   'use strict';
 
-  console.log('Running jQuery %s', $()
-    .jquery);
-  console.log('song.js');
+  var songId = 20; // urlからsongIdを取得する
+  var settings = StaffSettings(); //nownow
 
-  // urlからsongIdを取得する
-  var songId = 20;
   var chords = new Chords(songId);
+  var manager = new StaffManager(settings, true);
 
   return false;
 

@@ -23,12 +23,12 @@ define([], function() {
         case 'online':
         case 'staff':
         case 'grandStaff':
-          return this._lineSpace * 4;
+          return lineSpace * 4;
       }
     })(staffType);
 
     // 五線から次の五線までの距離
-    this._staffLineHeight = this._staffHeight + this.staffSpace;
+    this._staffLineHeight = this._staffHeight + this._staffSpace;
   }
 
   /**

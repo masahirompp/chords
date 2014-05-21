@@ -32,4 +32,6 @@ define([], function() {
     }
   });
 
+  return SvgStaffDef;
+
 });

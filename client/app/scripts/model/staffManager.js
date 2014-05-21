@@ -53,7 +53,6 @@ define(['model/paper',
     };
 
     var next = function() {
-      console.log(next);
       if (_barIndex % width.barCount === 0) {
         _barIndex = 1;
         _lineIndex++;
