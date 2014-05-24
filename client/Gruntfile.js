@@ -323,7 +323,9 @@ module.exports = function(grunt) {
             '*.{ico,png,txt}',
             '.htaccess',
             'images/{,*/}*.{webp,gif}',
-            'styles/fonts/*'
+            'styles/fonts/*',
+            'bower_components/d3/d3.min.js',
+            'bower_components/jquery/dist/jquery.min.js'
           ]
         }, {
           expand: true,

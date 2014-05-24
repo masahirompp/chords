@@ -8,7 +8,6 @@ define([], function() {
 
     var $defs = d3.select('#score')
       .append('defs');
-    console.log(settings);
     var ratio = settings.lineSpace / settings.BASE_LINE_SPACE;
     var xScale = scale.getD3Scale();
 
