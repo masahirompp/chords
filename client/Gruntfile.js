@@ -405,8 +405,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'test',
-    'build'
+    'jshint'
   ]);
 
   grunt.registerTask('sc', function(target) {
