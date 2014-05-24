@@ -2,21 +2,22 @@ define([], function() {
   'use strict';
   var d3 = window.d3;
 
-  function StaffDrawer(chords, staff) {
+  function StaffDrawer(settings, chords, staff) {
+    this._settings = settings;
     this._chords = chords;
     this._staff = staff;
     return this;
   }
 
-  StaffDrawer.prototype.Init = function() {
-    var paper = this._staff.getPaper();
-    var clefDef = this._staff.getClefDef();
-    //var staffDef = this._staff.getStaffDef();
+  StaffDrawer.prototype.Init = function(clefDef, staffDef) {
+
+    console.log(staffDef);
 
     var $svg = d3.select('#score')
-      .append('svg').attr({
-        height: paper.height,
-        width: paper.width
+      .append('svg')
+      .attr({
+        height: this._settings.height,
+        width: this._settings.width
       });
 
     var $defs = $svg.append('defs');

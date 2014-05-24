@@ -1,43 +1,8 @@
-define(['model/paper',
-  'model/staffHeight',
-  'model/staffWidth',
-  'model/svgClefDef',
-  'model/svgStaffDef'
-], function(Paper, Height, Width, ClefDef, StaffDef) {
+define([], function() {
   'use strict';
 
   // module pattern
-  var StaffManager = function(staffSettings, printMode) {
-
-    //=====================
-    // readonly
-    //=====================
-    var paper = new Paper(staffSettings.margin);
-    var clefDef = new ClefDef(staffSettings.lineSpace);
-
-    var height = new Height(
-      paper.height,
-      staffSettings.staffSpace,
-      staffSettings.lineSpace,
-      staffSettings.underlineSpace,
-      printMode,
-      staffSettings.hasPageNo,
-      staffSettings.staffType);
-
-    var width = new Width(
-      paper.width,
-      clefDef.width,
-      staffSettings.barCount,
-      staffSettings.musicalTime,
-      staffSettings.hasClef,
-      staffSettings.hasKey,
-      staffSettings.hasBarNo);
-
-    var staffDef = new StaffDef(
-      staffSettings.lineSpace,
-      width.firstBarWidth,
-      width.barWidth,
-      staffSettings.staffType);
+  var StaffManager = function(height, width) {
 
     //=====================
     // private variable
@@ -97,15 +62,6 @@ define(['model/paper',
     var getChordPointY = function() {};
 
     return {
-      getPaper: function() {
-        return paper;
-      },
-      getClefDef: function() {
-        return clefDef;
-      },
-      getStaffDef: function() {
-        return staffDef;
-      },
       isFirstBar: isFirstBar,
       next: next,
       nextLine: nextLine,
