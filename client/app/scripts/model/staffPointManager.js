@@ -7,7 +7,7 @@ define([], function() {
     //=====================
     // private variable
     //=====================
-    var _barIndex = 1; // 1...barCount
+    var _barIndex = 0; // 1...barCount
     var _lineIndex = 0;
 
     //=====================

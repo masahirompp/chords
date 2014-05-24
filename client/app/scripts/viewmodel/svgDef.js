@@ -7,7 +7,6 @@ define([], function() {
   SvgDef.prototype.Init = function(settings, clefDef, staffDef) {
 
     var $svg = d3.select('#score')
-      .append('svg')
       .attr({
         height: settings.height,
         width: settings.width
