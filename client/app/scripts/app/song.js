@@ -2,11 +2,11 @@ define(['model/chords',
   'model/staffSettings',
   'model/staffHeight',
   'model/staffWidth',
-  'model/staffManager',
+  'model/staffPointManager',
   'model/svgClefDef',
   'model/svgStaffDef',
   'viewmodel/staffDrawer'
-], function(Chords, StaffSettings, Height, Width, StaffManager, ClefDef, StaffDef, StaffDrawer) {
+], function(Chords, StaffSettings, Height, Width, StaffPointer, ClefDef, StaffDef, StaffDrawer) {
   'use strict';
 
   var songId = 20; // urlからsongIdを取得する
@@ -32,8 +32,8 @@ define(['model/chords',
     settings.hasKey,
     settings.hasBarNo);
 
-  var manager = new StaffManager(height, width);
-  var drawer = new StaffDrawer(settings, chords, manager);
+  var staffPointer = new StaffPointer(height, width);
+  var drawer = new StaffDrawer(settings, chords, staffPointer);
   var clefDef = new ClefDef();
   var staffDef = new StaffDef(settings.lineSpace, width.firstBarWidth, width.barWidth, settings.staffType);
   drawer.Init(clefDef, staffDef);
