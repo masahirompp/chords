@@ -4,20 +4,18 @@ define([], function() {
 
   function SvgDef() {}
 
-  SvgDef.prototype.Init = function(settings, clefDef, staffDef) {
+  SvgDef.prototype.Init = function(settings, scale, clefDef, staffDef) {
 
-    var $svg = d3.select('#score')
-      .attr({
-        height: settings.height,
-        width: settings.width
-      });
-
-    var $defs = $svg.append('defs');
+    var $defs = d3.select('#score')
+      .append('defs');
+    console.log(settings);
+    var ratio = settings.lineSpace / settings.BASE_LINE_SPACE;
+    var xScale = scale.getD3Scale();
 
     $defs.append('g')
       .attr({
-        id: 'gCelf',
-        transform: 'translate(0,' + clefDef.G_CLEF.OFFSET + '),scale(' + clefDef.G_CLEF.SCALE + ')'
+        id: 'gClef',
+        transform: 'translate(0,' + xScale(clefDef.G_CLEF.OFFSET * ratio) + '),scale(' + xScale(clefDef.G_CLEF.SCALE * ratio) + ')'
       })
       .append('path')
       .attr({
@@ -28,8 +26,8 @@ define([], function() {
 
     $defs.append('g')
       .attr({
-        id: 'fCelf',
-        transform: 'scale(' + clefDef.F_CLEF.SCALE + ')'
+        id: 'fClef',
+        transform: 'scale(' + xScale(clefDef.F_CLEF.SCALE * ratio) + ')'
       })
       .append('path')
       .attr({
@@ -48,16 +46,16 @@ define([], function() {
       .append('line')
       .attr({
         x1: function(d) {
-          return d.x1;
+          return xScale(d.x1);
         },
         x2: function(d) {
-          return d.x2;
+          return xScale(d.x2);
         },
         y1: function(d) {
-          return d.y1;
+          return xScale(d.y1);
         },
         y2: function(d) {
-          return d.y2;
+          return xScale(d.y2);
         },
         stroke: 'black',
         class: 'staff_line'
@@ -65,7 +63,7 @@ define([], function() {
     $firstBarDef.append('use')
       .attr('class', 'clef')
       .attr({
-        'xlink:href': '#gCelf'
+        'xlink:href': '#' + settings.clef
       });
 
     $defs.append('g')
@@ -78,16 +76,16 @@ define([], function() {
       .append('line')
       .attr({
         x1: function(d) {
-          return d.x1;
+          return xScale(d.x1);
         },
         x2: function(d) {
-          return d.x2;
+          return xScale(d.x2);
         },
         y1: function(d) {
-          return d.y1;
+          return xScale(d.y1);
         },
         y2: function(d) {
-          return d.y2;
+          return xScale(d.y2);
         },
         stroke: 'black',
         class: 'staff_line'

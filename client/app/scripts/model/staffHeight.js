@@ -2,8 +2,8 @@ define([], function() {
   'use strict';
 
   // nownow
-  var titleSpace = 20;
-  var firstChordSpace = 20;
+  var titleSpace = 5;
+  var firstChordSpace = 5;
 
   function StaffHeight(height, staffSpace, lineSpace, underlineSpace, printMode, hasPageNo, staffType) {
     this._height = height;
