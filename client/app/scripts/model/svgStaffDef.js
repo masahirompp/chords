@@ -8,29 +8,67 @@ define([], function() {
     this._staffType = staffType;
   }
 
-  Object.defineProperty(SvgStaffDef.prototype, 'lineSpace', {
-    get: function() {
-      return this._lineSpace;
-    }
-  });
+  SvgStaffDef.prototype.getFirstBarDef = function() {
+    var defs = getBarLineDef(this._lineSpace, this._firstBarWidth, this._staffType);
+    defs.push({
+      x1: 0,
+      x2: 0,
+      y1: 0,
+      y2: this._lineSpace * 4
+    });
+    defs.push({
+      x1: this._firstBarWidth,
+      x2: this._firstBarWidth,
+      y1: 0,
+      y2: this._lineSpace * 4
+    });
+    return defs;
+  };
 
-  Object.defineProperty(SvgStaffDef.prototype, 'firstBarWidth', {
-    get: function() {
-      return this._firstBarWidth;
-    }
-  });
+  SvgStaffDef.prototype.getBarDef = function() {
+    var defs = getBarLineDef(this._lineSpace, this._barWidth, this._staffType);
+    defs.push({
+      x1: this._barWidth,
+      x2: this._barWidth,
+      y1: 0,
+      y2: this._lineSpace * 4
+    });
+    return defs;
+  };
 
-  Object.defineProperty(SvgStaffDef.prototype, 'barWidth', {
-    get: function() {
-      return this._barWidth;
+  var getBarLineDef = function(lineSpace, width, staffType) {
+    switch (staffType) {
+      case 'online':
+        return getLineDefOnline(lineSpace, width);
+      case 'staff':
+        return getLineDefStaff(lineSpace, width);
+      case 'grandStaff':
+        return getLineDefGrandStaff(lineSpace, width);
     }
-  });
+  };
 
-  Object.defineProperty(SvgStaffDef.prototype, 'staffType', {
-    get: function() {
-      return this._staffType;
+  var getLineDefStaff = function(lineSpace, width) {
+    var lineDef = [];
+    for (var i = 0; i < 5; i++) {
+      lineDef.push({
+        x1: 0,
+        x2: width,
+        y1: lineSpace * i,
+        y2: lineSpace * i
+      });
     }
-  });
+    return lineDef;
+  };
+
+  var getLineDefGrandStaff = function(lineSpace, width) {
+    // todo
+    return [lineSpace, width];
+  };
+
+  var getLineDefOnline = function(lineSpace, width) {
+    // todo
+    return [lineSpace, width];
+  };
 
   return SvgStaffDef;
 
