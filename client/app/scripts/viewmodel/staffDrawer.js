@@ -12,9 +12,7 @@ define([], function() {
 
     var $svg = d3.select('#score');
     var pointer = this._pointer;
-
     var xScale = this._scale.getD3Scale();
-    var ratio = this._scale.ratio;
 
     for (var i = 0; i < this._chords.count(); i++) {
       pointer.next();
