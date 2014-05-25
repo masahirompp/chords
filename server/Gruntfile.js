@@ -7,7 +7,12 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     watch: {
       jshint: {
-        tasks: ['jshint']
+        tasks: ['jshint'],
+        files: [
+          'app.js',
+          'model.js',
+          'route/*.js'
+        ]
       }
     },
     jshint: {

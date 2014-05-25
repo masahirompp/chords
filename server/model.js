@@ -8,6 +8,7 @@ var db = mongoose.createConnection(uri, function(err, res) {
   } else {
     console.log('Success connected: ' + uri);
   }
+  console.dir(res);
 });
 
 // define
@@ -27,4 +28,4 @@ var artistSchema = new mongoose.Schema({
   created: Date,
   updated: Date
 });
-exports.
+exports.Artist = db.model('Artist', artistSchema);
