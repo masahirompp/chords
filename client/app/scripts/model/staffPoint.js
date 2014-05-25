@@ -60,6 +60,9 @@ define([], function() {
 
     var getChordPointXs = function() {
       var base = getStaffPointX();
+      if(isFirstBar()){
+        base = base + width.clefWidth;
+      }
       var points = [];
       for (var i = 0; i < width.musicalTime; i++) {
         points.push(base + width.chordWidth * i);

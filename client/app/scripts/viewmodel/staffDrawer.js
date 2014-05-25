@@ -42,8 +42,6 @@ define([], function() {
         y: function(d) {
           return xScale(d.y);
         },
-        'font-size': '16px',
-        fill: 'black',
         class: 'chord'
       })
       .text(function(d) {

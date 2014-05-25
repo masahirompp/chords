@@ -8,7 +8,7 @@ define(['util/list'], function(List) {
     // nownow
     this._songId = songId;
     this._list = [
-      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
+      ['Fm', , 'Fm', , 'Fm', , 'Fm', ],
       ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
       ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
       ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
