@@ -25,17 +25,36 @@ module.exports = function(grunt) {
         'model.js',
         'route/*.js'
       ]
+    },
+    open: {
+      dev: {
+        path: 'http://localhost:3000/'
+      }
+    },
+    shell: {
+      start: {
+        options: {
+          stdout: false
+        },
+        command: function() {
+          return 'npm start';
+        }
+      }
     }
   });
 
-  grunt.registerTask('default', 'Log some stuff.', function() {
-    grunt.log.write('Logging some stuff...')
-      .ok();
-
+  grunt.registerTask('serve', 'server start.', function() {
     grunt.task.run([
       'jshint',
-      'watch'
+      'open',
+      'shell'
     ]);
+  });
 
+  grunt.registerTask('default', 'jshint', function() {
+    grunt.task.run([
+      'jshint',
+      'watch',
+    ]);
   });
 };
