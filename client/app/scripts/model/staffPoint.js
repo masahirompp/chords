@@ -58,8 +58,18 @@ define([], function() {
       return height.offsetTop + (height.staffLineHeight * _lineIndex);
     };
 
-    var getChordPointXs = function() {};
-    var getChordPointY = function() {};
+    var getChordPointXs = function() {
+      var base = getStaffPointX();
+      var points = [];
+      for (var i = 0; i < width.musicalTime; i++) {
+        points.push(base + width.chordWidth * i);
+      }
+      return points;
+    };
+
+    var getChordPointY = function() {
+      return getStaffPointY() - height.underlineSpace;
+    };
 
     return {
       isFirstBar: isFirstBar,

@@ -48,6 +48,12 @@ define([], function() {
     }
   });
 
+  Object.defineProperty(StaffHeight.prototype, 'underlineSpace', {
+    get: function() {
+      return this._underlineSpace;
+    }
+  });
+
   return StaffHeight;
 
 });

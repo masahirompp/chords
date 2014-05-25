@@ -50,6 +50,12 @@ define([], function() {
     }
   });
 
+  Object.defineProperty(StaffWidth.prototype, 'chordWidth', {
+    get: function() {
+      return this._chordWidth;
+    }
+  });
+
   return StaffWidth;
 
 });

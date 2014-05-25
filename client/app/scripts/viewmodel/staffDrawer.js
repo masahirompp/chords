@@ -2,28 +2,53 @@ define([], function() {
   'use strict';
   var d3 = window.d3;
 
-  function StaffDrawer(scale, chords, pointer) {
+  function StaffDrawer(scale, d3model) {
     this._scale = scale;
-    this._chords = chords;
-    this._pointer = pointer;
+    this._d3model = d3model;
   }
 
   StaffDrawer.prototype.draw = function() {
 
     var $svg = d3.select('#score');
-    var pointer = this._pointer;
     var xScale = this._scale.getD3Scale();
+    var staffData = this._d3model.getStaffData();
+    var chordData = this._d3model.getChordData();
 
-    for (var i = 0; i < this._chords.count(); i++) {
-      pointer.next();
-      var point = pointer.getStaffPoint();
-      $svg.append('use')
-        .attr({
-          'xlink:href': pointer.isFirstBar() ? '#firstBar' : '#bar',
-          x: xScale(point.x),
-          y: xScale(point.y)
-        });
-    }
+    $svg.selectAll('use.bar')
+      .data(staffData)
+      .enter()
+      .append('use')
+      .attr({
+        x: function(d) {
+          return xScale(d.x);
+        },
+        y: function(d) {
+          return xScale(d.y);
+        },
+        'xlink:href': function(d) {
+          return d.link;
+        },
+        class: 'bar'
+      });
+
+    $svg.selectAll('text.chord')
+      .data(chordData)
+      .enter()
+      .append('text')
+      .attr({
+        x: function(d) {
+          return xScale(d.x);
+        },
+        y: function(d) {
+          return xScale(d.y);
+        },
+        'font-size': '16px',
+        fill: 'black',
+        class: 'chord'
+      })
+      .text(function(d) {
+        return d.text;
+      });
   };
 
   return StaffDrawer;

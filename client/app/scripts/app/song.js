@@ -2,14 +2,15 @@ define(['model/chords',
   'model/staffSettings',
   'model/staffHeight',
   'model/staffWidth',
-  'model/staffPointManager',
+  'model/staffPoint',
+  'model/d3model',
   'model/svgClefDef',
   'model/svgStaffDef',
   'viewmodel/viewScale',
   'viewmodel/svgDef',
   'viewmodel/staffDrawer',
   'util/scale'
-], function(Chords, Settings, Height, Width, Pointer, ClefDef, StaffDef, ViewScale, SvgDef, StaffDrawer, Scale) {
+], function(Chords, Settings, Height, Width, Point, D3Model, ClefDef, StaffDef, ViewScale, SvgDef, StaffDrawer, Scale) {
   'use strict';
 
   var songId = 20; // urlからsongIdを取得する
@@ -41,9 +42,10 @@ define(['model/chords',
   svgDef.Init(settings, scale, clefDef, staffDef);
 
   var chords = new Chords(songId);
-  var pointer = new Pointer(height, width);
+  var point = new Point(height, width);
+  var d3Model = new D3Model(chords, point);
 
-  var drawer = new StaffDrawer(scale, chords, pointer);
+  var drawer = new StaffDrawer(scale, d3Model);
   drawer.draw();
 
   return false;
