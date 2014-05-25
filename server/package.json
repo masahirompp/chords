@@ -6,12 +6,13 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "express": "latest",
-    "static-favicon": "latest",
-    "morgan": "latest",
-    "cookie-parser": "latest",
     "body-parser": "latest",
+    "cookie-parser": "latest",
     "debug": "latest",
-    "jade": "latest"
+    "express": "latest",
+    "jade": "latest",
+    "mongoose": "latest",
+    "morgan": "latest",
+    "static-favicon": "latest"
   }
 }
