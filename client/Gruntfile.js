@@ -29,7 +29,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     yeoman: yeomanConfig,
-    // TODO: Make this conditional
     watch: {
       coffee: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
@@ -42,6 +41,10 @@ module.exports = function(grunt) {
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass:server']
+      },
+      jade: {
+        files: ['<%= yeoman.app %>/jade/{,*/}*.jade'],
+        tasks: ['jade:all']
       },
       livereload: {
         options: {
@@ -366,6 +369,23 @@ module.exports = function(grunt) {
       all: {
         rjsConfig: '<%= yeoman.app %>/scripts/main.js'
       }
+    },
+    jade: {
+      all: {
+        options: {
+          data: {
+            debug: true
+          },
+          pretty: true
+        },
+        files: [{
+          cwd: "<%= yeoman.app %>/jade",
+          src: "*.jade",
+          dest: "<%= yeoman.app %>",
+          expand: true,
+          ext: ".html"
+        }]
+      }
     }
   });
 
@@ -381,6 +401,7 @@ module.exports = function(grunt) {
 
     grunt.task.run([
       'jshint',
+      'jade:all',
       'clean:server',
       'concurrent:server',
       'connect:livereload',
@@ -391,6 +412,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', [
     'jshint',
+    'jade:all',
     'clean:server',
     'concurrent:test',
     'connect:test',
@@ -399,6 +421,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'jshint',
+    'jade:all',
     'clean:dist',
     'useminPrepare',
     'concurrent:dist',
@@ -413,7 +436,8 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'jshint'
+    'jshint',
+    'jade:all'
   ]);
 
   grunt.registerTask('sc', function(target) {
@@ -423,6 +447,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('screenshots', [
     'jshint',
+    'jade:all',
     'clean:server',
     'concurrent:server',
     'connect:livereload',
