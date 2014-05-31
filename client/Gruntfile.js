@@ -124,7 +124,12 @@ module.exports = function(grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '.tmp',
+      s: [
+        'dist/s',
+        'dist/.htaccess',
+        'dist/robots.txt'
+      ]
     },
     browser_sync: {
       dev: {
@@ -402,6 +407,7 @@ module.exports = function(grunt) {
     'concat',
     'uglify',
     'copy',
+    'clean:s',
     'rev',
     'usemin'
   ]);

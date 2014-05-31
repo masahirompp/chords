@@ -39,6 +39,18 @@ module.exports = function(grunt) {
         command: function() {
           return 'npm start';
         }
+      },
+      public: {
+        options: {
+          stdout: true
+        },
+        command: function() {
+          return [
+            'rm -r public',
+            'mkdir public',
+            'cp -R ../client/dist/ public/'
+          ].join('&&');
+        }
       }
     }
   });
@@ -47,7 +59,7 @@ module.exports = function(grunt) {
     grunt.task.run([
       'jshint',
       'open',
-      'shell'
+      'shell:start'
     ]);
   });
 
@@ -55,6 +67,12 @@ module.exports = function(grunt) {
     grunt.task.run([
       'jshint',
       'watch',
+    ]);
+  });
+
+  grunt.registerTask('public', 'copy ../client/dist/ to public/', function() {
+    grunt.task.run([
+      'shell:public'
     ]);
   });
 };
