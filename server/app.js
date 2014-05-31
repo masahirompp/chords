@@ -1,6 +1,5 @@
-(function(global) {
+(function() {
   'use strict';
-  console.log(global);
 
   var express = require('express');
   var path = require('path');
@@ -62,4 +61,4 @@
   });
 
   module.exports = app;
-})(this);
+})();
