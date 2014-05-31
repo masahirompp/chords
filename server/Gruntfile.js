@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         files: [
           'app.js',
           'model.js',
-          'route/*.js'
+          'routes/*.js'
         ]
       }
     },
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
       all: [
         'app.js',
         'model.js',
-        'route/*.js'
+        'routes/*.js'
       ]
     },
     open: {
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     shell: {
       start: {
         options: {
-          stdout: false
+          stdout: true
         },
         command: function() {
           return 'npm start';
