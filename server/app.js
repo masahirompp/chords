@@ -8,7 +8,7 @@
   var cookieParser = require('cookie-parser');
   var bodyParser = require('body-parser');
 
-  var routes = require('./routes/index');
+  var index = require('./routes/index');
   var users = require('./routes/users');
   var songs = require('./routes/songs');
 
@@ -23,11 +23,16 @@
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded());
   app.use(cookieParser());
-  app.use(express.static(path.join(__dirname, 'public')));
 
-  app.use('/', routes);
-  app.use('/users', users);
-  app.use('/songs', songs);
+  /// static
+  app.use(express.static(path.join(__dirname, 'public')));
+  app.use('/user', express.static(path.join(__dirname, 'public')));
+  app.use('/song', express.static(path.join(__dirname, 'public')));
+
+  /// route
+  app.use('/', index);
+  app.use('/user', users);
+  app.use('/song', songs);
 
   /// catch 404 and forwarding to error handler
   app.use(function(req, res, next) {

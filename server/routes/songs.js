@@ -3,12 +3,13 @@
 
   var express = require('express');
   var router = express.Router();
+
   var model = require(__dirname + '/../model');
   var Song = model.Song;
 
   /* GET users listing. */
   router.get('/', function(req, res) {
-    res.send('songs list');
+    res.render('songlist.html');
   });
   router.get('/:id', function(req, res) {
     Song.find({
