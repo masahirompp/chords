@@ -9,7 +9,19 @@
 
   /* GET users listing. */
   router.get('/', function(req, res) {
-    res.render('songlist.html');
+    res.render('songlist.jade');
+  });
+  router.post('/list', function(req, res) {
+    Song.find({}, function(err, result) {
+      if (err) {
+        res.send({
+          'error': 'An error has occurred'
+        });
+      } else {
+        console.log('Success');
+        res.json(result);
+      }
+    })
   });
   router.get('/:id', function(req, res) {
     Song.find({

@@ -26,8 +26,8 @@
 
   /// static
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use('/user', express.static(path.join(__dirname, 'public')));
-  app.use('/song', express.static(path.join(__dirname, 'public')));
+  // app.use('/user', express.static(path.join(__dirname, 'public')));
+  // app.use('/song', express.static(path.join(__dirname, 'public')));
 
   /// route
   app.use('/', index);

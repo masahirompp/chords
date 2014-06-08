@@ -11,7 +11,8 @@ module.exports = function(grunt) {
         files: [
           'app.js',
           'model.js',
-          'routes/*.js'
+          'routes/*.js',
+          'public/scripts/**/*.js'
         ]
       }
     },
@@ -23,7 +24,8 @@ module.exports = function(grunt) {
       all: [
         'app.js',
         'model.js',
-        'routes/*.js'
+        'routes/*.js',
+        'public/scripts/**/*.js'
       ]
     },
     open: {

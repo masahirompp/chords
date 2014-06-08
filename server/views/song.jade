@@ -1,0 +1,9 @@
+extend layout
+
+block content
+  svg#score
+
+block jsfiles
+  script(data-main='/scripts/app/song', src='/bower_components/requirejs/require.js')
+  script(src='/bower_components/jquery/dist/jquery.min.js')
+  script(src='/bower_components/d3/d3.min.js')

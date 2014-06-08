@@ -6,7 +6,7 @@
 
   /* GET home page. */
   router.get('/', function(req, res) {
-    res.render('index.html');
+    res.render('index.jade');
   });
 
   module.exports = router;
