@@ -86,6 +86,3 @@ dist
 .sass-cache
 bower_components
 screenshots
-
-# app
-server/public/

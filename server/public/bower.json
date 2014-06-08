@@ -1,0 +1,23 @@
+{
+  "name": "public",
+  "version": "0.0.0",
+  "homepage": "https://github.com/masahirompp/chords",
+  "authors": [
+    "masahirompp <masahirompp@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "pure": "*",
+    "modernizr": "*",
+    "d3": "*",
+    "jquery": "*",
+    "requirejs": "*"
+  }
+}
