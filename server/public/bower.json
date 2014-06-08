@@ -18,6 +18,7 @@
     "modernizr": "*",
     "d3": "*",
     "jquery": "*",
-    "requirejs": "*"
+    "requirejs": "*",
+    "jsrender": "*"
   }
 }
