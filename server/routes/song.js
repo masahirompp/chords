@@ -9,9 +9,17 @@
 
   /* GET users listing. */
   router.get('/', function(req, res) {
+
+    // var testsong = new Song();
+    // testsong.songID = '4';
+    // testsong.name = 'test4';
+    // testsong.save(function(err){
+    //   console.log(err);
+    // });
+
     res.render('songlist.jade');
   });
-  router.post('/list', function(req, res) {
+  router.get('/list', function(req, res) {
     Song.find({}, function(err, result) {
       if (err) {
         res.send({
@@ -21,7 +29,7 @@
         console.log('Success');
         res.json(result);
       }
-    })
+    });
   });
   router.get('/:id', function(req, res) {
     Song.find({

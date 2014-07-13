@@ -1,18 +1,12 @@
 extend layout
 
 block content
-  h2.content-subhead How to use this layout
-  p
-    | To use this layout, you can just copy paste the HTML, along with the CSS in
-    a(href='/css/layouts/side-menu.css', alt='Side Menu CSS') side-menu.css
-    | , and the JavaScript in
-    a(href='/js/ui.js') ui.js
-    | . The JS file uses vanilla JavaScript to simply toggle an
-    code active
-    | class that makes the menu responsive.
-  h2.content-subhead Now Let's Speak Some Latin
-  p
-    | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+  form.pure-form
+    input(type="text").pure-input-rounded
+    button(type="submit").pure-button
+      検索
+  div.result#result
 block jsfiles
   script(data-main='/scripts/app/index', src='/bower_components/requirejs/require.js')
+  script(src='/bower_components/jquery/dist/jquery.min.js')
+  script(src='/bower_components/jsrender/jsrender.min.js')

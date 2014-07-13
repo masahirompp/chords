@@ -9,8 +9,9 @@
   var bodyParser = require('body-parser');
 
   var index = require('./routes/index');
-  var users = require('./routes/users');
-  var songs = require('./routes/songs');
+  var user = require('./routes/user');
+  var song = require('./routes/song');
+  var api = require('./routes/api');
 
   var app = express();
 
@@ -31,8 +32,9 @@
 
   /// route
   app.use('/', index);
-  app.use('/user', users);
-  app.use('/song', songs);
+  app.use('/user', user);
+  app.use('/song', song);
+  app.use('/api', api);
 
   /// catch 404 and forwarding to error handler
   app.use(function(req, res, next) {
