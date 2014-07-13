@@ -9,7 +9,7 @@ module.exports = function(grunt) {
       typescriptServer: {
         tasks: ['typescript:server'],
         files: ['app.ts',
-          'model.js',
+          'model.ts',
           'routes/**.ts'
         ]
       },
@@ -102,18 +102,22 @@ module.exports = function(grunt) {
     grunt.task.run([
       'typescript:server',
       'typescript:client',
-      'jshint',
       'open',
       'shell:start'
     ]);
   });
 
-  grunt.registerTask('default', 'jshint', function() {
+  grunt.registerTask('default', 'compile typescript.', function() {
     grunt.task.run([
       'typescript:server',
       'typescript:client',
-      'jshint',
       'watch',
+    ]);
+  });
+
+  grunt.registerTask('jshint', 'jshint.', function() {
+    grunt.task.run([
+      'jshint'
     ]);
   });
 

@@ -1,11 +1,10 @@
-/// <reference path='typings/node/node.d.ts' />
-/// <reference path='typings/express/express.d.ts' />
-/// <reference path='typings/mongoose/mongoose.d.ts' />
+/// <reference path='typings/tsd.d.ts' />
+
+import mongoose = require('mongoose');
 
 (function() {
   'use strict';
-  var mongoose = require('mongoose');
-  var uri : string = 'mongodb://localhost/chord';
+  var uri = 'mongodb://localhost/chord';
   var db = mongoose.createConnection(uri, function(err) {
     if (err) {
       console.log('Error connected: ' + uri + ' - ' + err);
@@ -13,10 +12,8 @@
       console.log('Success connected: ' + uri);
     }
   });
-  var Schema = mongoose.Schema;
 
-  // define
-  var User = new Schema({
+  var userSchema = new mongoose.Schema({
     userID: {
       type: String,
       required: true,
@@ -39,13 +36,13 @@
       default: Date.now
     }
   });
-  User.pre('save', function(next) {
+  userSchema.pre('save', function(next) {
     this.updated = new Date();
     next();
   });
-  User = db.model('User', User);
+  exports.User = db.model('User', userSchema);
 
-  var Artist = new Schema({
+  var artistSchema = new mongoose.Schema({
     artistID: {
       type: String,
       required: true,
@@ -68,13 +65,13 @@
       default: Date.now
     }
   });
-  Artist.pre('save', function(next) {
+  artistSchema.pre('save', function(next) {
     this.updated = new Date();
     next();
   });
-  Artist = db.model('Artist', Artist);
+  exports.Artist = db.model('Artist', artistSchema);
 
-  var Song = new Schema({
+  var songSchema = new mongoose.Schema({
     songID: {
       type: String,
       required: true,
@@ -85,7 +82,7 @@
       required: true
     },
     chords: {
-      type: [Schema.Types.Mixed],
+      type: [mongoose.Schema.Types.Mixed],
       default: []
     },
     created: {
@@ -97,10 +94,9 @@
       default: Date.now
     }
   });
-  Song.pre('save', function(next) {
+  songSchema.pre('save', function(next) {
     this.updated = new Date();
     next();
   });
-  exports.Song = db.model('Song', Song);
-
+  exports.Song = db.model('Song', songSchema);
 })();
