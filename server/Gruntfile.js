@@ -8,8 +8,9 @@ module.exports = function(grunt) {
     watch: {
       typescriptServer: {
         tasks: ['typescript:server'],
-        files: ['app.ts',
-          'model.ts',
+        files: [
+          'db/**.ts',
+          'app.ts',
           'routes/**.ts'
         ]
       },
@@ -23,21 +24,22 @@ module.exports = function(grunt) {
         tasks: ['jshint'],
         files: [
           'app.js',
-          'model.js',
-          'routes/*.js',
+          'db/**.js',
+          'routes/**.js',
           'public/scripts/**/*.js'
         ]
       }
     },
     typescript: {
       server: {
-        src: ['app.ts',
-          'model.ts',
+        src: [
+          'db/**.ts',
+          'app.ts',
           'routes/**.ts'
         ],
         dest: 'app.js',
         options: {
-          module: 'commonjs', //or amd
+          module: 'amd', //or commonjs
           target: 'es5', //or es3
           sourceMap: false,
           declaration: false,

@@ -1,16 +1,14 @@
 /// <reference path='../typings/tsd.d.ts' />
 
-(function() {
-  'use strict';
+import express = require('express');
 
-  var express = require('express');
-  var router = express.Router();
+function index() {
 
+  var router = new express.Router();
   /* GET home page. */
   router.get('/', function(req, res) {
     res.render('index.jade');
   });
-
-  module.exports = router;
-
-})();
+  return router;
+}
+export = index;

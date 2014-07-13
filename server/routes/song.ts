@@ -1,13 +1,13 @@
 /// <reference path='../typings/tsd.d.ts' />
 
-(function() {
-  'use strict';
+import express = require('express');
+import model = require('../db/model');
 
-  var express = require('express');
-  var router = express.Router();
+function song() {
 
-  var model = require(__dirname + '/../model');
-  var Song = model.Song;
+  var router = new express.Router();
+  var Model = model.getIncetance();
+  var Song = Model.createSong();
 
   /* GET users listing. */
   router.get('/', function(req, res) {
@@ -53,10 +53,10 @@
   router.put('/:id', function(req, res) {
     res.send('update ' + req.params.id);
   });
-  router.delete('/:id', function(req, res) {
+  router.del('/:id', function(req, res) {
     res.send('delete ' + req.params.id);
   });
 
-  module.exports = router;
-
-})();
+  return router;
+}
+export = song;

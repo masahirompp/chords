@@ -1,12 +1,12 @@
 /// <reference path='../typings/tsd.d.ts' />
 
-(function () {
-  'use strict';
+import express = require('express');
 
-  var express = require('express');
-  var router = express.Router();
+function api() {
 
-  router.get('/song/:artist/:song', function (req, res) {
+  var router = new express.Router();
+
+  router.get('/song/:artist/:song', function(req, res) {
     var query = req.query;
     if (query.artist && query.song) {
 
@@ -17,6 +17,6 @@
 
   router.get('/song/search');
 
-  module.exports = router;
-
-})();
+  return router;
+}
+export = api;
