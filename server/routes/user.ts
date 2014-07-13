@@ -1,12 +1,15 @@
+/// <reference path='../typings/node/node.d.ts' />
+/// <reference path='../typings/express/express.d.ts' />
+
 (function() {
   'use strict';
 
   var express = require('express');
   var router = express.Router();
 
-  /* GET home page. */
+  /* GET users listing. */
   router.get('/', function(req, res) {
-    res.render('index.jade');
+    res.send('respond with a resource');
   });
 
   module.exports = router;

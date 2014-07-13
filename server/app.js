@@ -1,6 +1,5 @@
-(function() {
+(function () {
   'use strict';
-
   var express = require('express');
   var path = require('path');
   var favicon = require('static-favicon');
@@ -15,7 +14,6 @@
 
   var app = express();
 
-  // view engine setup
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'jade');
 
@@ -25,30 +23,21 @@
   app.use(bodyParser.urlencoded());
   app.use(cookieParser());
 
-  /// static
   app.use(express.static(path.join(__dirname, 'public')));
-  // app.use('/user', express.static(path.join(__dirname, 'public')));
-  // app.use('/song', express.static(path.join(__dirname, 'public')));
 
-  /// route
   app.use('/', index);
   app.use('/user', user);
   app.use('/song', song);
   app.use('/api', api);
 
-  /// catch 404 and forwarding to error handler
-  app.use(function(req, res, next) {
+  app.use(function (req, res, next) {
     var err = new Error('Not Found');
-    err.status = 404;
+    res.status = 404;
     next(err);
   });
 
-  /// error handlers
-
-  // development error handler
-  // will print stacktrace
   if (app.get('env') === 'development') {
-    app.use(function(err, req, res) {
+    app.use(function (err, req, res) {
       res.status(err.status || 500);
       res.render('error', {
         message: err.message,
@@ -57,9 +46,7 @@
     });
   }
 
-  // production error handler
-  // no stacktraces leaked to user
-  app.use(function(err, req, res) {
+  app.use(function (err, req, res) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -68,4 +55,196 @@
   });
 
   module.exports = app;
+})();
+(function () {
+  'use strict';
+  var mongoose = require('mongoose');
+  var uri = 'mongodb://localhost/chord';
+  var db = mongoose.createConnection(uri, function (err) {
+    if (err) {
+      console.log('Error connected: ' + uri + ' - ' + err);
+    } else {
+      console.log('Success connected: ' + uri);
+    }
+  });
+  var Schema = mongoose.Schema;
+
+  var User = new Schema({
+    userID: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      default: 'example@domain.ne.jp'
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    },
+    updated: {
+      type: Date,
+      default: Date.now
+    }
+  });
+  User.pre('save', function (next) {
+    this.updated = new Date();
+    next();
+  });
+  User = db.model('User', User);
+
+  var Artist = new Schema({
+    artistID: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    url: {
+      type: String,
+      default: ''
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    },
+    updated: {
+      type: Date,
+      default: Date.now
+    }
+  });
+  Artist.pre('save', function (next) {
+    this.updated = new Date();
+    next();
+  });
+  Artist = db.model('Artist', Artist);
+
+  var Song = new Schema({
+    songID: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    chords: {
+      type: [Schema.Types.Mixed],
+      default: []
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    },
+    updated: {
+      type: Date,
+      default: Date.now
+    }
+  });
+  Song.pre('save', function (next) {
+    this.updated = new Date();
+    next();
+  });
+  exports.Song = db.model('Song', Song);
+})();
+(function () {
+  'use strict';
+
+  var express = require('express');
+  var router = express.Router();
+
+  router.get('/song/:artist/:song', function (req, res) {
+    var query = req.query;
+    if (query.artist && query.song) {
+    }
+
+    res.json(query);
+  });
+
+  router.get('/song/search');
+
+  module.exports = router;
+})();
+(function () {
+  'use strict';
+
+  var express = require('express');
+  var router = express.Router();
+
+  router.get('/', function (req, res) {
+    res.render('index.jade');
+  });
+
+  module.exports = router;
+})();
+(function () {
+  'use strict';
+
+  var express = require('express');
+  var router = express.Router();
+
+  var model = require(__dirname + '/../model');
+  var Song = model.Song;
+
+  router.get('/', function (req, res) {
+    res.render('songlist.jade');
+  });
+  router.get('/list', function (req, res) {
+    Song.find({}, function (err, result) {
+      if (err) {
+        res.send({
+          'error': 'An error has occurred'
+        });
+      } else {
+        console.log('Success');
+        res.json(result);
+      }
+    });
+  });
+  router.get('/:id', function (req, res) {
+    Song.find({
+      songID: req.params.id
+    }, function (err, result) {
+      if (err) {
+        res.send({
+          'error': 'An error has occurred'
+        });
+      } else {
+        console.log('Success: ' + result);
+        res.json(result);
+      }
+    });
+  });
+  router.post('/', function (req, res) {
+    res.send('new song');
+  });
+  router.put('/:id', function (req, res) {
+    res.send('update ' + req.params.id);
+  });
+  router.delete('/:id', function (req, res) {
+    res.send('delete ' + req.params.id);
+  });
+
+  module.exports = router;
+})();
+(function () {
+  'use strict';
+
+  var express = require('express');
+  var router = express.Router();
+
+  router.get('/', function (req, res) {
+    res.send('respond with a resource');
+  });
+
+  module.exports = router;
 })();

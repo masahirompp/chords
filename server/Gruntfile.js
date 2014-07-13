@@ -6,6 +6,19 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     watch: {
+      typescriptServer: {
+        tasks: ['typescript:server'],
+        files: ['app.ts',
+          'model.js',
+          'routes/**.ts'
+        ]
+      },
+      typescriptClient: {
+        tasks: ['typescript:client'],
+        files: [
+          'public/scripts/**.ts'
+        ]
+      },
       jshint: {
         tasks: ['jshint'],
         files: [
@@ -16,12 +29,40 @@ module.exports = function(grunt) {
         ]
       }
     },
+    typescript: {
+      server: {
+        src: ['app.ts',
+          'model.ts',
+          'routes/**.ts'
+        ],
+        dest: 'app.js',
+        options: {
+          module: 'commonjs', //or amd
+          target: 'es5', //or es3
+          sourceMap: false,
+          declaration: false,
+          indentStep: 2
+        }
+      },
+      client: {
+        src: [
+          'public/scripts/**.ts'
+        ],
+        options: {
+          module: 'amd', //or commonjs
+          target: 'es5', //or es3
+          sourceMap: false,
+          declaration: false,
+          indentStep: 2
+        }
+      }
+    },
     jshint: {
       options: {
         jshintrc: '.jshintrc',
         reporter: require('jshint-stylish')
       },
-      all: [
+      app: [
         'app.js',
         'model.js',
         'routes/*.js',
@@ -42,7 +83,7 @@ module.exports = function(grunt) {
           return 'npm start';
         }
       },
-      public: {
+      publish: {
         options: {
           stdout: true
         },
@@ -59,6 +100,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('serve', 'server start.', function() {
     grunt.task.run([
+      'typescript:server',
+      'typescript:client',
       'jshint',
       'open',
       'shell:start'
@@ -67,14 +110,16 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', 'jshint', function() {
     grunt.task.run([
+      'typescript:server',
+      'typescript:client',
       'jshint',
       'watch',
     ]);
   });
 
-  grunt.registerTask('public', 'copy ../client/dist/ to public/', function() {
+  grunt.registerTask('publish', 'copy ../client/dist/ to public/', function() {
     grunt.task.run([
-      'shell:public'
+      'shell:publish'
     ]);
   });
 };

@@ -1,8 +1,11 @@
+/// <reference path='typings/node/node.d.ts' />
+/// <reference path='typings/express/express.d.ts' />
+/// <reference path='typings/mongoose/mongoose.d.ts' />
+
 (function() {
   'use strict';
-
   var mongoose = require('mongoose');
-  var uri = 'mongodb://localhost/chord';
+  var uri : string = 'mongodb://localhost/chord';
   var db = mongoose.createConnection(uri, function(err) {
     if (err) {
       console.log('Error connected: ' + uri + ' - ' + err);
