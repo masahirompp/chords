@@ -14,7 +14,7 @@ router.get('/', function(req, res) {
  * /api/admin/:artist/:song POST NEW
  */
 router.post('/:artist/:song', function(req, res) {
-  var q = req.params;
+  var artist = req.params;
   res.json({artist: q.artist, song: q.song, method: 'new'});
 });
 

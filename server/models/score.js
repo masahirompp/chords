@@ -3,6 +3,7 @@
 var mongoose = require('mongoose'), Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
 var Score = new Schema({
+  url: {type: String, require: true},
   description: {type: String, require: true},
   artistid: {type: ObjectId, ref: 'Artist'},
   artistName: {type: String, require: true},
@@ -22,7 +23,8 @@ Score.pre('save', function(next) {
   next();
 });
 
-Score.statics.createNewSong = function(description,
+Score.statics.createNewSong = function(url,
+  description,
   artistid,
   artistName,
   isOriginal,
@@ -34,6 +36,7 @@ Score.statics.createNewSong = function(description,
   isPublish,
   callback) {
   var score = new this({
+    url: url,
     description: description,
     artistid: artistid,
     artistName: artistName,

@@ -4,6 +4,7 @@ var mongoose = require('mongoose'), Schema = mongoose.Schema, ObjectId = Schema.
 
 var Artist = new Schema({
   name: {type: String, require: true, unique: true},
+  url: {type: String, require: true, unique: true},
   isOriginal: {type: Boolean, require: true},
   authorid: {type: ObjectId, ref: 'Author'},
   created: { type: Date, default: Date.now },
@@ -16,7 +17,7 @@ Artist.pre('save', function(next) {
 });
 
 Artist.statics.createNewArtist = function(name, isOriginal, authorid, callback) {
-  var artist = new this({name: name, isOriginal: isOriginal, authorid: authorid});
+  var artist = new this({name: name, url: name, isOriginal: isOriginal, authorid: authorid}); //TODO: URL convert.
   artist.save(callback);
 };
 

@@ -4,6 +4,7 @@ var mongoose = require('mongoose'), Schema = mongoose.Schema, ObjectId = Schema.
 
 var Song = new Schema({
   title: {type: String, require: true}, //アーティスト内でのタイトル重複チェックはアプリで行う。
+  url: {type: String, require: true},
   artistid: {type: ObjectId, ref: 'Artist', require: true},
   created: { type: Date, default: Date.now },
   updated: Date
@@ -15,7 +16,7 @@ Song.pre('save', function(next) {
 });
 
 Song.statics.createNewSong = function(title, artistid, callback) {
-  var song = new this({title: title, artistid: artistid});
+  var song = new this({title: title, url: url, artistid: artistid}); //TODO url convert.
   song.save(callback);
 };
 
