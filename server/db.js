@@ -11,5 +11,8 @@ exports.debug = function(debug) {
 };
 
 exports.Author = require('./models/author');
-exports.Article = require('./models/article');
+exports.Artist = require('./models/artist');
+exports.Song = require('./models/song');
+exports.Score = require('./models/score');
+exports.Chord = require('./models/chord');
 
