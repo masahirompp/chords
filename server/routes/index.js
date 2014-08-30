@@ -1,12 +1,11 @@
-define(["require", "exports", 'express'], function(require, exports, express) {
-  function index() {
-    var router = new express.Router();
+'use strict';
 
-    router.get('/', function (req, res) {
-      res.render('index.jade');
-    });
-    return router;
-  }
-  
-  return index;
+var express = require('express');
+var router = express.Router();
+
+/* GET home page. */
+router.get('/', function(req, res) {
+  res.sendfile('html/index.html', {root: './public'});
 });
+
+module.exports = router;

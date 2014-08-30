@@ -1,8 +1,7 @@
 <component name="libraryTable">
   <library name="compass-library">
     <CLASSES>
-      <root url="file://$USER_HOME$/.rbenv/versions/2.0.0-p195/lib/ruby/gems/2.0.0/gems/compass-0.12.6" />
-      <root url="file://$USER_HOME$/.rbenv/versions/2.0.0-p195/lib/ruby/gems/2.0.0/gems/compass-0.12.6" />
+      <root url="file://$USER_HOME$/.rbenv/versions/2.0.0-p195/lib/ruby/gems/2.0.0/gems/compass-core-1.0.1" />
     </CLASSES>
     <SOURCES />
   </library>

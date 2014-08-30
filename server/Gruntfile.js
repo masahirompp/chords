@@ -6,69 +6,26 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     watch: {
-      typescriptServer: {
-        tasks: ['typescript:server'],
-        files: [
-          'db/**.ts',
-          'app.ts',
-          'routes/**.ts'
-        ]
-      },
-      typescriptClient: {
-        tasks: ['typescript:client'],
-        files: [
-          'public/scripts/**.ts'
-        ]
-      },
       jshint: {
         tasks: ['jshint'],
         files: [
           'app.js',
-          'db/**.js',
-          'routes/**.js',
-          'public/scripts/**/*.js'
+          'db.js',
+          'models/**.js',
+          'routes/**.js'
         ]
-      }
-    },
-    typescript: {
-      server: {
-        src: [
-          'db/**.ts',
-          'app.ts',
-          'routes/**.ts'
-        ],
-        dest: 'app.js',
-        options: {
-          module: 'amd', //or commonjs
-          target: 'es5', //or es3
-          sourceMap: false,
-          declaration: false,
-          indentStep: 2
-        }
-      },
-      client: {
-        src: [
-          'public/scripts/**.ts'
-        ],
-        options: {
-          module: 'amd', //or commonjs
-          target: 'es5', //or es3
-          sourceMap: false,
-          declaration: false,
-          indentStep: 2
-        }
       }
     },
     jshint: {
       options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
+        reporter: require('jshint-stylish'),
+        jshintrc: '.jshintrc'
       },
-      app: [
+      files: [
         'app.js',
-        'model.js',
-        'routes/*.js',
-        'public/scripts/**/*.js'
+        'db.js',
+        'models/**.js',
+        'routes/*.js'
       ]
     },
     open: {
@@ -102,24 +59,16 @@ module.exports = function(grunt) {
 
   grunt.registerTask('serve', 'server start.', function() {
     grunt.task.run([
-      'typescript:server',
-      'typescript:client',
+      'jshint',
       'open',
       'shell:start'
     ]);
   });
 
-  grunt.registerTask('default', 'compile typescript.', function() {
+  grunt.registerTask('hint', 'jshint.', function() {
     grunt.task.run([
-      'typescript:server',
-      'typescript:client',
-      'watch',
-    ]);
-  });
-
-  grunt.registerTask('jshint', 'jshint.', function() {
-    grunt.task.run([
-      'jshint'
+      'jshint',
+      'watch'
     ]);
   });
 

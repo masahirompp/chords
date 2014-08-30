@@ -6,14 +6,14 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
-    "body-parser": "latest",
-    "cookie-parser": "latest",
-    "debug": "latest",
     "express": "latest",
-    "jade": "latest",
     "mongoose": "latest",
+    "static-favicon": "latest",
     "morgan": "latest",
-    "static-favicon": "latest"
+    "cookie-parser": "latest",
+    "body-parser": "latest",
+    "debug": "latest",
+    "jade": "latest"
   },
   "devDependencies": {
     "grunt": "latest",
@@ -21,7 +21,6 @@
     "grunt-contrib-watch": "latest",
     "grunt-open": "latest",
     "grunt-shell": "latest",
-    "grunt-typescript": "latest",
     "jshint-stylish": "latest",
     "load-grunt-tasks": "latest",
     "time-grunt": "latest"

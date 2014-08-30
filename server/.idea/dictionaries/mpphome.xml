@@ -1,3 +1,9 @@
 <component name="ProjectDictionaryState">
-  <dictionary name="mpphome" />
+  <dictionary name="mpphome">
+    <words>
+      <w>dest</w>
+      <w>jshint</w>
+      <w>jshintrc</w>
+    </words>
+  </dictionary>
 </component>
