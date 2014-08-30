@@ -6,14 +6,15 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
-    "express": "latest",
-    "mongoose": "latest",
-    "static-favicon": "latest",
-    "morgan": "latest",
-    "cookie-parser": "latest",
     "body-parser": "latest",
+    "cookie-parser": "latest",
     "debug": "latest",
-    "jade": "latest"
+    "express": "latest",
+    "jade": "latest",
+    "mongoose": "latest",
+    "morgan": "latest",
+    "passport": "^0.2.0",
+    "static-favicon": "latest"
   },
   "devDependencies": {
     "grunt": "latest",
