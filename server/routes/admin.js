@@ -2,20 +2,23 @@
 
 var express = require('express');
 var router = express.Router();
+var model = require('../model');
+var db = require('../db');
 
 /**
- * /api/admin
+ * /api/admin GET LIST
  */
 router.get('/', function(req, res) {
   res.json({admin: '作成中も含めた一覧を表示'});
 });
 
 /**
- * /api/admin/:artist/:song POST NEW
+ * /api/admin/ POST NEW
  */
-router.post('/:artist/:song', function(req, res) {
-  var artist = req.params;
-  res.json({artist: q.artist, song: q.song, method: 'new'});
+router.post('/', function(req, res) {
+  var artistUrl = req.query.artist;
+  var songUrl = req.query.song;
+  res.json({artist: artistUrl, song: songUrl, method: 'new'});
 });
 
 /**

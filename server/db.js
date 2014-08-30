@@ -10,9 +10,9 @@ exports.debug = function(debug) {
   mongoose.set('debug', debug);
 };
 
-exports.Author = require('./models/author');
-exports.Artist = require('./models/artist');
-exports.Song = require('./models/song');
-exports.Score = require('./models/score');
-exports.Chord = require('./models/chord');
+exports.Author = require('./db/author');
+exports.Artist = require('./db/artist');
+exports.Song = require('./db/song');
+exports.Score = require('./db/score');
+exports.Chord = require('./db/chord');
 

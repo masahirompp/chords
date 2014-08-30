@@ -11,6 +11,8 @@ module.exports = function(grunt) {
         files: [
           'app.js',
           'db.js',
+          'model.js',
+          'db/**.js',
           'models/**.js',
           'routes/**.js'
         ]
@@ -24,6 +26,8 @@ module.exports = function(grunt) {
       files: [
         'app.js',
         'db.js',
+        'model.js',
+        'db/**.js',
         'models/**.js',
         'routes/*.js'
       ]

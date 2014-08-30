@@ -3,12 +3,12 @@
 var mongoose = require('mongoose'), Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
 var Score = new Schema({
-  url: {type: String, require: true},
+  url: {type: String, require: true, unique: true},
   description: {type: String, require: true},
-  artistid: {type: ObjectId, ref: 'Artist'},
+  artistid: String,
   artistName: {type: String, require: true},
   isOriginal: {type: Boolean, require: true},
-  songid: {type: ObjectId, ref: 'Chords'},
+  songid: String,
   title: {type: String, require: true},
   authorid: {type: ObjectId, ref: 'Author'},
   authorName: {type: String, require: true},
