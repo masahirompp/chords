@@ -9,7 +9,6 @@ var Song = new Schema({
   updated: Date
 });
 
-// 保存前に現在時刻を挿入
 Song.pre('save', function(next) {
   this.updated = new Date();
   next();
