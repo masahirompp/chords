@@ -2,8 +2,7 @@
 
 var express = require('express');
 var router = express.Router();
-var model = require('../model');
-var db = require('../db');
+//var model = require('../model');
 
 /**
  * /api/admin GET LIST

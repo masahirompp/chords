@@ -14,7 +14,8 @@
     "mongoose": "latest",
     "morgan": "latest",
     "passport": "^0.2.0",
-    "static-favicon": "latest"
+    "static-favicon": "latest",
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "grunt": "latest",

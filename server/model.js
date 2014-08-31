@@ -1,3 +1,3 @@
 'use strict';
 
-exports.Song = require('./models/song');
+exports.Score = require('./models/score');

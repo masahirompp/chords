@@ -23,7 +23,7 @@ Score.pre('save', function(next) {
   next();
 });
 
-Score.statics.createNewSong = function(url,
+Score.statics.createNewScore = function(url,
   description,
   artistid,
   artistName,
