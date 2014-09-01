@@ -4,6 +4,7 @@ var mongoose = require('mongoose'), Schema = mongoose.Schema, ObjectId = Schema.
 
 var Score = new Schema({
   url: {type: String, require: true, unique: true},
+  scoreid: {type: Number, default: 1},
   description: {type: String, require: true},
   artistid: String,
   artistName: {type: String, require: true},
@@ -24,6 +25,7 @@ Score.pre('save', function(next) {
 });
 
 Score.statics.createNewScore = function(url,
+  scoreid,
   description,
   artistid,
   artistName,
@@ -37,6 +39,7 @@ Score.statics.createNewScore = function(url,
   callback) {
   var score = new this({
     url: url,
+    scoreid : scoreid,
     description: description,
     artistid: artistid,
     artistName: artistName,

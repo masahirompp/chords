@@ -39,17 +39,11 @@ module.exports = function(grunt) {
     },
     shell: {
       start: {
-        options: {
-          stdout: true
-        },
         command: function() {
           return 'npm start';
         }
       },
       publish: {
-        options: {
-          stdout: true
-        },
         command: function() {
           return [
             'rm -r public',

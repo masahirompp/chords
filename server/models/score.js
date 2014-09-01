@@ -9,15 +9,19 @@ var CONST = {
   DRAFT: false
 };
 
-var generateScoreUrl = function(artistName, title, callback) {
-  db.Score.find({artistName: artistName, title: title}, 'url', function(err, urls) {
+var generateScoreId = function(artistName, title, callback) {
+  db.Score.find({artistName: artistName, title: title}, 'url', function(err, results) {
     if(err) {
       return callback(err);
     }
-    var scoreID = _.chain(urls).map(function(url) {
-      return Number(url.substring(url.lastIndexOf('/') + 1));
-    }).max() + 1;
-    callback(null, '/' + artistName + '/' + title + '/' + scoreID);
+    if(results.length === 0) {
+      return callback(null, 1);
+    }
+    console.dir(results);
+    var maxScoreId = _.chain(results).map(function(result) {
+      return Number(result.url.substring(result.url.lastIndexOf('/') + 1));
+    }).max().value();
+    callback(null, maxScoreId + 1);
   });
 };
 
@@ -31,11 +35,12 @@ Score.createNewOriginalScore = function(authorid, title, description, callback) 
     if(err) {
       return callback(err);
     }
-    generateScoreUrl(author.name, title, function(err, url) {
+    generateScoreId(author.name, title, function(err, scoreid) {
       if(err) {
         return callback(err);
       }
-      db.Score.createNewScore(url,
+      db.Score.createNewScore('/' + author.name + '/' + title + '/' + scoreid,
+        scoreid,
         description,
         authorid,
         author.name,
@@ -59,7 +64,7 @@ Score.createNewExistingScore = function(authorid, artistid, artistName, songid, 
     if(err) {
       return callback(err);
     }
-    generateScoreUrl(artistName, title, function(err, url) {
+    generateScoreId(artistName, title, function(err, url) {
       if(err) {
         return callback(err);
       }

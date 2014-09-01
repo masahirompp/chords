@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'), Schema = mongoose.Schema;
 
 var Author = new Schema({
-  email: {type: String, required: true, index: {unique: true}},
+  email: String,
   name: {type: String, required: true, index: {unique: true}},
   created: { type: Date, default: Date.now },
   updated: Date
@@ -14,26 +14,24 @@ Author.pre('save', function(next) {
   next();
 });
 
-Author.statics.createAuthor = function(email, callback) {
+Author.statics.createAuthor = function(name, email, callback) {
 
-  var Author = mongoose.model('Author'); // self === Author
+  var Author = mongoose.model('Author');
 
-  Author.findByEmail(email, function(error, author) {
+  Author.findByName(name, function(error, author) {
     if(error) {
       return callback(error);
     }
     if(author) {
       return callback(new Error('already registered.'));
     }
-    author = new Author({email: email});
+    author = new Author({name: name, email: email});
     author.save(callback);
   });
 };
 
-Author.statics.findByEmail = function(email, callback) {
-  this.findOne({email: email}, callback);
+Author.statics.findByName = function(name, callback) {
+  this.findOne({name: name}, callback);
 };
 
-// スキーマAuthorをAuthorモデルとして登録
-// そして、Authorモデルをこのモジュールにexport
 module.exports = mongoose.model('Author', Author);

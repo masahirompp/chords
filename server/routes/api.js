@@ -2,12 +2,26 @@
 
 var express = require('express');
 var router = express.Router();
+var db = require('../db');
+//var model = require('../model');
 
 /**
  * /api/user/:id GET
  */
-router.post('/user/:id', function(req, res) {
+router.get('/user/:id', function(req, res) {
   res.json({user: req.params.id});
+});
+
+/**
+ * /api/user/:id POST
+ */
+router.post('/user/:id', function(req, res, next) {
+  db.Author.createAuthor(req.params.id, '', function(err, author) {
+    if(err) {
+      return next(err);
+    }
+    res.json(author);
+  });
 });
 
 /**
