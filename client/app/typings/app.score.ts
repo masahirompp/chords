@@ -2,7 +2,7 @@
 
 require.config({baseUrl: 'scripts'});
 
-require(['./func.draw'], function(draw:()=> void) {
+require(['./endpoint', './func.draw'], function(endpoint:Endpoint, draw:()=> void) {
   console.log('index');
   console.log('Running jQuery %s', $().jquery);
   draw();
