@@ -1,12 +1,12 @@
 {
-  "name": "chords",
-  "version": "0.0.1",
+  "name": "client",
+  "private": true,
   "dependencies": {
-    "pure": "latest",
-    "requirejs": "latest",
-    "modernizr": "latest",
-    "jquery": "latest",
-    "d3": "latest"
+    "bootstrap": "~3.2.0",
+    "requirejs": "~2.1.14",
+    "underscore": "~1.7.0",
+    "d3": "~3.4.11"
   },
-  "devDependencies": {}
+  "devDependencies": {
+  }
 }

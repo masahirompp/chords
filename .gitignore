@@ -1,6 +1,10 @@
 # server side
 server/public
 
+# client side
+client/app/*.html
+client/app/scripts
+
 # Created by http://www.gitignore.io
 
 #!! ERROR: os is undefined. Use list command to see defined gitignore types !!#

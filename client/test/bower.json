@@ -2,9 +2,8 @@
   "name": "client",
   "private": true,
   "dependencies": {
-    "chai": "latest",
-    "mocha": "latest",
-    "requirejs": "latest"
+    "chai": "~1.8.0",
+    "mocha": "~1.14.0"
   },
   "devDependencies": {}
 }
