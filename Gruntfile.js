@@ -2,7 +2,7 @@
 module.exports = function(grunt) {
   require('time-grunt')(grunt);
   require('load-grunt-tasks')(grunt);
-  var LIVE_RELOAD_PORT = 35729;
+  //var LIVE_RELOAD_PORT = 35729;
 
   // Configurable paths
   var config = {
@@ -15,7 +15,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     watch: {
       options: {
-        livereload: LIVE_RELOAD_PORT
+        livereload: false
       },
       html: {
         files: ['<%= config.app %>/jade/{,*/}*.jade'],
