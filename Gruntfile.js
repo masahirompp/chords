@@ -1,20 +1,8 @@
-// Generated on 2014-09-01 using
-// generator-webapp 0.5.0
 'use strict';
-
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// If you want to recursively match all subfolders, use:
-// 'test/spec/**/*.js'
-
 module.exports = function(grunt) {
-
-  // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
-
-  // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
+  var LIVE_RELOAD_PORT = 35729;
 
   // Configurable paths
   var config = {
@@ -22,96 +10,39 @@ module.exports = function(grunt) {
     dist: 'dist'
   };
 
-  // Define the configuration for all the tasks
   grunt.initConfig({
-
-    // Project settings
     config: config,
-
-    // Watches files for changes and runs tasks based on the changed files
+    pkg: grunt.file.readJSON('package.json'),
     watch: {
-      //      bower: {
-      //        files: ['bower.json'],
-      //        tasks: ['wiredep']
-      //      },
+      options: {
+        livereload: LIVE_RELOAD_PORT
+      },
       html: {
         files: ['<%= config.app %>/jade/{,*/}*.jade'],
-        tasks: ['jade']
+        tasks: ['jade',
+                'shell:cphtml']
       },
       ts: {
         files: ['<%= config.app %>/typings/{,*/}*.ts'],
-        tasks: ['typescript']
+        tasks: ['typescript',
+                'shell:cpjs']
       },
-      js: {
-        files: ['<%= config.app %>/scripts/{,*/}*.js'],
-        //tasks: ['jshint'],
-        options: {
-          livereload: true
-        }
+      jshint: {
+        files: [
+          'app.js',
+          'db.js',
+          'model.js',
+          'db/**.js',
+          'models/**.js',
+          'routes/**.js'
+        ],
+        tasks: ['jshint']
       },
-      jstest: {
-        files: ['test/spec/{,*/}*.js'],
-        tasks: ['test:watch']
-      },
-      //      gruntfile: {
-      //        files: ['Gruntfile.js']
-      //      },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles',
-                'autoprefixer']
-      },
-      livereload: {
-        options: {
-          livereload: '<%= connect.options.livereload %>'
-        },
-        files: [
-          '<%= config.app %>/{,*/}*.html',
-          '.tmp/styles/{,*/}*.css',
-          '<%= config.app %>/images/{,*/}*'
-        ]
-      }
-    },
-
-    // The actual grunt server settings
-    connect: {
-      options: {
-        port: 9000,
-        open: true,
-        livereload: 35729,
-        // Change this to '0.0.0.0' to access the server from outside
-        hostname: 'localhost'
-      },
-      livereload: {
-        options: {
-          middleware: function(connect) {
-            return [
-              connect.static('.tmp'),
-              connect().use('/bower_components', connect.static('./bower_components')),
-              connect.static(config.app)
-            ];
-          }
-        }
-      },
-      test: {
-        options: {
-          open: false,
-          port: 9001,
-          middleware: function(connect) {
-            return [
-              connect.static('.tmp'),
-              connect.static('test'),
-              connect().use('/bower_components', connect.static('./bower_components')),
-              connect.static(config.app)
-            ];
-          }
-        }
-      },
-      dist: {
-        options: {
-          base: '<%= config.dist %>',
-          livereload: false
-        }
+                'autoprefixer',
+                'shell:cpcss']
       }
     },
 
@@ -142,21 +73,25 @@ module.exports = function(grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= config.app %>/scripts/{,*/}*.js',
-        '!<%= config.app %>/scripts/vendor/*',
+        'app.js',
+        'db.js',
+        'model.js',
+        'db/**.js',
+        'models/**.js',
+        'routes/*.js',
         'test/spec/{,*/}*.js'
       ]
     },
 
-    // Mocha testing framework configuration options
-    mocha: {
-      all: {
-        options: {
-          run: true,
-          urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
-        }
-      }
-    },
+    //    // Mocha testing framework configuration options
+    //    mocha: {
+    //      all: {
+    //        options: {
+    //          run: true,
+    //          urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
+    //        }
+    //      }
+    //    },
 
     // Add vendor prefixed styles
     autoprefixer: {
@@ -177,15 +112,6 @@ module.exports = function(grunt) {
         ]
       }
     },
-
-    //    // Automatically inject Bower components into the HTML file
-    //    wiredep: {
-    //      app: {
-    //        ignorePath: /^\/|\.\.\//,
-    //        src: ['<%= config.app %>/index.html'],
-    //        exclude: ['bower_components/bootstrap/dist/js/bootstrap.js']
-    //      }
-    //    },
 
     // Renames files for browser caching purposes
     rev: {
@@ -424,29 +350,79 @@ module.exports = function(grunt) {
         'imagemin',
         'svgmin'
       ]
+    },
+
+    open: {
+      dev: {
+        path: 'http://localhost:3000/'
+      }
+    },
+    shell: {
+      cpapp: {
+        command: function() {
+          return [
+            'rm -r public',
+            'mkdir public',
+            'cp -R app/bower_components public/bower_components',
+            'cp -R app/images public/images',
+            'cp -R app/scripts public/scripts',
+            'cp -R app/styles public/styles',
+            'cp app/*.html public/',
+            'cp app/*.ico public/'
+          ].join('&&');
+        }
+      },
+      cphtml: {
+        command: function() {
+          return [
+            'cp -f app/*.html public/'
+          ].join('&&');
+        }
+      },
+      cpjs: {
+        command: function() {
+          return [
+            'cp -f app/scripts/*.js public/scripts/'
+          ].join('&&');
+        }
+      },
+      cpcss: {
+        command: function() {
+          return [
+            'cp -f app/styles/*.css public/styles/'
+          ].join('&&');
+        }
+      },
+      cpdist: {
+        command: function() {
+          return [
+            'rm -r public',
+            'mkdir public',
+            'cp -R dist/ public/'
+          ].join('&&');
+        }
+      }
     }
   });
-
 
   grunt.registerTask('serve',
     'start the server and preview your app, --allow-remote for remote access',
     function(target) {
-      if(grunt.option('allow-remote')) {
-        grunt.config.set('connect.options.hostname', '0.0.0.0');
-      }
       if(target === 'dist') {
         return grunt.task.run(['build',
-                               'connect:dist:keepalive']);
+                               'open']);
       }
 
       grunt.task.run([
+        'jshint',
         'clean:server',
         //'wiredep',
         'jade',
         'typescript',
         'concurrent:server',
         'autoprefixer',
-        'connect:livereload',
+        'shell:cpapp',
+        'open',
         'watch'
       ]);
     });
@@ -458,22 +434,23 @@ module.exports = function(grunt) {
                     'serve']);
   });
 
-  grunt.registerTask('test', function(target) {
-    if(target !== 'watch') {
-      grunt.task.run([
-        'clean:server',
-        'concurrent:test',
-        'autoprefixer'
-      ]);
-    }
-
-    grunt.task.run([
-      'connect:test'
-      //'mocha'
-    ]);
-  });
+  //  grunt.registerTask('test', function(target) {
+  //    if(target !== 'watch') {
+  //      grunt.task.run([
+  //        'clean:server',
+  //        'concurrent:test',
+  //        'autoprefixer'
+  //      ]);
+  //    }
+  //
+  //    grunt.task.run([
+  //      'connect:test'
+  //      //'mocha'
+  //    ]);
+  //  });
 
   grunt.registerTask('build', [
+    'jshint',
     'clean:dist',
     'jade',
     'typescript',
@@ -487,14 +464,18 @@ module.exports = function(grunt) {
     'copy:dist',
     'rev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'shell:cpdist'
   ]);
 
   grunt.registerTask('default', [
     //'jade',
-    'typescript'
+    'typescript',
+    'jshint',
+    'watch'
     //'newer:jshint',
     //'test',
     //'build'
   ]);
+
 };

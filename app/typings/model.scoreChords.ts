@@ -5,7 +5,6 @@ import Chord = require('./model.chord')
 import BarChords = require('./model.barChords')
 
 class ScoreChords extends List<BarChords> {
-  private chordId:string;
 
   constructor(barChordsArray:BarChords[]) {
     super(barChordsArray);
@@ -16,21 +15,20 @@ class ScoreChords extends List<BarChords> {
     return scoreChords;
   }
 
-  public static factory(chordId:string):ScoreChords {
-    // todo ajax get
-    var bars:string[][] = [
-      ['Fm', '', 'Fm', '', 'Fm', '', 'Fm', ''],
-      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
-      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
-      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
-      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
-      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm']
-    ];
+  public static factory(bars:string[][]):ScoreChords {
+    //    // todo ajax get
+    //    var bars:string[][] = [
+    //      ['Fm', '', 'Fm', '', 'Fm', '', 'Fm', ''],
+    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
+    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
+    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
+    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
+    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm']
+    //    ];
 
     var scoreChords = new ScoreChords(_.map<string[],BarChords>(bars, bar => {
       return BarChords.factory(bar);
     }));
-    scoreChords.chordId = chordId;
     return scoreChords;
   }
 

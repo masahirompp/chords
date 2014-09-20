@@ -7,13 +7,13 @@ html.no-js(lang='ja')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     title client
     link(rel='shortcut icon', href='/favicon.ico')
-    //build:css(.) styles/vendor.css
+    //build:css(.) /styles/vendor.css
     //bower:css
-    link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap_.css')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap_.css')
     //endbower
     //endbuild
-    //build:css(.tmp) styles/main.css
-    link(rel='stylesheet', href='styles/main.css')
+    //build:css(.tmp) /styles/main.css
+    link(rel='stylesheet', href='/styles/main.css')
     //endbuild
   body
     //if lt IE 10
@@ -67,12 +67,12 @@ html.no-js(lang='ja')
         p
           span.glyphicon.glyphicon-heart
           | from the Yeoman team
-    //build:js(.) scripts/vendor.js
+    //build:js(.) /scripts/vendor.js
     //bower:js
-    script(src='bower_components/jquery/dist/jquery.js')
-    script(src='bower_components/underscore/underscore.js')
-    script(src='bower_components/d3/d3.js')
-    script(src='bower_components/requirejs/require.js')
+    script(src='/bower_components/jquery/dist/jquery.js')
+    script(src='/bower_components/underscore/underscore.js')
+    script(src='/bower_components/d3/d3.js')
+    script(src='/bower_components/requirejs/require.js')
     //endbower
     //endbuild
     script(type='text/javascript').
@@ -89,18 +89,18 @@ html.no-js(lang='ja')
       }(window, document, 'script', 'ga'));
       ga('create', 'UA-XXXXX-X');
       ga('send', 'pageview');
-    //build:js(.) scripts/plugins.js
-    script(src='bower_components/bootstrap/js/affix.js')
-    script(src='bower_components/bootstrap/js/alert.js')
-    script(src='bower_components/bootstrap/js/dropdown.js')
-    script(src='bower_components/bootstrap/js/tooltip.js')
-    script(src='bower_components/bootstrap/js/modal.js')
-    script(src='bower_components/bootstrap/js/transition.js')
-    script(src='bower_components/bootstrap/js/button.js')
-    script(src='bower_components/bootstrap/js/popover.js')
-    script(src='bower_components/bootstrap/js/carousel.js')
-    script(src='bower_components/bootstrap/js/scrollspy.js')
-    script(src='bower_components/bootstrap/js/collapse.js')
-    script(src='bower_components/bootstrap/js/tab.js')
+    //build:js(.) /scripts/plugins.js
+    script(src='/bower_components/bootstrap/js/affix.js')
+    script(src='/bower_components/bootstrap/js/alert.js')
+    script(src='/bower_components/bootstrap/js/dropdown.js')
+    script(src='/bower_components/bootstrap/js/tooltip.js')
+    script(src='/bower_components/bootstrap/js/modal.js')
+    script(src='/bower_components/bootstrap/js/transition.js')
+    script(src='/bower_components/bootstrap/js/button.js')
+    script(src='/bower_components/bootstrap/js/popover.js')
+    script(src='/bower_components/bootstrap/js/carousel.js')
+    script(src='/bower_components/bootstrap/js/scrollspy.js')
+    script(src='/bower_components/bootstrap/js/collapse.js')
+    script(src='/bower_components/bootstrap/js/tab.js')
     //endbuild
     block script

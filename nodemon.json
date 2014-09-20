@@ -1,0 +1,10 @@
+{
+  "verbose": true,
+  "ignore": [".tmp",
+             "app",
+             "dist",
+             "node_modules",
+             "test",
+             "typings",
+             "*.json"]
+}

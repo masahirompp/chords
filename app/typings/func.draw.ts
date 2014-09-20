@@ -1,5 +1,6 @@
 /// <reference path="../../typings/tsd.d.ts" />
 
+import ScoreDTO = require('./dto.score')
 import ScoreChords = require('./model.scoreChords')
 import StaffSettings = require('./model.staffSettings')
 import StaffHeight = require('./model.staffHeight')
@@ -13,9 +14,8 @@ import SvgDef = require('./vm.svgDef')
 import StaffDrawer = require('./vm.staffDrawer')
 import Scale = require('./util.scale')
 
-function draw():void {
+export function draw(data:ScoreDTO):void {
 
-  var scoreId:string = '20'; // urlからsongIdを取得する
   var settings:StaffSettings = new StaffSettings(); //nownow
 
   var height:StaffHeight = new StaffHeight(
@@ -43,13 +43,10 @@ function draw():void {
   var svgDef = new SvgDef();
   svgDef.init(settings, scale, clef, staffDef);
 
-  var chords = ScoreChords.factory(scoreId);
+  var chords = ScoreChords.factory(data.chords);
   var staffManager = new StaffManager(height, width);
   var d3Model = new D3Model(chords, staffManager);
 
   var drawer = new StaffDrawer(scale, d3Model);
   drawer.draw();
 }
-
-export = draw
-
