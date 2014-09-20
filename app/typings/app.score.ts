@@ -1,13 +1,12 @@
 /// <reference path="../../typings/tsd.d.ts" />
 
-require.config(<RequireConfig>{baseUrl: 'scripts'});
+require.config(<RequireConfig>{baseUrl: '/scripts'});
 
-import AjaxScore = require('./data.ajaxScore')
-import func = require('./func.draw')
-
-console.log('index');
-console.log('Running jQuery %s', $().jquery);
-
-$(function() {
+require([
+          './data.ajaxScore',
+          './func.draw'
+        ], (AjaxScore, func) => {
+  console.log('index');
+  console.log('Running jQuery %s', $().jquery);
   AjaxScore.getScoreChordsData(location.pathname, func.draw);
 });
