@@ -1,6 +1,6 @@
 interface BaseDTO<T> {
   success : boolean;
-  message : string;
+  messages : string[];
   data : T;
 }
 

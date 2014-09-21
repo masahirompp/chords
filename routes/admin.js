@@ -19,11 +19,19 @@ router.post('/', function(req, res, next) {
   var title = req.body.title;
   var description = req.body.description;
   if(req.body.isOriginal) {
-    model.Score.createNewOriginalScore('5402a919f68977bb2072b811', title, description, function(err, score) {
+    model.Score.createNewOriginalScore('5402a919f68977bb2072b811', title, description, function(err, score, chord) {
       if(err) {
         return next(err);
       }
-      res.json(score);
+      res.json({
+        success: true,
+        messages: [],
+        data: {
+          info: score,
+          chords: chord.chords,
+          option: chord.option
+        }
+      });
     });
   } else {
     model.Score.createNewExistingScore('5402a919f68977bb2072b811',

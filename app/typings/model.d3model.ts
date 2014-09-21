@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../typings/tsd.d.client.ts" />
 
 import IPoint = require('./interface.point')
 import BarPoint = require('./interface.barPoint')

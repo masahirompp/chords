@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../typings/tsd.d.client.ts" />
 
 import ScoreDTO = require('./dto.score')
 import ScoreChords = require('./model.scoreChords')

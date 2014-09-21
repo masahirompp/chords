@@ -3,7 +3,6 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../db');
-//var model = require('../model');
 
 /**
  * /api/user/:id GET
@@ -50,9 +49,31 @@ router.get('/:artist/:song', function(req, res) {
 /**
  * /api/:artist/:song/:id GET
  */
-router.get('/:artist/:song/:id', function(req, res) {
+router.get('/:artist/:song/:id', function(req, res, next) {
   var q = req.params;
-  res.json({artist: q.artist, song: q.song, index: q.id});
+  db.Score.where({
+    artistName: q.artist,
+    title: q.song,
+    scoreid: q.id + ''
+  }).findOne(function(err, score) {
+    if(err) {
+      return next(err);
+    }
+    db.Chord.where({scoreid: score.scoreid}).findOne(function(err, chord) {
+      if(err) {
+        return next(err);
+      }
+      res.json({
+        success: true,
+        messages: [],
+        data: {
+          info: score,
+          chords: chord.chords,
+          option: chord.option
+        }
+      });
+    });
+  });
 });
 
 module.exports = router;

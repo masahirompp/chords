@@ -1,6 +1,7 @@
 'use strict';
 var db = require('../db');
 var model = require('../model');
+var Q = require('q');
 var _ = require('underscore');
 var CONST = {
   ORIGINAL: true,
@@ -25,8 +26,9 @@ var generateScoreId = function(artistName, title, callback) {
   });
 };
 
-var Score = function(scoreDoc) {
+var Score = function(scoreDoc, chordDoc) {
   this.score = scoreDoc;
+  this.chord = chordDoc;
 };
 
 Score.createNewOriginalScore = function(authorid, title, description, callback) {
@@ -52,7 +54,12 @@ Score.createNewOriginalScore = function(authorid, title, description, callback) 
         CONST.STAR_DEFAULT,
         CONST.DRAFT,
         function(err, scoreDoc) {
-          callback(err, new Score(scoreDoc));
+          if(err) {
+            return callback(err);
+          }
+          db.Chord.createNewChord(scoreid, [], {}, function(err, chordDoc) {
+            callback(err, new Score(scoreDoc, chordDoc));
+          });
         });
     });
   });
@@ -64,11 +71,11 @@ Score.createNewExistingScore = function(authorid, artistid, artistName, songid, 
     if(err) {
       return callback(err);
     }
-    generateScoreId(artistName, title, function(err, url) {
+    generateScoreId(artistName, title, function(err, scoreid) {
       if(err) {
         return callback(err);
       }
-      db.Score.createNewScore(url,
+      db.Score.createNewScore('/' + artistName + '/' + title + '/' + scoreid,
         description,
         artistid,
         artistName,
@@ -80,7 +87,12 @@ Score.createNewExistingScore = function(authorid, artistid, artistName, songid, 
         CONST.STAR_DEFAULT,
         CONST.DRAFT,
         function(err, scoreDoc) {
-          callback(err, new Score(scoreDoc));
+          if(err) {
+            callback(err);
+          }
+          db.Chord.createNewChord(scoreid, [], {}, function(err, chordDoc) {
+            callback(err, new Score(scoreDoc, chordDoc));
+          });
         });
     });
   });

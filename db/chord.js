@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'), Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
 var Chord = new Schema({
-  scoreid: {type: ObjectId, ref: 'Author', require: true},
+  scoreid: {type: ObjectId, ref: 'Score', require: true},
   chords: {type: Array},
   option: {type: Schema.Types.Mixed, require: true},
   created: { type: Date, default: Date.now },
@@ -16,9 +16,9 @@ Chord.pre('save', function(next) {
   next();
 });
 
-Chord.statics.createNewScore = function(scoreid, chords, option, callback) {
+Chord.statics.createNewChord = function(scoreid, chords, option, callback) {
   var chord = new this({
-    scoreid: scoreid,
+    scoreid: scoreid + 0,
     chords: chords,
     option: option
   });

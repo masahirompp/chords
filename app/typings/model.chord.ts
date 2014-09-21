@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../typings/tsd.d.client.ts" />
 
 class Chord {
   private chordString:string;

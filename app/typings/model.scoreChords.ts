@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../typings/tsd.d.client.ts" />
 
 import List = require('./util.list')
 import Chord = require('./model.chord')
@@ -16,16 +16,6 @@ class ScoreChords extends List<BarChords> {
   }
 
   public static factory(bars:string[][]):ScoreChords {
-    //    // todo ajax get
-    //    var bars:string[][] = [
-    //      ['Fm', '', 'Fm', '', 'Fm', '', 'Fm', ''],
-    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
-    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
-    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
-    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm'],
-    //      ['Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm', 'Fm']
-    //    ];
-
     var scoreChords = new ScoreChords(_.map<string[],BarChords>(bars, bar => {
       return BarChords.factory(bar);
     }));

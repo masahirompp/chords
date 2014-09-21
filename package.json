@@ -19,6 +19,7 @@
     "multer": "latest",
     "passport": "latest",
     "passport-twitter": "latest",
+    "q": "^1.0.1",
     "serve-favicon": "latest",
     "static-favicon": "latest",
     "underscore": "latest"

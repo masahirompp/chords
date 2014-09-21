@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../typings/tsd.d.client.ts" />
 
 import BaseDTO = require('./dto.base')
 import ScoreDTO = require('./dto.score')
