@@ -12,8 +12,6 @@ var ChordSchema:mongoose.Schema = new mongoose.Schema({
   updated: { type: Date, default: Date.now }
 });
 
-var ChordDocumentModel:IChordDocumentModel = <IChordDocumentModel> mongoose.model('Chord', ChordSchema);
-
 ChordSchema.static('createNewChord',
   (scoreId:mongoose.Types.ObjectId, callback:(err:any, chord:IChordDocument)=>void) => {
     var chord = new ChordDocumentModel({
@@ -23,5 +21,7 @@ ChordSchema.static('createNewChord',
     });
     chord.save(callback);
   });
+
+var ChordDocumentModel:IChordDocumentModel = <IChordDocumentModel> mongoose.model('Chord', ChordSchema);
 
 export = ChordDocumentModel;

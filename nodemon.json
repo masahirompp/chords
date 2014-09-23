@@ -1,10 +1,7 @@
 {
   "verbose": true,
-  "ignore": [".tmp",
+  "ignore": [".*",
              "app",
-             "dist",
-             "node_modules",
-             "test",
-             "typings",
-             "*.json"]
+             "dist"],
+  "ext": "js jade"
 }

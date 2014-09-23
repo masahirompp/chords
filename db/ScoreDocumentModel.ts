@@ -22,8 +22,6 @@ var ScoreSchema:mongoose.Schema = new mongoose.Schema({
   updated: { type: Date, default: Date.now }
 });
 
-var ScoreDocumentModel:IScoreDocumentModel = <IScoreDocumentModel>mongoose.model('Score', ScoreSchema);
-
 ScoreSchema.static('createNewScore',
   (scoreNo:number,
    description:string,

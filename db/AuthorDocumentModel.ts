@@ -11,8 +11,6 @@ var AuthorSchema:mongoose.Schema = new mongoose.Schema({
   updated: { type: Date, default: Date.now }
 });
 
-var AuthorDocumentModel:IAuthorDocumentModel = <IAuthorDocumentModel>mongoose.model('Author', AuthorSchema);
-
 AuthorSchema.static('createNewAuthor',
   (name:string, email:string, callback:(err:any, result:IAuthorDocument)=>void) => {
     AuthorDocumentModel.findByName(name, (err:any, author:IAuthorDocument) => {
@@ -30,5 +28,7 @@ AuthorSchema.static('createNewAuthor',
 AuthorSchema.static('findByName', (name:string, callback:(err:any, result:IAuthorDocument)=>void)=> {
   AuthorDocumentModel.findOne({name: name}, callback);
 });
+
+var AuthorDocumentModel:IAuthorDocumentModel = <IAuthorDocumentModel>mongoose.model('Author', AuthorSchema);
 
 export = AuthorDocumentModel;

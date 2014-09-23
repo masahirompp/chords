@@ -1,7 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import db = require('../db/db');
-import Author = require('Author');
+import Author = require('./Author');
 import IAuthorDocument = require('../db/IAuthorDocument');
 import IScoreDocument = require('../db/IScoreDocument');
 import IChordDocument = require('../db/IChordDocument');
@@ -125,6 +125,7 @@ class Score {
       if(err) {
         callback(err);
       }
+      console.dir(score);
       db.Chord.findOne({
         scoreId: score._id
       }, (err:any, chord:IChordDocument) => {

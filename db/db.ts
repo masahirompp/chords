@@ -1,12 +1,12 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import mongoose = require('mongoose');
-import AuthorDocumentModel = require('AuthorDocumentModel');
-import ScoreDocumentModel = require('ScoreDocumentModel');
-import ChordDocumentModel = require('ChordDocumentModel');
-import IAuthorDocumentModel = require('IAuthorDocumentModel');
-import IScoreDocumentModel = require('IScoreDocumentModel');
-import IChordDocumentModel = require('IChordDocumentModel');
+import AuthorDocumentModel = require('./AuthorDocumentModel');
+import ScoreDocumentModel = require('./ScoreDocumentModel');
+import ChordDocumentModel = require('./ChordDocumentModel');
+import IAuthorDocumentModel = require('./IAuthorDocumentModel');
+import IScoreDocumentModel = require('./IScoreDocumentModel');
+import IChordDocumentModel = require('./IChordDocumentModel');
 
 class db {
 
