@@ -3,7 +3,7 @@
 import mongoose = require('mongoose');
 import IScoreDocument = require('IScoreDocument');
 import IScoreDocumentModel = require('IScoreDocumentModel');
-import UriUtil = require('../util/uriUtil');
+import UriUtil = require('../util/UriUtil');
 
 var ScoreSchema:mongoose.Schema = new mongoose.Schema({
   url: {type: String, require: true, unique: true},
