@@ -1,5 +1,5 @@
-import StaffType = require('./model.staffType');
-import Clef = require('./model.clef');
+import StaffType = require('./StaffType');
+import Clef = require('./Clef');
 
 class StaffSettings {
   // const

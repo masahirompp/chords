@@ -1,4 +1,4 @@
-import IPoint = require('./interface.point')
+import IPoint = require('./IPoint')
 
 interface IBarPoint extends IPoint {
   link:string

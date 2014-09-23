@@ -1,7 +1,7 @@
 require.config(<RequireConfig>{baseUrl: '/scripts'});
 
 require([
-          './data.ajaxScore',
+          './data/AjaxScore',
           './func.draw'
         ], (AjaxScore, func) => {
   console.log('index');

@@ -1,5 +1,5 @@
-import BaseDTO = require('./dto.base')
-import ScoreDTO = require('./dto.score')
+import BaseDTO = require('./../dto/BaseDTO')
+import ScoreDTO = require('./../dto/ScoreDTO')
 
 class AjaxScore {
   public static getScoreChordsData(uri:string, callback:(ScoreDTO)=>void) {

@@ -1,4 +1,4 @@
-import StaffTypeEnum = require('./model.staffTypeEnum')
+import StaffTypeEnum = require('./StaffTypeEnum')
 
 class StaffType {
 

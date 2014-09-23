@@ -150,7 +150,7 @@ module.exports = function(grunt) {
 
     typescript: {
       client: {
-        src: ['<%= config.app %>/typings/*.ts'],
+        src: ['<%= config.app %>/typings/{,*/}*.ts'],
         dest: '<%= config.app %>/scripts',
         options: {
           module: 'amd',

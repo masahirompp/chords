@@ -1,7 +1,7 @@
-/// <reference path="../../typings/underscore/underscore.d.ts" />
+/// <reference path="../../../typings/underscore/underscore.d.ts" />
 
-import List = require('./util.list')
-import Chord = require('./model.chord')
+import List = require('../util/List')
+import Chord = require('./Chord')
 
 class BarChords extends List<Chord> {
 

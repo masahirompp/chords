@@ -1,6 +1,6 @@
-import List = require('./util.list')
-import Chord = require('./model.chord')
-import BarChords = require('./model.barChords')
+import List = require('./../util/List')
+import Chord = require('./Chord')
+import BarChords = require('./BarChords')
 
 class ScoreChords extends List<BarChords> {
 

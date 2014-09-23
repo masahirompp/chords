@@ -1,9 +1,9 @@
-import StaffSettings = require('./model.staffSettings')
-import Scale = require('./util.scale')
-import Clef = require('./model.clef')
-import SvgStaffDef = require('./model.svgStaffDef')
+import StaffSettings = require('./../model/StaffSettings')
+import Scale = require('./../util/Scale')
+import Clef = require('./../model/Clef')
+import SvgStaffDef = require('./../model/SvgStaffDef')
 
-class SvgDef {
+class SvgDefDrawer {
 
   public init(settings:StaffSettings, scale:Scale, clef:Clef, staffDef:SvgStaffDef) {
     var $defs:D3.Selection = d3.select('#score').append('defs');
@@ -91,5 +91,5 @@ class SvgDef {
   }
 }
 
-export = SvgDef
+export = SvgDefDrawer
 

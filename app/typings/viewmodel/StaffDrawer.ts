@@ -1,7 +1,7 @@
-import BarPoint = require('./interface.barPoint')
-import ChordPoint = require('./interface.chordPoint')
-import Scale = require('./util.scale')
-import D3Model = require('./model.d3model')
+import BarPoint = require('./../interface/IBarPoint')
+import ChordPoint = require('./../interface/IChordPoint')
+import Scale = require('./../util/Scale')
+import D3Model = require('./../model/D3Model')
 
 class StaffDrawer {
   private scale:Scale;

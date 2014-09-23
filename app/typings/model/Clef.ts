@@ -1,5 +1,5 @@
-import IClef = require('./interface.clef')
-import ClefType = require('./model.clefTypeEnum')
+import IClef = require('./../interface/IClef')
+import ClefType = require('./CType')
 
 class Clef {
 

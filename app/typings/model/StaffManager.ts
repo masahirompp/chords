@@ -1,6 +1,6 @@
-import Point = require('./interface.point')
-import StaffHeight = require('model.staffHeight')
-import StaffWidth = require('model.staffWidth')
+import Point = require('./../interface/IPoint')
+import StaffHeight = require('StaffHeight')
+import StaffWidth = require('StaffWidth')
 
 class StaffManager {
 

@@ -1,4 +1,4 @@
-import StaffSettings = require('model.staffSettings')
+import StaffSettings = require('../model/StaffSettings')
 
 class ViewScale {
 

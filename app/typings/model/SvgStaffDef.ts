@@ -1,5 +1,5 @@
-import StaffType = require('./model.staffType')
-import ILinePoint = require('./interface.linePoint')
+import StaffType = require('./StaffType')
+import ILinePoint = require('./../interface/ILinePoint')
 
 class SvgStaffDef {
   private lineSpace:number;

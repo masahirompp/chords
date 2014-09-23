@@ -1,10 +1,10 @@
-import IPoint = require('./interface.point')
-import BarPoint = require('./interface.barPoint')
-import ChordPoint = require('./interface.chordPoint')
-import StaffManager = require('./model.staffManager')
-import Chord = require('./model.chord')
-import BarChords = require('./model.barChords')
-import ScoreChords = require('./model.scoreChords')
+import IPoint = require('./../interface/IPoint')
+import BarPoint = require('./../interface/IBarPoint')
+import ChordPoint = require('./../interface/IChordPoint')
+import StaffManager = require('./StaffManager')
+import Chord = require('./Chord')
+import BarChords = require('./BarChords')
+import ScoreChords = require('./ScoreChords')
 
 class D3Model {
   private _barPoints:BarPoint[] = [];

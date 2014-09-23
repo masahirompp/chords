@@ -1,4 +1,4 @@
-import StaffType = require('./model.staffType')
+import StaffType = require('./StaffType')
 
 class StaffHeight {
   // nownow
