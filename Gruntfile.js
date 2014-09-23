@@ -441,9 +441,13 @@ module.exports = function(grunt) {
         'watch'
       ]);
     });
-
   grunt.registerTask('server', function(target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
+    grunt.task.run([target ?
+                    ('serve:' + target) :
+                    'serve']);
+  });
+  grunt.registerTask('s', function(target) {
     grunt.task.run([target ?
                     ('serve:' + target) :
                     'serve']);
@@ -483,11 +487,18 @@ module.exports = function(grunt) {
     'htmlmin',
     'shell:cpdist'
   ]);
+  grunt.registerTask('b', function() {
+    grunt.task.run('build');
+  });
 
-  grunt.registerTask('cleanjs', [
+  // cleanup
+  grunt.registerTask('cleanup', [
     'clean:dist',
     'clean:server'
   ]);
+  grunt.registerTask('cu', function() {
+    grunt.task.run('cleanup');
+  });
 
   grunt.registerTask('default', [
     'clean:dist',
