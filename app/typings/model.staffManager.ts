@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 import Point = require('./interface.point')
 import StaffHeight = require('model.staffHeight')
 import StaffWidth = require('model.staffWidth')

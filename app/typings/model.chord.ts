@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 class Chord {
   private chordString:string;
 

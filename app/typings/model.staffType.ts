@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 import StaffTypeEnum = require('./model.staffTypeEnum')
 
 class StaffType {

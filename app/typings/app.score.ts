@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 require.config(<RequireConfig>{baseUrl: '/scripts'});
 
 require([

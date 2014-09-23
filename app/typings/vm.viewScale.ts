@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 import StaffSettings = require('model.staffSettings')
 
 class ViewScale {
@@ -31,12 +29,12 @@ class ViewScale {
     this._viewHeight = Math.ceil(this._height * this._ratio);
   }
 
-  private  applyView() {
+  private applyView() {
     $('#score')
       .attr({
-              width : this._viewWidth,
-              height : this._viewHeight
-            });
+        width: this._viewWidth,
+        height: this._viewHeight
+      });
   }
 
   get viewHeight():number {

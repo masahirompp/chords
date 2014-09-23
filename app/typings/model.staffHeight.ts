@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 import StaffType = require('./model.staffType')
 
 class StaffHeight {

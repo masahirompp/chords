@@ -1,4 +1,4 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
+/// <reference path="../../typings/underscore/underscore.d.ts" />
 
 import List = require('./util.list')
 import Chord = require('./model.chord')

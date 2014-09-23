@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 import StaffSettings = require('./model.staffSettings')
 import Scale = require('./util.scale')
 import Clef = require('./model.clef')

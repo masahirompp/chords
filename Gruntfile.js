@@ -22,22 +22,29 @@ module.exports = function(grunt) {
         tasks: ['jade',
                 'shell:cphtml']
       },
-      ts: {
+      tsClient: {
         files: ['<%= config.app %>/typings/{,*/}*.ts'],
-        tasks: ['typescript',
+        tasks: ['typescript:client',
                 'shell:cpjs']
       },
-      jshint: {
-        files: [
-          'app.js',
-          'db.js',
-          'model.js',
-          'db/**.js',
-          'models/**.js',
-          'routes/**.js'
-        ],
-        tasks: ['jshint']
+      tsServer: {
+        files: ['db/*.ts',
+                'model/*.ts',
+                'routes/*.ts',
+                'util/*.ts'],
+        tasks: ['typescript:server']
       },
+      //      jshint: {
+      //        files: [
+      //          'app.js',
+      //          'db.js',
+      //          'model.js',
+      //          'db/**.js',
+      //          'model/**.js',
+      //          'routes/**.js'
+      //        ],
+      //        tasks: ['jshint']
+      //      },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles',
@@ -62,7 +69,20 @@ module.exports = function(grunt) {
           }
         ]
       },
-      server: '.tmp'
+      server: {
+        files: [
+          {
+            dot: true,
+            src: [
+              '.tmp',
+              'db/*.js',
+              'model/*.js',
+              'routes/*.js',
+              'util/*.js'
+            ]
+          }
+        ]
+      }
     },
 
     // Make sure code styles are up to par and there are no obvious mistakes
@@ -74,11 +94,11 @@ module.exports = function(grunt) {
       all: [
         'Gruntfile.js',
         'app.js',
-        'db.js',
-        'model.js',
-        'db/**.js',
-        'models/**.js',
-        'routes/*.js',
+        //        'db.js',
+        //        'model.js',
+        //        'db/**.js',
+        //        'model/**.js',
+        //        'routes/*.js',
         'test/spec/{,*/}*.js'
       ]
     },
@@ -146,13 +166,27 @@ module.exports = function(grunt) {
     },
 
     typescript: {
-      app: {
-        src: ['<%= config.app %>/typings/{,*/}*.ts'],
+      client: {
+        src: ['<%= config.app %>/typings/*.ts',
+              '!<%= config.app %>/typings/interface.*.ts'],
         dest: '<%= config.app %>/scripts',
         options: {
-          module: 'amd', //or commonjs
-          target: 'es5', //or es3
+          module: 'amd',
+          target: 'es5',
           basePath: '<%= config.app %>/typings',
+          sourceMap: false,
+          declaration: false
+        }
+      },
+      server: {
+        src: ['db/*.ts',
+              'model/*.ts',
+              'routes/*.ts',
+              'util/*.ts',
+              '!db/I*.ts'],
+        options: {
+          module: 'commonjs',
+          target: 'es5',
           sourceMap: false,
           declaration: false
         }
@@ -418,7 +452,8 @@ module.exports = function(grunt) {
         'clean:server',
         //'wiredep',
         'jade',
-        'typescript',
+        'typescript:client',
+        'typescript:server',
         'concurrent:server',
         'autoprefixer',
         'shell:cpapp',
@@ -453,7 +488,7 @@ module.exports = function(grunt) {
     'jshint',
     'clean:dist',
     'jade',
-    'typescript',
+    'typescript:client',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
@@ -468,14 +503,19 @@ module.exports = function(grunt) {
     'shell:cpdist'
   ]);
 
+  grunt.registerTask('cleanjs', [
+    'clean:dist',
+    'clean:server'
+  ]);
+
   grunt.registerTask('default', [
     //'jade',
-    'typescript',
+    'typescript:client',
+    'typescript:server',
     'jshint',
     'watch'
     //'newer:jshint',
     //'test',
     //'build'
   ]);
-
 };

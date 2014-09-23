@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 import List = require('./util.list')
 import Chord = require('./model.chord')
 import BarChords = require('./model.barChords')

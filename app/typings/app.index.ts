@@ -1,4 +1,5 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
+/// <reference path="../../typings/requirejs/require.d.ts" />
+/// <reference path="../../typings/jquery/jquery.d.ts" />
 
 require.config(<RequireConfig>{baseUrl: '/scripts'});
 

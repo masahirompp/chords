@@ -1,5 +1,3 @@
-/// <reference path="../../typings/tsd.d.client.ts" />
-
 import IClef = require('./interface.clef')
 import ClefType = require('./model.clefTypeEnum')
 
@@ -14,7 +12,7 @@ class Clef {
     this._svgDef = svgDef;
   }
 
-  get id():string{
+  get id():string {
     return this._svgDef.id
   }
 

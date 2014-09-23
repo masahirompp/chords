@@ -12,7 +12,7 @@ var multer = require('multer');
 var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
 
-var db = require('./db');
+var db = require('./db/db');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
