@@ -2,7 +2,7 @@ require.config(<RequireConfig>{baseUrl: '/scripts'});
 
 require([
           './data/AjaxScore',
-          './func.draw'
+          './func/draw'
         ], (AjaxScore, func) => {
   console.log('index');
   console.log('Running jQuery %s', $().jquery);
