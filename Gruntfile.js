@@ -34,6 +34,7 @@ module.exports = function(grunt) {
       },
       tsserver: {
         files: ['db/*.ts',
+                'dto/*.ts',
                 'model/*.ts',
                 'routes/*.ts',
                 'util/*.ts'],
@@ -64,6 +65,7 @@ module.exports = function(grunt) {
             src: [
               '.tmp',
               'db/*.js',
+              'dto/*.js',
               'model/*.js',
               'routes/*.js',
               'util/*.js'
@@ -162,6 +164,7 @@ module.exports = function(grunt) {
       },
       server: {
         src: ['db/*.ts',
+              'dto/*.ts',
               'model/*.ts',
               'routes/*.ts',
               'util/*.ts'],
@@ -416,7 +419,17 @@ module.exports = function(grunt) {
             'cp -R dist/ public/'
           ].join('&&');
         }
+      },
+      cpdto: {
+        command: function() {
+          return [
+            'rm -r dto',
+            'mkdir dto',
+            'cp -R app/typings/dto/ dto/'
+          ].join('&&');
+        }
       }
+
     }
   });
 
@@ -432,6 +445,7 @@ module.exports = function(grunt) {
         'jshint',
         'clean:server',
         'jade',
+        'shell:cpdto',
         'typescript:client',
         'typescript:server',
         'concurrent:server',
@@ -471,7 +485,9 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'jshint',
     'clean:dist',
+    'clean:server',
     'jade',
+    'shell:cpdto',
     'typescript:server',
     'typescript:client',
     'useminPrepare',
@@ -494,7 +510,8 @@ module.exports = function(grunt) {
   // cleanup
   grunt.registerTask('cleanup', [
     'clean:dist',
-    'clean:server'
+    'clean:server',
+    'shell:cpdto'
   ]);
   grunt.registerTask('cu', function() {
     grunt.task.run('cleanup');
@@ -506,6 +523,7 @@ module.exports = function(grunt) {
     'jshint',
     'jade',
     'typescript:client',
+    'shell:cpdto',
     'typescript:server',
     'watch'
   ]);

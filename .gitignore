@@ -403,6 +403,7 @@ model/*.js
 routes/*.js
 util/*.js
 *.log
+/dto/
 
 build/
 
