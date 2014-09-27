@@ -57,15 +57,7 @@ router.get('/:artist/:song/:id', (req:express.Request, res:express.Response, nex
     if(err){
       return next(err);
     }
-    res.json({
-      success: true,
-      messages: [],
-      data: {
-        info: score,
-        chords: score.chord,
-        option: score.option
-      }
-    });
+    res.json(score.json);
   });
 });
 

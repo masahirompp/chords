@@ -13,7 +13,7 @@ class ScoreChords extends List<BarChords> {
     return scoreChords;
   }
 
-  public static factory(bars:string[][]):ScoreChords {
+  public static factory(bars:Array<Array<string>>):ScoreChords {
     var scoreChords = new ScoreChords(_.map<string[],BarChords>(bars, bar => {
       return BarChords.factory(bar);
     }));

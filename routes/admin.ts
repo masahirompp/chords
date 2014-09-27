@@ -24,15 +24,7 @@ router.post('/', (req:express.Request, res:express.Response, next:Function)=> {
       if(err) {
         return next(err);
       }
-      res.json({
-        success: true,
-        messages: [],
-        data: {
-          info: score,
-          chords: score.chord,
-          option: score.option
-        }
-      });
+      res.json(score.json);
     });
   } else {
     Score.createNewExistingScore('5402a919f68977bb2072b811',
@@ -45,15 +37,7 @@ router.post('/', (req:express.Request, res:express.Response, next:Function)=> {
         if(err) {
           return next(err);
         }
-        res.json({
-          success: true,
-          messages: [],
-          data: {
-            info: score,
-            chords: score.chord,
-            option: score.option
-          }
-        });
+        res.json(score.json);
       });
   }
 });

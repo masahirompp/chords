@@ -16,17 +16,17 @@ class DtoUtil<T> {
     }
   }
 
-  public addMessage(message:string):DtoUtil<T> {
+  addMessage(message:string):DtoUtil<T> {
     this._messages.push(message);
     return this;
   }
 
-  public setData(data:T):DtoUtil<T> {
+  setData(data:T):DtoUtil<T> {
     this._data = data;
     return this;
   }
 
-  public json():BaseDTO<T> {
+  get json():BaseDTO<T> {
     return <BaseDTO<T>> {
       success: this._success,
       messages: this._messages,
