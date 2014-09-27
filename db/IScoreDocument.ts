@@ -4,6 +4,7 @@ import mongoose = require('mongoose');
 
 interface IScoreDocument extends mongoose.Document {
   url: string;
+  scoreNo: number;
   description: string;
   artistId: string;
   artistName: string;

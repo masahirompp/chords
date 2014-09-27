@@ -5,6 +5,7 @@ import Author = require('./Author');
 import IAuthorDocument = require('../db/IAuthorDocument');
 import IScoreDocument = require('../db/IScoreDocument');
 import IChordDocument = require('../db/IChordDocument');
+import ScoreDTO = require('../dto/ScoreDTO');
 
 class Score {
   private _score:IScoreDocument;
@@ -23,14 +24,39 @@ class Score {
     return this._chord.option;
   }
 
-  private static CONST = {
-    ORIGINAL: true,
-    EXISTING: false,
-    STAR_DEFAULT: 0,
-    DRAFT: false
-  };
+  get json():ScoreDTO {
+    return <ScoreDTO> {
+      author: {
+        id: this._score.authorName,
+        name: this._score.authorName
+      },
+      artist: {
+        id: this._score.artistId,
+        name: this._score.artistName
+      },
+      song: {
+        id: this._score.songId,
+        name: this._score.songName
+      },
+      scoreNo: this._score.scoreNo,
+      star: this._score.star,
+      description: this._score.description,
+      isOriginal: this._score.isOriginal,
+      chords: this._chord.chords,
+      option: this._chord.option
+    }
+  }
 
-  private static generateScoreNo(artistName:string, songName:string, callback:(err:any, scoreNo?:number)=> void) {
+  private static
+    CONST = {
+      ORIGINAL: true,
+      EXISTING: false,
+      STAR_DEFAULT: 0,
+      DRAFT: false
+    };
+
+  private static
+  generateScoreNo(artistName:string, songName:string, callback:(err:any, scoreNo?:number)=> void) {
     db.Score.find({artistName: artistName, title: songName}, 'url', (err:any, results:IScoreDocument[])=> {
       if(err) {
         return callback(err);
@@ -45,10 +71,8 @@ class Score {
     });
   }
 
-  public static createNewOriginalScore(authorId:string,
-                                       songName:string,
-                                       description:string,
-                                       callback:(err:any, score?:Score)=>void) {
+  public static
+  createNewOriginalScore(authorId:string, songName:string, description:string, callback:(err:any, score?:Score)=>void) {
     Author.getById(authorId, (err:any, author?:IAuthorDocument) => {
         if(err) {
           return callback(err);
@@ -80,13 +104,14 @@ class Score {
   }
 
 
-  public static createNewExistingScore(authorId:string,
-                                       artistId:string,
-                                       artistName:string,
-                                       songId:string,
-                                       songName:string,
-                                       description:string,
-                                       callback:(err:any, score?:Score)=>void) {
+  public static
+  createNewExistingScore(authorId:string,
+                         artistId:string,
+                         artistName:string,
+                         songId:string,
+                         songName:string,
+                         description:string,
+                         callback:(err:any, score?:Score)=>void) {
     Author.getById(authorId, (err:any, author?:IAuthorDocument) => {
       if(err) {
         return callback(err);
@@ -116,7 +141,8 @@ class Score {
     });
   }
 
-  public static find(artistName:string, songName:string, scoreNo:number, callback:(err:any, score?:Score)=>void) {
+  public static
+  find(artistName:string, songName:string, scoreNo:number, callback:(err:any, score?:Score)=>void) {
     db.Score.findOne({
       artistName: artistName,
       songName: songName,
