@@ -3,6 +3,7 @@
 import express = require('express');
 import Author = require('../model/Author');
 import Score = require('../model/Score');
+import DtoUtil = require('../util/DtoUtil');
 
 var router:express.Router = express.Router();
 
@@ -21,7 +22,7 @@ router.post('/user/:id', (req:express.Request, res:express.Response, next:Functi
     if(err) {
       return next(err);
     }
-    res.json(author);
+    res.json(DtoUtil.makeSuccess(author.json));
   });
 });
 
@@ -57,7 +58,7 @@ router.get('/:artist/:song/:id', (req:express.Request, res:express.Response, nex
     if(err){
       return next(err);
     }
-    res.json(score.json);
+    res.json(DtoUtil.makeSuccess(score.json));
   });
 });
 

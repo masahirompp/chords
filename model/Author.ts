@@ -18,6 +18,13 @@ class Author {
     return !!this._author;
   }
 
+  get json():any{
+    return {
+      id: this._author.name,
+      name: this._author.name
+    }
+  }
+
   static createNewAuthor = (name:string, email:string, callback:(err:any, author:Author)=>void) => {
     db.Author.createNewAuthor(name, email, (err:any, author:IAuthorDocument)=> {
       callback(err, new Author(author));
