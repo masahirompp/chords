@@ -8,12 +8,11 @@ class SvgDefDrawer {
   public static append(settings:StaffSettings, scale:Scale, clef:Clef, staffDef:SvgStaffDef) {
     var $defs:D3.Selection = d3.select('#score').append('defs');
     var ratio:number = settings.lineSpace / settings.BASE_LINE_SPACE;
-    var xScale:D3.Scale.LinearScale = scale.getD3Scale();
 
     $defs.append('g')
       .attr({
               id: Clef.GClef.id,
-              transform: 'translate(0,' + xScale(clef.offset * ratio) + '),scale(' + xScale(clef.scale * ratio) +')'
+              transform: 'translate(0,' + scale.calc(clef.offset * ratio) + '),scale(' + scale.calc(clef.scale * ratio) +')'
             })
       .append('path')
       .attr({
@@ -25,7 +24,7 @@ class SvgDefDrawer {
     $defs.append('g')
       .attr({
               id: Clef.FClef.id,
-              transform: 'scale(' + xScale(clef.scale * ratio) + ')'
+              transform: 'scale(' + scale.calc(clef.scale * ratio) + ')'
             })
       .append('path')
       .attr({
@@ -44,16 +43,16 @@ class SvgDefDrawer {
       .append('line')
       .attr({
               x1: function(d) {
-                return xScale(d.x1);
+                return scale.calc(d.x1);
               },
               x2: function(d) {
-                return xScale(d.x2);
+                return scale.calc(d.x2);
               },
               y1: function(d) {
-                return xScale(d.y1);
+                return scale.calc(d.y1);
               },
               y2: function(d) {
-                return xScale(d.y2);
+                return scale.calc(d.y2);
               },
               stroke: 'black',
               class: 'staff_line'
@@ -74,16 +73,16 @@ class SvgDefDrawer {
       .append('line')
       .attr({
               x1: function(d) {
-                return xScale(d.x1);
+                return scale.calc(d.x1);
               },
               x2: function(d) {
-                return xScale(d.x2);
+                return scale.calc(d.x2);
               },
               y1: function(d) {
-                return xScale(d.y1);
+                return scale.calc(d.y1);
               },
               y2: function(d) {
-                return xScale(d.y2);
+                return scale.calc(d.y2);
               },
               stroke: 'black',
               class: 'staff_line'

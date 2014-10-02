@@ -4,18 +4,20 @@ class Scale {
 
   private _original:number;
   private _target:number;
+  private _scale:D3.Scale.LinearScale;
 
   constructor(original:number, target:number) {
     this._original = original;
     this._target = target;
-  }
-
-  public getD3Scale():D3.Scale.LinearScale {
-    return d3.scale.linear()
+    this._scale = d3.scale.linear()
       .domain([0,
                this._original])
       .range([0,
               this._target]);
+  }
+
+  public calc(x:number):number {
+    return Math.floor(this._scale(x));
   }
 
 }

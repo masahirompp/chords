@@ -4,19 +4,11 @@ import Scale = require('./../util/Scale')
 import D3Model = require('./../model/D3Model')
 
 class StaffDrawer {
-  private scale:Scale;
-  private d3model:D3Model;
 
-  constructor(scale:Scale, d3model:D3Model) {
-    this.scale = scale;
-    this.d3model = d3model;
-  }
-
-  public draw() {
+  public static draw(scale:Scale, d3model:D3Model) {
     var $svg:D3.Selection = d3.select('#score');
-    var xScale:D3.Scale.LinearScale = this.scale.getD3Scale();
-    var staffData:BarPoint[] = this.d3model.barPoints;
-    var chordData:ChordPoint[] = this.d3model.chordPoints;
+    var staffData:BarPoint[] = d3model.barPoints;
+    var chordData:ChordPoint[] = d3model.chordPoints;
 
     $svg.selectAll('use.bar')
       .data(staffData)
@@ -24,10 +16,10 @@ class StaffDrawer {
       .append('use')
       .attr({
               x: function(d) {
-                return xScale(d.x);
+                return scale.calc(d.x);
               },
               y: function(d) {
-                return xScale(d.y);
+                return scale.calc(d.y);
               },
               'xlink:href': function(d) {
                 return d.link;
@@ -41,10 +33,10 @@ class StaffDrawer {
       .append('text')
       .attr({
               x: function(d) {
-                return xScale(d.x);
+                return scale.calc(d.x);
               },
               y: function(d) {
-                return xScale(d.y);
+                return scale.calc(d.y);
               },
               class: 'chord'
             })
@@ -56,4 +48,3 @@ class StaffDrawer {
 }
 
 export  = StaffDrawer
-

@@ -45,9 +45,7 @@ class ScoreController {
     var chords = ScoreChords.factory(data.chords);
     var staffManager = new StaffManager(height, width);
     var d3Model = new D3Model(chords, staffManager);
-
-    var drawer = new StaffDrawer(scale, d3Model);
-    drawer.draw();
+    StaffDrawer.draw(scale, d3Model);
   }
 }
 

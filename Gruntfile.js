@@ -30,7 +30,8 @@ module.exports = function(grunt) {
       },
       tsclient: {
         files: ['<%= config.app %>/typings/{,*/}*.ts'],
-        tasks: ['typescript:client']
+        tasks: ['clean:dist',
+                'typescript:client']
       },
       tsserver: {
         files: ['db/*.ts',
@@ -507,8 +508,7 @@ module.exports = function(grunt) {
   // cleanup
   grunt.registerTask('cleanup', [
     'clean:dist',
-    'clean:server',
-  ]);
+    'clean:server']);
   grunt.registerTask('cu', function() {
     grunt.task.run('cleanup');
   });
@@ -518,6 +518,8 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('default', [
+    'clean:dist',
+    'clean:server',
     'typescript:client',
     'typescript:server',
     'watch'
