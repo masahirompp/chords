@@ -2,7 +2,6 @@
 
 import express = require('express');
 import Score = require('../model/Score')
-import DtoUtil = require('../util/DtoUtil');
 
 var router:express.Router = express.Router();
 
@@ -25,7 +24,7 @@ router.post('/', (req:express.Request, res:express.Response, next:Function)=> {
       if(err) {
         return next(err);
       }
-      res.json(DtoUtil.makeSuccess(score.json));
+      res.json(score.json);
     });
   } else {
     Score.createNewExistingScore('5402a919f68977bb2072b811',
@@ -38,7 +37,7 @@ router.post('/', (req:express.Request, res:express.Response, next:Function)=> {
         if(err) {
           return next(err);
         }
-        res.json(DtoUtil.makeSuccess(score.json));
+        res.json(score.json);
       });
   }
 });

@@ -352,6 +352,15 @@ module.exports = function(grunt) {
         cwd: '<%= config.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      },
+      dto: {
+        expand: true,
+        cwd: '<%= config.app %>/typings/dto',
+        src: '*.ts',
+        dest: 'dto',
+        rename: function(dest, src) {
+          return dest + '/_' + src;
+        }
       }
     },
 
@@ -419,17 +428,7 @@ module.exports = function(grunt) {
             'cp -R dist/ public/'
           ].join('&&');
         }
-      },
-      cpdto: {
-        command: function() {
-          return [
-            'rm -r dto',
-            'mkdir dto',
-            'cp -R app/typings/dto/ dto/'
-          ].join('&&');
-        }
       }
-
     }
   });
 
@@ -445,7 +444,6 @@ module.exports = function(grunt) {
         'jshint',
         'clean:server',
         'jade',
-        'shell:cpdto',
         'typescript:client',
         'typescript:server',
         'concurrent:server',
@@ -487,7 +485,6 @@ module.exports = function(grunt) {
     'clean:dist',
     'clean:server',
     'jade',
-    'shell:cpdto',
     'typescript:server',
     'typescript:client',
     'useminPrepare',
@@ -511,20 +508,21 @@ module.exports = function(grunt) {
   grunt.registerTask('cleanup', [
     'clean:dist',
     'clean:server',
-    'shell:cpdto'
   ]);
   grunt.registerTask('cu', function() {
     grunt.task.run('cleanup');
   });
 
+  grunt.registerTask('copydto', [
+    'copy:dto'
+  ]);
+
   grunt.registerTask('default', [
     'clean:dist',
     'clean:server',
-    'jshint',
-    'jade',
     'typescript:client',
-    'shell:cpdto',
     'typescript:server',
     'watch'
   ]);
+
 };

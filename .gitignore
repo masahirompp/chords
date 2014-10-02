@@ -402,8 +402,8 @@ db/*.js
 model/*.js
 routes/*.js
 util/*.js
+dto/*.js
 *.log
-/dto/
 
 build/
 

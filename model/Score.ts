@@ -5,7 +5,7 @@ import Author = require('./Author');
 import IAuthorDocument = require('../db/IAuthorDocument');
 import IScoreDocument = require('../db/IScoreDocument');
 import IChordDocument = require('../db/IChordDocument');
-import ScoreDTO = require('../dto/ScoreDTO');
+import ScoreDTO = require('../dto/_ScoreDTO');
 
 class Score {
   private _score:IScoreDocument;
