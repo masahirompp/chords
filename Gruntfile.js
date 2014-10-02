@@ -29,7 +29,7 @@ module.exports = function(grunt) {
                 'shell:cpcss']
       },
       tsclient: {
-        files: ['<%= config.app %>/typings/*.ts'],
+        files: ['<%= config.app %>/typings/{,*/}*.ts'],
         tasks: ['typescript:client']
       },
       tsserver: {
@@ -518,8 +518,6 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'clean:dist',
-    'clean:server',
     'typescript:client',
     'typescript:server',
     'watch'
