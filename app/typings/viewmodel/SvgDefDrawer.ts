@@ -5,7 +5,7 @@ import SvgStaffDef = require('./../model/SvgStaffDef')
 
 class SvgDefDrawer {
 
-  public init(settings:StaffSettings, scale:Scale, clef:Clef, staffDef:SvgStaffDef) {
+  public static append(settings:StaffSettings, scale:Scale, clef:Clef, staffDef:SvgStaffDef) {
     var $defs:D3.Selection = d3.select('#score').append('defs');
     var ratio:number = settings.lineSpace / settings.BASE_LINE_SPACE;
     var xScale:D3.Scale.LinearScale = scale.getD3Scale();

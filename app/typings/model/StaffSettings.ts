@@ -20,7 +20,7 @@ class StaffSettings {
   public hasKey:boolean;
   public hasBarNo:boolean;
 
-  constructor() {
+  constructor(option?:any) {
     this.staffSpace = 20;
     this.lineSpace = 2;
     this.underlineSpace = 2;
@@ -32,7 +32,21 @@ class StaffSettings {
     this.clef = Clef.GClef;
     this.hasKey = false;
     this.hasBarNo = false;
+    if(option){
+      if(option.staffSpace) this.staffSpace = option.staffSpace;
+      if(option.lineSpace) this.staffSpace = option.lineSpace;
+      if(option.underlineSpace) this.staffSpace = option.underlineSpace;
+      if(option.hasPageNo) this.staffSpace = option.hasPageNo;
+      if(option.staffType) this.staffSpace = option.staffType;
+      if(option.barCount) this.staffSpace = option.barCount;
+      if(option.musicalTime) this.staffSpace = option.musicalTime;
+      if(option.hasClef) this.staffSpace = option.hasClef;
+      if(option.clef) this.staffSpace = option.clef;
+      if(option.hasKey) this.staffSpace = option.hasKey;
+      if(option.hasBarNo) this.staffSpace = option.hasBarNo;
+    }
   }
+
 }
 
 export = StaffSettings
