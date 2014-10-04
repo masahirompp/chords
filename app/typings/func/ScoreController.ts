@@ -18,6 +18,10 @@ class ScoreController {
 
     var settings:StaffSettings = new StaffSettings(data.option);
 
+    var viewScale:ViewScale = new ViewScale(settings);
+    var scale:Scale = new Scale(settings.WIDTH, viewScale.viewWidth);
+    var clef = Clef.GClef;
+
     var height:StaffHeight = new StaffHeight(
       settings.HEIGHT,
       settings.staffSpace,
@@ -36,9 +40,6 @@ class ScoreController {
       settings.hasKey,
       settings.hasBarNo);
 
-    var viewScale:ViewScale = new ViewScale(settings);
-    var scale:Scale = new Scale(settings.WIDTH, viewScale.viewWidth);
-    var clef = Clef.GClef;
     var staffDef = new SvgStaffDef(settings.lineSpace, width.firstBarWidth, width.barWidth, settings.staffType);
     SvgDef.append(settings, scale, clef, staffDef);
 

@@ -6,7 +6,7 @@ class ViewScale {
   private _height:number;
   private _ratio:number;
   private _viewWidth:number;
-  private _viewHeight:number
+  private _viewHeight:number;
 
   constructor(settings:StaffSettings) {
     this._width = settings.WIDTH;

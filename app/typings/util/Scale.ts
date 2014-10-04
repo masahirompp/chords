@@ -17,7 +17,7 @@ class Scale {
   }
 
   public calc(x:number):number {
-    return Math.floor(this._scale(x));
+    return Math.floor(this._scale(x) * 100) / 100; // 小数点第二位まで求める。
   }
 
 }

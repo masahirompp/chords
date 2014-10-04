@@ -31,7 +31,8 @@ module.exports = function(grunt) {
       tsclient: {
         files: ['<%= config.app %>/typings/{,*/}*.ts'],
         tasks: ['clean:dist',
-                'typescript:client']
+                'typescript:client',
+                'shell:cpjs']
       },
       tsserver: {
         files: ['db/*.ts',
