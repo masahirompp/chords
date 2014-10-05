@@ -1,6 +1,7 @@
 import Point = require('./../interface/IPoint')
-import StaffHeight = require('StaffHeight')
-import StaffWidth = require('StaffWidth')
+import StaffSettings = require('./StaffSettings')
+import StaffHeight = require('./StaffHeight')
+import StaffWidth = require('./StaffWidth')
 
 class StaffManager {
 
@@ -10,41 +11,40 @@ class StaffManager {
   private _barIndex:number = 0;
   private _lineIndex:number = 0;
 
-  constructor(height:StaffHeight, width:StaffWidth) {
-    this._height = height;
-    this._width = width;
+  constructor(public settings:StaffSettings) {
+    this._height = new StaffHeight(settings);
+    this._width = new StaffWidth(settings);
   }
 
   public isFirstBar():boolean {
-    return this._barIndex === 1;
+    return this._barIndex % this.settings.barCount === 0;
   }
 
-  public  next() {
-    if(this._barIndex % this._width.barCount === 0) {
-      this._barIndex = 1;
+  public next():StaffManager {
+    this._barIndex++;
+    if(this.isFirstBar()) {
       this._lineIndex++;
-    } else {
-      this._barIndex++;
     }
+    return this;
   }
 
-  public nextLine() {
-    if(this._barIndex !== 1) {
-      this._barIndex = 1;
-      this._lineIndex++;
+  public nextLine():StaffManager {
+    while(!this.isFirstBar()) {
+      this.next();
     }
+    return this;
   }
 
   public getStaffPoint():Point {
     return {
-      x: this.getStaffPointX(),
-      y: this.getStaffPointY()
+      x: this._width.getOffsetLeft(this._barIndex),
+      y: this._height.getOffsetTopStaff(this._lineIndex)
     };
   }
 
   public getChordPoint():Point[] {
-    var xs:number[] = this.getChordPointXs();
-    var y:number = this.getChordPointY();
+    var xs:number[] = this._width.getOffsetLeftChordArray(this._lineIndex);
+    var y:number = this._height.getOffsetTopChord(this._lineIndex);
     return _.map<number,Point>(xs, x => {
       return {
         x: x,
@@ -53,32 +53,6 @@ class StaffManager {
     });
   }
 
-  private getStaffPointX():number {
-    if(this.isFirstBar()) {
-      return 0;
-    }
-    return this._width.firstBarWidth + (this._width.barWidth * (this._barIndex - 2));
-  }
-
-  private getStaffPointY():number {
-    return this._height.offsetTop + (this._height.staffLineHeight * this._lineIndex);
-  }
-
-  private getChordPointXs():number[] {
-    var base:number = this.getStaffPointX();
-    if(this.isFirstBar()) {
-      base = base + this._width.clefWidth;
-    }
-    var points:number[] = [];
-    for(var i:number = 0; i < this._width.musicalTime; i++) {
-      points.push(base + this._width.chordWidth * i);
-    }
-    return points;
-  }
-
-  private getChordPointY() {
-    return this.getStaffPointY() - this._height.underlineSpace;
-  }
 }
 
 export = StaffManager

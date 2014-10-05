@@ -1,66 +1,46 @@
+import StaffSettings = require('./../model/StaffSettings')
+
 class StaffWidth {
 
-  private _width:number;
-  private _clefWidth:number;
-  private _barCount:number;
-  private _musicalTime:number;
-  private _hasClef:boolean;
-  private _hasKey:boolean;
-
-  // nownow
-  private _keyWidth:number = 0;
-
-  private _paddingLeft:number;
+  private _staffWidth:number;
   private _barWidth:number;
   private _firstBarWidth:number;
   private _chordWidth:number;
 
-  constructor(width:number,
-              clefWidth:number,
-              barCount:number,
-              musicalTime:number,
-              hasClef:boolean,
-              hasKey:boolean) {
-    this._width = width;
-    this._clefWidth = clefWidth;
-    this._barCount = barCount;
-    this._musicalTime = musicalTime;
-    this._hasClef = hasClef;
-    this._hasKey = hasKey;
-
-    // calculated
-    this._paddingLeft = (hasClef ?
-                        clefWidth :
-                        0) + (hasKey ?
-                              this._keyWidth :
-                              0);
-    this._barWidth = (width - this._paddingLeft) / barCount;
-    this._firstBarWidth = this._paddingLeft + this._barWidth;
-    this._chordWidth = this._barWidth / musicalTime;
+  constructor(public settings:StaffSettings) {
+    this._staffWidth = StaffSettings.WIDTH - settings.margin.left - settings.margin.right;
+    this._barWidth = (this._staffWidth - settings.clefWidth) / settings.barCount;
+    this._firstBarWidth = this._barWidth + settings.clefWidth;
+    this._chordWidth = this._barWidth / settings.musicalTime;
   }
 
-  get barCount():number {
-    return this._barCount;
+  public getOffsetLeft(barIndex:number):number {
+    var index = barIndex % this.settings.barCount;
+    switch(index) {
+      case 0:
+        return this.settings.margin.left;
+      case 1:
+        return this.settings.margin.left + this._firstBarWidth;
+      default :
+        return this.settings.margin.left + this._firstBarWidth + this._barWidth * (index - 1);
+    }
   }
 
-  get musicalTime():number {
-    return this._musicalTime;
-  }
-
-  get barWidth():number {
-    return this._barWidth;
+  public getOffsetLeftChordArray(barIndex:number):number[] {
+    var base = this.getOffsetLeft(barIndex);
+    var offsets:number[] = [];
+    for(var i = 0; i < this.settings.musicalTime; i++) {
+      offsets.push(base + this._chordWidth * i);
+    }
+    return offsets;
   }
 
   get firstBarWidth():number {
     return this._firstBarWidth;
   }
 
-  get clefWidth():number {
-    return this._clefWidth;
-  }
-
-  get chordWidth():number {
-    return this._chordWidth;
+  get barWidth():number {
+    return this._barWidth;
   }
 }
 

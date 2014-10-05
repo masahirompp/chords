@@ -1,16 +1,14 @@
 import StaffType = require('./StaffType');
+import StaffTypeEnum = require('./StaffTypeEnum');
 import Clef = require('./Clef');
 
 class StaffSettings {
   // const
-  public HEIGHT:number = 297; //A4 based
-  public WIDTH:number = 210;  //A4 based
-  public TITLE_BAR_WIDTH:number = 50;
-  public SINGLE_STAFF_HEIGHT = 10;
-
-  // あとで消す
-  public BASE_CLEF_WIDTH = 10;
-  public BASE_LINE_SPACE = 10;
+  public static HEIGHT:number = 297; //A4 based
+  public static WIDTH:number = 210;  //A4 based
+  public static TITLE_BAR_WIDTH:number = 50;
+  public static SINGLE_STAFF_HEIGHT = 10;
+  public static BASE_LINE_SPACE = 2;
 
   public margin:{
     top:number;
@@ -27,12 +25,15 @@ class StaffSettings {
   public showMusicalTime:boolean;
 
   public staffType:StaffType;
-  public clef:Clef;
+  public clefId:string;
+  public _gClef:Clef;
+  public _fClef:Clef;
 
   public musicalTime:number;
   public underlineSpace:number;
   public lineSpace:number;
   public staffSpace:number;
+  public grandStaffSpace:number;
   public barCount:number;
 
   constructor(option?:any) {
@@ -52,12 +53,14 @@ class StaffSettings {
     this.showMusicalTime = false;
 
     this.staffType = StaffType.Line;
-    this.clef = Clef.GClef;
+    this._gClef = Clef.factory('GClef');
+    this._fClef = Clef.factory('FClef');
 
     this.musicalTime = 8;
     this.underlineSpace = 2;
-    this.lineSpace = 2;
+    this.lineSpace = StaffSettings.BASE_LINE_SPACE;
     this.staffSpace = 20;
+    this.grandStaffSpace = 20;
     this.barCount = 4;
 
     if(option) {
@@ -71,13 +74,50 @@ class StaffSettings {
       if(option.showMusicalTime) this.showMusicalTime = option.showMusicalTime;
 
       if(option.staffType) this.staffType = StaffType.factory(option.staffType);
-      if(option.clef) this.clef = Clef.factory(option.clef);
-
+      if(option.clefId) this.clefId = option.clefId;
       if(option.musicalTime) this.musicalTime = option.musicalTime;
       if(option.underlineSpace) this.underlineSpace = option.underlineSpace;
       if(option.lineSpace) this.lineSpace = option.lineSpace;
       if(option.staffSpace) this.staffSpace = option.staffSpace;
+      if(option.grandStaffSpace) this.grandStaffSpace = option.grandStaffSpace;
       if(option.barCount) this.barCount = option.barCount;
+    }
+  }
+
+  get clef():Clef {
+    if(this.clefId === 'GClef') {
+      return this._gClef;
+    }
+    return this._fClef;
+  }
+
+  get gClef():Clef {
+    return this._gClef;
+  }
+
+  get fClef():Clef {
+    return this._fClef;
+  }
+
+  get clefWidth():number {
+    switch(this.staffType.enum) {
+      case StaffTypeEnum.GrandStaff:
+        return this._gClef.width;
+      case StaffTypeEnum.Line:
+        return 0;
+      case StaffTypeEnum.Staff:
+        return this.clef.width;
+    }
+  }
+
+  get staffHeight():number {
+    switch(this.staffType.enum) {
+      case StaffTypeEnum.GrandStaff:
+        return this.lineSpace * 4 * 2 + this.grandStaffSpace;
+      case StaffTypeEnum.Line:
+        return StaffSettings.SINGLE_STAFF_HEIGHT;
+      case StaffTypeEnum.Staff:
+        return this.lineSpace * 4;
     }
   }
 

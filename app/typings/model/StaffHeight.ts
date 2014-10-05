@@ -1,65 +1,38 @@
+import StaffSettings = require('./../model/StaffSettings')
 import StaffType = require('./StaffType')
 
 class StaffHeight {
-  // nownow
-  private _titleSpace:number = 5;
-  private _firstChordSpace:number = 5;
 
-  private _height:number;
-  private _staffSpace:number;
-  private _lineSpace:number;
-  private _underlineSpace:number;
-  private _printMode:boolean;
-  private _staffType:StaffType;
-  private _offsetTop:number;
-  private _staffHeight:number;
-  private _staffLineHeight:number;
+  private _contentHeight:number;
+  private _rowHeight:number;
+  private _numberOfRowsPerPage:number;
 
-  constructor(height:number,
-              staffSpace:number,
-              lineSpace:number,
-              underlineSpace:number,
-              printMode:boolean,
-              staffType:StaffType) {
-    this._height = height;
-    this._staffSpace = staffSpace;
-    this._lineSpace = lineSpace;
-    this._underlineSpace = underlineSpace;
-    this._printMode = printMode;
-    this._staffType = staffType;
-
-    // 最初の五線譜までの距離
-    this._offsetTop = this._firstChordSpace + (printMode ?
-                                             this._titleSpace :
-                                             0);
-
-    // 五線部分の高さ
-    this._staffHeight = this.calcStaffHeight();
-
-    // 五線から次の五線までの距離
-    this._staffLineHeight = this._staffHeight + this._staffSpace;
+  constructor(public settings:StaffSettings) {
+    this._contentHeight = StaffSettings.HEIGHT - settings.margin.top - settings.margin.bottom;
+    this._rowHeight = settings.staffHeight + settings.staffSpace;
+    this._numberOfRowsPerPage = Math.floor(this._contentHeight / this._rowHeight);
   }
 
-  get offsetTop():number {
-    return this._offsetTop
+  public getPageIndex(lineIndex:number):number {
+    return Math.floor(lineIndex / this._numberOfRowsPerPage);
   }
 
-  get staffLineHeight():number {
-    return this._staffLineHeight;
+  public getOffsetTopStaff(lineIndex:number):number {
+    return this.settings.margin.top + this._rowHeight * lineIndex;
   }
 
-  get underlineSpace():number {
-    return this._underlineSpace;
+  public getOffsetTopChord(lineIndex:number):number {
+    return this.getOffsetTopStaff(lineIndex) - this.settings.underlineSpace;
   }
 
-  private calcStaffHeight():number {
-    switch(this._staffType) {
-      case StaffType.GrandStaff:
-      case StaffType.Staff:
-      case StaffType.Line:
-        return this._lineSpace * 4;
-    }
+  public getOffsetTopStaffWithinCurrentPage(lineIndex:number):number {
+    return this.getOffsetTopStaff(lineIndex % this._numberOfRowsPerPage);
   }
+
+  public getOffsetTopChordWithinCurrentPage(lineIndex:number):number {
+    return this.getOffsetTopChord(lineIndex % this._numberOfRowsPerPage);
+  }
+
 }
 
 export = StaffHeight

@@ -1,48 +1,61 @@
+import StaffSettings = require('./../model/StaffSettings')
 import StaffType = require('./StaffType')
+import StaffWidth = require('./StaffWidth')
+import Clef = require('./Clef')
 import ILinePoint = require('./../interface/ILinePoint')
 
 class SvgStaffDef {
-  private lineSpace:number;
-  private firstBarWidth:number;
-  private barWidth:number;
-  private staffType:StaffType;
+  private _width:StaffWidth;
 
-  constructor(lineSpace:number, firstBarWidth:number, barWidth:number, staffType:StaffType) {
-    this.lineSpace = lineSpace;
-    this.firstBarWidth = firstBarWidth;
-    this.barWidth = barWidth;
-    this.staffType = staffType;
+  constructor(public settings:StaffSettings) {
+    this._width = new StaffWidth(settings);
   }
 
   public getFirstBarDef():ILinePoint[] {
-    var defs:ILinePoint[] = this.getBarLineDef(this.lineSpace, this.firstBarWidth, this.staffType);
+    var defs:ILinePoint[] = SvgStaffDef.getBarLineDef(this.settings.lineSpace,
+      this._width.firstBarWidth,
+      this.settings.staffType);
     defs.push({
-                x1 : 0,
-                x2 : 0,
-                y1 : 0,
-                y2 : this.lineSpace * 4
-              });
+      x1: 0,
+      x2: 0,
+      y1: 0,
+      y2: this.settings.lineSpace * 4
+    });
     defs.push({
-                x1 : this.firstBarWidth,
-                x2 : this.firstBarWidth,
-                y1 : 0,
-                y2 : this.lineSpace * 4
-              });
+      x1: this._width.firstBarWidth,
+      x2: this._width.firstBarWidth,
+      y1: 0,
+      y2: this.settings.lineSpace * 4
+    });
     return defs;
   }
 
   public getBarDef():ILinePoint[] {
-    var defs:ILinePoint[] = this.getBarLineDef(this.lineSpace, this.barWidth, this.staffType);
+    var defs:ILinePoint[] = SvgStaffDef.getBarLineDef(this.settings.lineSpace,
+      this._width.barWidth,
+      this.settings.staffType);
     defs.push({
-                x1 : this.barWidth,
-                x2 : this.barWidth,
-                y1 : 0,
-                y2 : this.lineSpace * 4
-              });
+      x1: this._width.barWidth,
+      x2: this._width.barWidth,
+      y1: 0,
+      y2: this.settings.lineSpace * 4
+    });
     return defs;
   }
 
-  private getBarLineDef(lineSpace:number, width:number, staffType:StaffType):ILinePoint[] {
+  get clef():Clef {
+    return this.settings.clef;
+  }
+
+  get gClef():Clef {
+    return this.settings.gClef;
+  }
+
+  get fClef():Clef {
+    return this.settings.fClef;
+  }
+
+  private static getBarLineDef(lineSpace:number, width:number, staffType:StaffType):ILinePoint[] {
     switch(staffType) {
       // TODO
       case StaffType.Line:
@@ -52,15 +65,15 @@ class SvgStaffDef {
     }
   }
 
-  private getLineDefStaff(lineSpace:number, width:number):ILinePoint[] {
+  private static getLineDefStaff(lineSpace:number, width:number):ILinePoint[] {
     var lineDef:ILinePoint[] = [];
     for(var i = 0; i < 5; i++) {
       lineDef.push({
-                     x1 : 0,
-                     x2 : width,
-                     y1 : lineSpace * i,
-                     y2 : lineSpace * i
-                   });
+        x1: 0,
+        x2: width,
+        y1: lineSpace * i,
+        y2: lineSpace * i
+      });
     }
     return lineDef;
   }

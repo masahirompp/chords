@@ -1,4 +1,5 @@
 import StaffSettings = require('../model/StaffSettings')
+import Scale = require('./../util/Scale')
 
 class ViewScale {
 
@@ -7,20 +8,26 @@ class ViewScale {
   private _ratio:number;
   private _viewWidth:number;
   private _viewHeight:number;
+  private _scale:Scale;
 
-  constructor(settings:StaffSettings) {
-    this._width = settings.WIDTH;
-    this._height = settings.HEIGHT;
+  constructor() {
+    this._width = StaffSettings.WIDTH;
+    this._height = StaffSettings.HEIGHT;
     this._ratio = 1;
-    this._viewWidth = settings.WIDTH;
-    this._viewHeight = settings.HEIGHT;
+    this._viewWidth = StaffSettings.WIDTH;
+    this._viewHeight = StaffSettings.HEIGHT;
     this.resize();
+    this._scale = new Scale(StaffSettings.WIDTH, this._viewWidth);
   }
 
   public resize():ViewScale {
     this.load();
     this.applyView();
     return this;
+  }
+
+  public calc(x:number):number {
+    return this._scale.calc(x);
   }
 
   private load() {
@@ -43,10 +50,6 @@ class ViewScale {
 
   get viewWidth():number {
     return this._viewWidth;
-  }
-
-  get ratio():number {
-    return this._ratio;
   }
 }
 
