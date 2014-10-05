@@ -15,16 +15,16 @@ class StaffDrawer {
       .enter()
       .append('use')
       .attr({
-        x: function(d) {
+        x: (d:BarPoint) => {
           return viewScale.calc(d.x);
         },
-        y: function(d) {
+        y: (d:BarPoint) => {
           return viewScale.calc(d.y);
         },
         'xlink:href': function(d) {
           return d.link;
         },
-        class: 'bar'
+        'class': 'bar'
       });
 
     $svg.selectAll('text.chord')
@@ -32,15 +32,18 @@ class StaffDrawer {
       .enter()
       .append('text')
       .attr({
-        x: function(d) {
+        x: (d:ChordPoint) => {
           return viewScale.calc(d.x);
         },
-        y: function(d) {
+        y: (d:ChordPoint) => {
           return viewScale.calc(d.y);
         },
-        class: 'chord'
+        'class': 'chord',
+        'font-size': ()=> {
+          return viewScale.floor(4) + 'px';
+        }
       })
-      .text(function(d) {
+      .text((d:ChordPoint) => {
         return d.chord;
       });
 

@@ -41,16 +41,16 @@ class SvgDefDrawer {
       .enter()
       .append('line')
       .attr({
-        x1: function(d) {
+        x1: (d) => {
           return viewScale.calc(d.x1);
         },
-        x2: function(d) {
+        x2: (d) => {
           return viewScale.calc(d.x2);
         },
-        y1: function(d) {
+        y1: (d) => {
           return viewScale.calc(d.y1);
         },
-        y2: function(d) {
+        y2: (d) => {
           return viewScale.calc(d.y2);
         },
         stroke: 'black',
@@ -71,16 +71,16 @@ class SvgDefDrawer {
       .enter()
       .append('line')
       .attr({
-        x1: function(d) {
+        x1: (d) => {
           return viewScale.calc(d.x1);
         },
-        x2: function(d) {
+        x2: (d) => {
           return viewScale.calc(d.x2);
         },
-        y1: function(d) {
+        y1: (d) => {
           return viewScale.calc(d.y1);
         },
-        y2: function(d) {
+        y2: (d) => {
           return viewScale.calc(d.y2);
         },
         stroke: 'black',
