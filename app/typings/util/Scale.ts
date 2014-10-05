@@ -20,6 +20,10 @@ class Scale {
     return Math.floor(this._scale(x) * 100) / 100; // 小数点第二位まで求める。
   }
 
+  public floor(x:number):number {
+    return Math.floor(this._scale(x));
+  }
+
 }
 
 export = Scale

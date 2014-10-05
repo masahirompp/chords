@@ -30,6 +30,10 @@ class ViewScale {
     return this._scale.calc(x);
   }
 
+  public floor(x:number):number {
+    return this._scale.floor(x);
+  }
+
   private load() {
     this._viewWidth = $('#content-score').width();
     this._ratio = this._viewWidth / this._width;
