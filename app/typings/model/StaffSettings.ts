@@ -53,6 +53,7 @@ class StaffSettings {
     this.showMusicalTime = false;
 
     this.staffType = StaffType.Line;
+    this.clefId = 'GClef';
     this._gClef = Clef.factory('GClef');
     this._fClef = Clef.factory('FClef');
 
