@@ -10,7 +10,6 @@ class StaffHeight {
   private _lineSpace:number;
   private _underlineSpace:number;
   private _printMode:boolean;
-  private _hasPageNo:boolean;
   private _staffType:StaffType;
   private _offsetTop:number;
   private _staffHeight:number;
@@ -21,14 +20,12 @@ class StaffHeight {
               lineSpace:number,
               underlineSpace:number,
               printMode:boolean,
-              hasPageNo:boolean,
               staffType:StaffType) {
     this._height = height;
     this._staffSpace = staffSpace;
     this._lineSpace = lineSpace;
     this._underlineSpace = underlineSpace;
     this._printMode = printMode;
-    this._hasPageNo = hasPageNo;
     this._staffType = staffType;
 
     // 最初の五線譜までの距離

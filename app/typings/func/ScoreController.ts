@@ -28,7 +28,6 @@ class ScoreController {
       settings.lineSpace,
       settings.underlineSpace,
       true, //printMode,
-      settings.hasPageNo,
       settings.staffType);
 
     var width:StaffWidth = new StaffWidth(
@@ -36,9 +35,8 @@ class ScoreController {
       settings.BASE_CLEF_WIDTH,
       settings.barCount,
       settings.musicalTime,
-      settings.hasClef,
-      settings.hasKey,
-      settings.hasBarNo);
+      settings.showClef,
+      settings.showKeySignature);
 
     var staffDef = new SvgStaffDef(settings.lineSpace, width.firstBarWidth, width.barWidth, settings.staffType);
     SvgDef.append(settings, scale, clef, staffDef);

@@ -6,7 +6,6 @@ class StaffWidth {
   private _musicalTime:number;
   private _hasClef:boolean;
   private _hasKey:boolean;
-  private _hasBarNo:boolean;
 
   // nownow
   private _keyWidth:number = 0;
@@ -21,15 +20,13 @@ class StaffWidth {
               barCount:number,
               musicalTime:number,
               hasClef:boolean,
-              hasKey:boolean,
-              hasBarNo:boolean) {
+              hasKey:boolean) {
     this._width = width;
     this._clefWidth = clefWidth;
     this._barCount = barCount;
     this._musicalTime = musicalTime;
     this._hasClef = hasClef;
     this._hasKey = hasKey;
-    this._hasBarNo = hasBarNo;
 
     // calculated
     this._paddingLeft = (hasClef ?

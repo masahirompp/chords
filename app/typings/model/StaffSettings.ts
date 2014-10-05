@@ -12,42 +12,72 @@ class StaffSettings {
   public BASE_CLEF_WIDTH = 10;
   public BASE_LINE_SPACE = 10;
 
-  public staffSpace:number;
-  public lineSpace:number;
-  public underlineSpace:number;
-  public hasPageNo:boolean;
+  public margin:{
+    top:number;
+    bottom:number;
+    left:number;
+    right:number;
+  };
+
+  public offsetTitle:number;
+  public offsetSection:number;
+
+  public showClef:boolean;
+  public showKeySignature:boolean;
+  public showMusicalTime:boolean;
+
   public staffType:StaffType;
-  public barCount:number;
-  public musicalTime:number;
-  public hasClef:boolean;
   public clef:Clef;
-  public hasKey:boolean;
-  public hasBarNo:boolean;
+
+  public musicalTime:number;
+  public underlineSpace:number;
+  public lineSpace:number;
+  public staffSpace:number;
+  public barCount:number;
 
   constructor(option?:any) {
-    this.staffSpace = 20;
-    this.lineSpace = 2;
-    this.underlineSpace = 2;
-    this.hasPageNo = true;
+
+    this.margin = {
+      top: 20,
+      bottom: 20,
+      left: 20,
+      right: 20
+    };
+
+    this.offsetTitle = 50;
+    this.offsetSection = 30;
+
+    this.showClef = true;
+    this.showKeySignature = false;
+    this.showMusicalTime = false;
+
     this.staffType = StaffType.Line;
-    this.barCount = 4;
-    this.musicalTime = 8;
-    this.hasClef = true;
     this.clef = Clef.GClef;
-    this.hasKey = false;
-    this.hasBarNo = false;
-    if(option){
-      if(option.staffSpace) this.staffSpace = option.staffSpace;
-      if(option.lineSpace) this.lineSpace = option.lineSpace;
-      if(option.underlineSpace) this.underlineSpace = option.underlineSpace;
-      if(option.hasPageNo) this.hasPageNo = option.hasPageNo;
+
+    this.musicalTime = 8;
+    this.underlineSpace = 2;
+    this.lineSpace = 2;
+    this.staffSpace = 20;
+    this.barCount = 4;
+
+    if(option) {
+      if(option.margin) this.margin = option.margin;
+
+      if(option.offsetTitle) this.offsetTitle = option.offsetTitle;
+      if(option.offsetSection) this.offsetSection = option.offsetSection;
+
+      if(option.showClef) this.showClef = option.showClef;
+      if(option.showKeySignature) this.showKeySignature = option.showKeySignature;
+      if(option.showMusicalTime) this.showMusicalTime = option.showMusicalTime;
+
       if(option.staffType) this.staffType = StaffType.factory(option.staffType);
-      if(option.barCount) this.barCount = option.barCount;
-      if(option.musicalTime) this.musicalTime = option.musicalTime;
-      if(option.hasClef) this.hasClef = option.hasClef;
       if(option.clef) this.clef = Clef.factory(option.clef);
-      if(option.hasKey) this.hasKey = option.hasKey;
-      if(option.hasBarNo) this.hasBarNo = option.hasBarNo;
+
+      if(option.musicalTime) this.musicalTime = option.musicalTime;
+      if(option.underlineSpace) this.underlineSpace = option.underlineSpace;
+      if(option.lineSpace) this.lineSpace = option.lineSpace;
+      if(option.staffSpace) this.staffSpace = option.staffSpace;
+      if(option.barCount) this.barCount = option.barCount;
     }
   }
 
