@@ -40,7 +40,7 @@ class StaffDrawer {
         },
         'class': 'chord',
         'font-size': ()=> {
-          return viewScale.floor(4) + 'px';
+          return viewScale.floor(d3model.fontSize) + 'px';
         }
       })
       .text((d:ChordPoint) => {

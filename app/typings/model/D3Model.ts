@@ -10,7 +10,7 @@ class D3Model {
   private _barPoints:BarPoint[] = [];
   private _chordPoints:ChordPoint[] = [];
 
-  constructor(scoreChords:ScoreChords, staffManager:StaffManager) {
+  constructor(public scoreChords:ScoreChords, public staffManager:StaffManager) {
     for(var i:number = 0; i < scoreChords.size(); i++) {
       staffManager.next();
 
@@ -45,6 +45,10 @@ class D3Model {
 
   get chordPoints():ChordPoint[] {
     return this._chordPoints;
+  }
+
+  get fontSize():number {
+    return this.staffManager.settings.fontSize;
   }
 }
 

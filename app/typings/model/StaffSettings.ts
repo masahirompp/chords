@@ -4,11 +4,11 @@ import Clef = require('./Clef');
 
 class StaffSettings {
   // const
-  public static HEIGHT:number = 297; //A4 based
-  public static WIDTH:number = 210;  //A4 based
-  public static TITLE_BAR_WIDTH:number = 50;
-  public static SINGLE_STAFF_HEIGHT = 10;
-  public static BASE_LINE_SPACE = 2;
+  public static HEIGHT:number = 2970; //A4 based
+  public static WIDTH:number = 2100;  //A4 based
+  public static TITLE_BAR_WIDTH:number = 500;
+  public static SINGLE_STAFF_HEIGHT = 100;
+  public static BASE_LINE_SPACE = 20;
 
   public margin:{
     top:number;
@@ -36,17 +36,19 @@ class StaffSettings {
   public grandStaffSpace:number;
   public barCount:number;
 
+  public fontSize:number;
+
   constructor(option?:any) {
 
     this.margin = {
-      top: 20,
-      bottom: 20,
-      left: 20,
-      right: 20
+      top: 200,
+      bottom: 200,
+      left: 200,
+      right: 200
     };
 
-    this.offsetTitle = 50;
-    this.offsetSection = 30;
+    this.offsetTitle = 100;
+    this.offsetSection = 100;
 
     this.showClef = true;
     this.showKeySignature = false;
@@ -58,11 +60,13 @@ class StaffSettings {
     this._fClef = Clef.factory('FClef');
 
     this.musicalTime = 8;
-    this.underlineSpace = 2;
+    this.underlineSpace = 20;
     this.lineSpace = StaffSettings.BASE_LINE_SPACE;
-    this.staffSpace = 20;
-    this.grandStaffSpace = 20;
+    this.staffSpace = 200;
+    this.grandStaffSpace = 200;
     this.barCount = 4;
+
+    this.fontSize = 45;
 
     if(option) {
       if(option.margin) this.margin = option.margin;
@@ -76,12 +80,15 @@ class StaffSettings {
 
       if(option.staffType) this.staffType = StaffType.factory(option.staffType);
       if(option.clefId) this.clefId = option.clefId;
+
       if(option.musicalTime) this.musicalTime = option.musicalTime;
       if(option.underlineSpace) this.underlineSpace = option.underlineSpace;
       if(option.lineSpace) this.lineSpace = option.lineSpace;
       if(option.staffSpace) this.staffSpace = option.staffSpace;
       if(option.grandStaffSpace) this.grandStaffSpace = option.grandStaffSpace;
       if(option.barCount) this.barCount = option.barCount;
+
+      if(option.fontSize) this.fontSize = option.fontSize;
     }
   }
 
