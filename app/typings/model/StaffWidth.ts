@@ -9,8 +9,8 @@ class StaffWidth {
 
   constructor(public settings:StaffSettings) {
     this._staffWidth = StaffSettings.WIDTH - settings.margin.left - settings.margin.right;
-    this._barWidth = (this._staffWidth - settings.clefWidth) / settings.barCount;
-    this._firstBarWidth = this._barWidth + settings.clefWidth;
+    this._barWidth = (this._staffWidth - settings.clef.width) / settings.barCount;
+    this._firstBarWidth = this._barWidth + settings.clef.width;
     this._chordWidth = this._barWidth / settings.musicalTime;
   }
 
@@ -28,6 +28,9 @@ class StaffWidth {
 
   public getOffsetLeftChordArray(barIndex:number):number[] {
     var base = this.getOffsetLeft(barIndex);
+    if(barIndex % this.settings.barCount === 0) {
+      base = base + this.settings.clef.width;
+    }
     var offsets:number[] = [];
     for(var i = 0; i < this.settings.musicalTime; i++) {
       offsets.push(base + this._chordWidth * i);

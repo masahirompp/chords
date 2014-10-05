@@ -8,8 +8,8 @@ class StaffManager {
   private _height:StaffHeight;
   private _width:StaffWidth;
 
-  private _barIndex:number = 0;
-  private _lineIndex:number = 0;
+  private _barIndex:number = -1;
+  private _lineIndex:number = -1;
 
   constructor(public settings:StaffSettings) {
     this._height = new StaffHeight(settings);
@@ -43,7 +43,7 @@ class StaffManager {
   }
 
   public getChordPoint():Point[] {
-    var xs:number[] = this._width.getOffsetLeftChordArray(this._lineIndex);
+    var xs:number[] = this._width.getOffsetLeftChordArray(this._barIndex);
     var y:number = this._height.getOffsetTopChord(this._lineIndex);
     return _.map<number,Point>(xs, x => {
       return {

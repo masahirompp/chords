@@ -99,17 +99,6 @@ class StaffSettings {
     return this._fClef;
   }
 
-  get clefWidth():number {
-    switch(this.staffType.enum) {
-      case StaffTypeEnum.GrandStaff:
-        return this._gClef.width;
-      case StaffTypeEnum.Line:
-        return 0;
-      case StaffTypeEnum.Staff:
-        return this.clef.width;
-    }
-  }
-
   get staffHeight():number {
     switch(this.staffType.enum) {
       case StaffTypeEnum.GrandStaff:
