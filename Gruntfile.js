@@ -411,7 +411,7 @@ module.exports = function(grunt) {
       cpjs: {
         command: function() {
           return [
-            'cp -f app/scripts/*.js public/scripts/'
+            'cp -r app/scripts/ public/scripts/'
           ].join('&&');
         }
       },
