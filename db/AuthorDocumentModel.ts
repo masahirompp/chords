@@ -1,5 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
+import Q = require('q');
 import mongoose = require('mongoose');
 import IAuthorDocument = require('IAuthorDocument');
 import IAuthorDocumentModel = require('IAuthorDocumentModel');
@@ -12,21 +13,33 @@ var AuthorSchema:mongoose.Schema = new mongoose.Schema({
 });
 
 AuthorSchema.static('createNewAuthor',
-  (name:string, email:string, callback:(err:any, result:IAuthorDocument)=>void) => {
-    AuthorDocumentModel.findByName(name, (err:any, author:IAuthorDocument) => {
-      if(err) {
-        return callback(err, null);
-      }
-      if(author) {
-        return callback(new Error('already exists.'), author);
-      }
-      author = <IAuthorDocument>new AuthorDocumentModel({name: name, email: email});
-      author.save(callback);
-    });
+  (name:string, email:string):Q.Promise<IAuthorDocument> => {
+
+    var d = Q.defer<IAuthorDocument>();
+
+    AuthorDocumentModel.findByName(name)
+      .then((author:IAuthorDocument) => {
+        if(author) {
+          d.reject(new Error('already exists.'));
+          return;
+        }
+        author = <IAuthorDocument>new AuthorDocumentModel({name: name, email: email});
+        author.save((err) => {
+          err ? d.reject(err) : d.resolve(author);
+        });
+      });
+
+    return d.promise;
   });
 
-AuthorSchema.static('findByName', (name:string, callback:(err:any, result:IAuthorDocument)=>void)=> {
-  AuthorDocumentModel.findOne({name: name}, callback);
+AuthorSchema.static('findByName', (name:string):Q.Promise<IAuthorDocument> => {
+  var d = Q.defer<IAuthorDocument>();
+
+  AuthorDocumentModel.findOne({name: name}, (err, author:IAuthorDocument) => {
+    err ? d.reject(err) : d.resolve(author);
+  });
+
+  return d.promise;
 });
 
 var AuthorDocumentModel:IAuthorDocumentModel = <IAuthorDocumentModel>mongoose.model('Author', AuthorSchema);

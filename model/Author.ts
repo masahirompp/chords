@@ -1,5 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
+import Q = require('q');
 import db = require('../db/db');
 import IAuthorDocument = require('../db/IAuthorDocument');
 
@@ -18,29 +19,34 @@ class Author {
     return !!this._author;
   }
 
-  get json():any{
+  get json():any {
     return {
       id: this._author.name,
       name: this._author.name
     }
   }
 
-  static createNewAuthor = (name:string, email:string, callback:(err:any, author:Author)=>void) => {
-    db.Author.createNewAuthor(name, email, (err:any, author:IAuthorDocument)=> {
-      callback(err, new Author(author));
-    });
+  static createNewAuthor = (name:string, email:string):Q.Promise<Author> => {
+    return db.Author.createNewAuthor(name, email)
+      .then((author:IAuthorDocument) => {
+        return new Author(author);
+      });
   };
 
-  static getById = (authorId:string, callback:(err:any, author?:IAuthorDocument)=>void) => {
+  static getById = (authorId:string):Q.Promise<Author> => {
+    var d = Q.defer<Author>();
+
     db.Author.findById(authorId, (err:any, author:IAuthorDocument) => {
       if(err) {
-        return callback(err);
+        return d.reject(err);
       }
       if(!author) {
-        return callback(new Error('not found.'), author);
+        return d.reject(new Error('not found.'));
       }
-      callback(null, author);
+      d.resolve(new Author(author));
     });
+
+    return d.promise;
   };
 }
 

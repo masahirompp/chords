@@ -17,11 +17,10 @@ router.get('/user/:id', (req:express.Request, res:express.Response) => {
  * /api/user/:id POST
  */
 router.post('/user/:id', (req:express.Request, res:express.Response, next:Function) => {
-  Author.createNewAuthor(req.params.id, '', (err:any, author:Author) => {
-    if(err) {
-      return next(err);
-    }
+  Author.createNewAuthor(req.params.id, '').then((author:Author) => {
     res.json(author.json);
+  }).catch((err) => {
+    next(err);
   });
 });
 
@@ -53,12 +52,13 @@ router.get('/:artist/:song', (req:express.Request, res:express.Response) => {
  */
 router.get('/:artist/:song/:id', (req:express.Request, res:express.Response, next:Function) => {
   var q = req.params;
-  Score.find(q.artist,q.song,q.id, (err:any, score?:Score) => {
-    if(err){
-      return next(err);
-    }
-    res.json(score.json);
-  });
+  Score.find(q.artist, q.song, q.id)
+    .then((score:Score) => {
+      res.json(score.json);
+    })
+    .catch((err)=> {
+      console.dir(err);
+    });
 });
 
 module.exports = router;

@@ -1,5 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
+import Q = require('q');
 import db = require('../db/db');
 import Author = require('./Author');
 import IAuthorDocument = require('../db/IAuthorDocument');
@@ -11,9 +12,11 @@ class Score {
   private _score:IScoreDocument;
   private _chord:IChordDocument;
 
-  constructor(score:IScoreDocument, chord:IChordDocument) {
+  constructor(score:IScoreDocument, chord?:IChordDocument) {
     this._score = score;
-    this._chord = chord;
+    if(chord) {
+      this._chord = chord;
+    }
   }
 
   get chord():Array<Array<string>> {
@@ -28,7 +31,7 @@ class Score {
     return <ScoreDTO> {
       author: {
         id: this._score.authorName,
-        name: this._score.authorName,
+        name: this._score.authorName
       },
       song: {
         id: this._score.songId,
@@ -36,7 +39,7 @@ class Score {
         artist: {
           id: this._score.artistId,
           name: this._score.artistName,
-          isOriginal: this._score.isOriginal,
+          isOriginal: this._score.isOriginal
         }
       },
       scoreNo: this._score.scoreNo,
@@ -54,53 +57,50 @@ class Score {
     DRAFT: false
   };
 
-  private static generateScoreNo(artistName:string, songName:string, callback:(err:any, scoreNo?:number)=> void) {
-    db.Score.find({artistName: artistName, title: songName}, 'url', (err:any, results:IScoreDocument[])=> {
+  private static generateScoreNo(artistId:string, songId:string):Q.Promise<number> {
+    var d = Q.defer<number>();
+
+    db.Score.find({artistId: artistId, songId: songId}, 'url', (err:any, results:IScoreDocument[])=> {
       if(err) {
-        return callback(err);
+        return d.reject(err);
       }
       if(results.length === 0) {
-        return callback(null, 1);
+        return d.resolve(1);
       }
       var maxScoreId:number = _.chain(results).map((result) => {
         return Number(result.url.substring(result.url.lastIndexOf('/') + 1));
       }).max().value();
-      callback(null, maxScoreId + 1);
+      d.resolve(maxScoreId + 1);
     });
+
+    return d.promise;
   }
 
-  static createNewOriginalScore(authorId:string,
-                                songName:string,
-                                description:string,
-                                callback:(err:any, score?:Score)=>void) {
-    Author.getById(authorId, (err:any, author?:IAuthorDocument) => {
-        if(err) {
-          return callback(err);
-        }
-        this.generateScoreNo(author.name, songName, (err:any, scoreNo?:number) => {
-          if(err) {
-            return callback(err);
-          }
-          db.Score.createNewScore(scoreNo,
-            description,
-            authorId,
-            author.name,
-            this.CONST.ORIGINAL,
-            songName, //TODO songID
-            songName,
-            authorId,
-            author.name,
-            (err:any, score:IScoreDocument) => {
-              if(err) {
-                return callback(err);
-              }
-              db.Chord.createNewChord(score._id, (err:any, chord:IChordDocument) => {
-                callback(err, new Score(score, chord));
-              });
-            });
-        });
-      }
-    );
+  static createNewOriginalScore(authorId:string, songName:string, description:string):Q.Promise<Score> {
+
+    // TODO
+    var songId = songName;
+
+    return Q.all([Author.getById(authorId), Score.generateScoreNo(authorId, songId)])
+      .then((values:any[])=> {
+        var author = <Author>values[0];
+        var scoreNo = <number>values[1];
+        return db.Score.createNewScore(scoreNo,
+          description,
+          authorId,
+          author.name,
+          this.CONST.ORIGINAL,
+          songName, //TODO songID
+          songName,
+          authorId,
+          author.name)
+      })
+      .then((score:IScoreDocument) => {
+        return db.Chord.createNewChord(score._id)
+          .then((chord:IChordDocument) => {
+            return new Score(score, chord);
+          })
+      });
   }
 
 
@@ -109,56 +109,77 @@ class Score {
                                 artistName:string,
                                 songId:string,
                                 songName:string,
-                                description:string,
-                                callback:(err:any, score?:Score)=>void) {
-    Author.getById(authorId, (err:any, author?:IAuthorDocument) => {
-      if(err) {
-        return callback(err);
-      }
-      this.generateScoreNo(artistName, songName, (err:any, scoreNo?:number)=> {
-        if(err) {
-          return callback(err);
-        }
-        db.Score.createNewScore(scoreNo,
-          description,
-          artistId,
-          artistName,
-          this.CONST.EXISTING,
-          songId,
-          songName,
-          authorId,
-          author.name,
-          (err:any, score:IScoreDocument) => {
-            if(err) {
-              callback(err);
-            }
-            db.Chord.createNewChord(score._id, (err:any, chord:IChordDocument) => {
-              callback(err, new Score(score, chord));
-            });
+                                description:string):Q.Promise<Score> {
+    return Author.getById(authorId)
+      .then((author:Author) => {
+
+        return Score.generateScoreNo(artistName, songName)
+          .then((scoreNo:number) => {
+            return db.Score.createNewScore(scoreNo,
+              description,
+              artistId,
+              artistName,
+              this.CONST.EXISTING,
+              songId,
+              songName,
+              authorId,
+              author.name)
+              .then((score:IScoreDocument) => {
+                return db.Chord.createNewChord(score._id).then((chord:IChordDocument) => {
+                  return new Score(score, chord);
+                });
+              });
           });
-      });
-    });
+
+      })
   }
 
-  static find(artistName:string, songName:string, scoreNo:number, callback:(err:any, score?:Score)=>void) {
+  static find(artistName:string, songName:string, scoreNo:number):Q.Promise<Score> {
+
+    var d = Q.defer<Score>();
+
     db.Score.findOne({
       artistName: artistName,
       songName: songName,
       scoreNo: scoreNo
     }, (err:any, score:IScoreDocument) => {
       if(err) {
-        callback(err);
+        return d.reject(err);
       }
-      console.dir(score);
       db.Chord.findOne({
         scoreId: score._id
       }, (err:any, chord:IChordDocument) => {
         if(err) {
-          callback(err);
+          return d.reject(err);
         }
-        callback(err, new Score(score, chord));
+        d.resolve(new Score(score, chord));
       });
     });
+
+    return d.promise;
+  }
+
+  static search(keyword:string):Q.Promise<Score[]> {
+    var d:Q.Deferred<Score[]> = Q.defer<Score[]>();
+
+    var reg = '/' + keyword + '/';
+    db.Score.find({$or: [
+      {
+        artistName: reg
+      },
+      {
+        songName: reg
+      }
+    ]}, (err:any, scores:IScoreDocument[]) => {
+      if(err) {
+        return d.reject(err);
+      }
+      d.resolve(_.map<IScoreDocument,Score>(scores, doc => {
+        return new Score(doc);
+      }));
+    });
+
+    return d.promise;
   }
 
 }

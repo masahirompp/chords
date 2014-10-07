@@ -1,5 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
+import Q = require('q');
 import mongoose = require('mongoose');
 import IChordDocument = require('IChordDocument');
 import IChordDocumentModel = require('IChordDocumentModel');
@@ -13,13 +14,20 @@ var ChordSchema:mongoose.Schema = new mongoose.Schema({
 });
 
 ChordSchema.static('createNewChord',
-  (scoreId:mongoose.Types.ObjectId, callback:(err:any, chord:IChordDocument)=>void) => {
+  (scoreId:mongoose.Types.ObjectId):Q.Promise<IChordDocument> => {
+
+    var d = Q.defer<IChordDocument>();
+
     var chord = new ChordDocumentModel({
       scoreId: scoreId,
       chords: [],
       option: {}
     });
-    chord.save(callback);
+    chord.save((err) => {
+      err ? d.reject(err) : d.resolve(chord);
+    });
+
+    return d.promise;
   });
 
 var ChordDocumentModel:IChordDocumentModel = <IChordDocumentModel> mongoose.model('Chord', ChordSchema);

@@ -1,5 +1,6 @@
 /// <reference path="../typings/tsd.d.ts" />
 
+import Q = require('q');
 import mongoose = require('mongoose');
 import IScoreDocument = require('IScoreDocument');
 import IScoreDocumentModel = require('IScoreDocumentModel');
@@ -31,8 +32,10 @@ ScoreSchema.static('createNewScore',
    songId:string,
    songName:string,
    authorId:mongoose.Types.ObjectId,
-   authorName:string,
-   callback:(err:any, score:IScoreDocument)=>void)=> {
+   authorName:string):Q.Promise<IScoreDocument> => {
+
+    var d = Q.defer<IScoreDocument>();
+
     var score = new ScoreDocumentModel({
       url: UriUtil.makeUri(artistName, songName, scoreNo),
       scoreNo: scoreNo,
@@ -47,7 +50,11 @@ ScoreSchema.static('createNewScore',
       star: 0,
       isPublish: false
     });
-    score.save(callback);
+    score.save((err) => {
+      err ? d.reject(err) : d.resolve(score);
+    });
+
+    return d.promise;
   });
 
 var ScoreDocumentModel:IScoreDocumentModel = <IScoreDocumentModel> mongoose.model('Score', ScoreSchema);

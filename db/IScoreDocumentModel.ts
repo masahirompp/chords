@@ -12,8 +12,7 @@ interface IScoreDocumentModel extends mongoose.Model<IScoreDocument> {
                   songId:string,
                   songName:string,
                   authorId:mongoose.Types.ObjectId,
-                  authorName:string,
-                  callback:(err:any, score:IScoreDocument)=>void)=>void;
+                  authorName:string) => Q.Promise<IScoreDocument>;
 }
 
 export = IScoreDocumentModel;

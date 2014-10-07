@@ -20,25 +20,22 @@ router.post('/', (req:express.Request, res:express.Response, next:Function)=> {
   var songName:string = req.body.songName;
   var description:string = req.body.description;
   if(req.body.isOriginal) {
-    Score.createNewOriginalScore('5402a919f68977bb2072b811', songName, description, (err:any, score?:Score) => {
-      if(err) {
-        return next(err);
-      }
-      res.json(score.json);
-    });
+    Score.createNewOriginalScore('5402a919f68977bb2072b811', songName, description)
+      .then((score:Score) => {
+        res.json(score.json);
+      })
+      .catch((err) => next(err));
   } else {
     Score.createNewExistingScore('5402a919f68977bb2072b811',
       'artistId',
       'artistName',
       'songId',
       songName,
-      description,
-      (err:any, score?:Score) => {
-        if(err) {
-          return next(err);
-        }
+      description)
+      .then((score:Score) => {
         res.json(score.json);
-      });
+      })
+      .catch((err) => next(err));
   }
 });
 
