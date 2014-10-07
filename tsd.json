@@ -3,31 +3,34 @@
   "repo": "borisyankov/DefinitelyTyped",
   "ref": "master",
   "path": "typings",
-  "bundle": "typings/tsd.d.client.ts",
+  "bundle": "typings/tsd.d.ts",
   "installed": {
     "jquery/jquery.d.ts": {
-      "commit": "b0b4af1223f4f9449012688fa0c18f20cc3267e7"
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
     },
     "d3/d3.d.ts": {
-      "commit": "b0b4af1223f4f9449012688fa0c18f20cc3267e7"
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
     },
     "requirejs/require.d.ts": {
-      "commit": "b0b4af1223f4f9449012688fa0c18f20cc3267e7"
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
     },
     "underscore/underscore.d.ts": {
-      "commit": "b0b4af1223f4f9449012688fa0c18f20cc3267e7"
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
     },
     "mongoose/mongoose.d.ts": {
-      "commit": "b0b4af1223f4f9449012688fa0c18f20cc3267e7"
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
     },
     "node/node.d.ts": {
-      "commit": "b0b4af1223f4f9449012688fa0c18f20cc3267e7"
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
     },
     "express/express.d.ts": {
-      "commit": "b0b4af1223f4f9449012688fa0c18f20cc3267e7"
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
     },
     "q/Q.d.ts": {
-      "commit": "b0b4af1223f4f9449012688fa0c18f20cc3267e7"
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+    },
+    "bootstrap/bootstrap.d.ts": {
+      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
     }
   }
 }
