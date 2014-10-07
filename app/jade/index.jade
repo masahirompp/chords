@@ -1,20 +1,15 @@
 extends common/_layout
 block content
   .row
-    .col-lg-6
-      h1 'Allo, 'Allo!
-      p.lead Always a pleasure scaffolding your apps.
-      p
-        a.btn.btn-lg.btn-success(href='/masahirompp/title01/1')
-          | Splendid!
-          span.glyphicon.glyphicon-ok
-      h4 HTML5 Boilerplate
-      p
-        | HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or
-        | sites.
-      h4 Bootstrap
-      p
-        | Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.
+    .col-lg-9
+      h1 ChordsCliche
+      p.lead コード譜共有サイト コードクリシェ
+      h4 検索
+      p 上の検索ボックスから、アーティスト名、曲名でコード譜を検索できます。
+      h4 カスタマイズ（近日公開）
+      p コード譜の見た目や曲のキーを自由にカスタマイズできます。
+      h4 作成（近日公開）
+      p 既存曲やオリジナル曲のコード譜を作成できます。
 block script
   //build:js({app,.tmp}) /scripts/app.index.js
   script(src='/scripts/app.index.js')
