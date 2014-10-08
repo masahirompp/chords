@@ -6,9 +6,9 @@ import D3Model = require('./../model/D3Model')
 class StaffDrawer {
 
   public static draw(viewScale:ViewScale, d3model:D3Model) {
-    var $svg:D3.Selection = d3.select('#score');
-    var staffData:BarPoint[] = d3model.barPoints;
-    var chordData:ChordPoint[] = d3model.chordPoints;
+    var $svg = d3.select('#score');
+    var staffData = d3model.barPoints;
+    var chordData = d3model.chordPoints;
 
     $svg.selectAll('use.bar')
       .data(staffData)

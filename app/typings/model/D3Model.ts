@@ -11,29 +11,29 @@ class D3Model {
   private _chordPoints:ChordPoint[] = [];
 
   constructor(public scoreChords:ScoreChords, public staffManager:StaffManager) {
-    for(var i:number = 0; i < scoreChords.size(); i++) {
+    for(var i = 0; i < scoreChords.size(); i++) {
       staffManager.next();
 
       // staff
-      var staffPoint:IPoint = staffManager.getStaffPoint();
+      var staffPoint = staffManager.getStaffPoint();
       this._barPoints.push({
-                             link: staffManager.isFirstBar() ? '#firstBar' : '#bar',
-                             x: staffPoint.x,
-                             y: staffPoint.y
-                           });
+        link: staffManager.isFirstBar() ? '#firstBar' : '#bar',
+        x: staffPoint.x,
+        y: staffPoint.y
+      });
 
       // chord
       // TODO Refactor
       var barPoint:IPoint[] = staffManager.getChordPoint();
       var barChords:BarChords = scoreChords.get(i);
-      for(var j:number = 0; j < barChords.size(); j++) {
-        var chord:Chord = barChords.get(j);
+      for(var j = 0; j < barChords.size(); j++) {
+        var chord = barChords.get(j);
         if(chord.text !== '') {
           this._chordPoints.push({
-                                   x: barPoint[j].x,
-                                   y: barPoint[j].y,
-                                   chord: barChords.get(j).text
-                                 });
+            x: barPoint[j].x,
+            y: barPoint[j].y,
+            chord: barChords.get(j).text
+          });
         }
       }
     }

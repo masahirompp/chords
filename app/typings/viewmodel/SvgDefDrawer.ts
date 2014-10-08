@@ -4,7 +4,7 @@ import SvgStaffDef = require('./../model/SvgStaffDef')
 class SvgDefDrawer {
 
   public static append(viewScale:ViewScale, svgStaffDef:SvgStaffDef) {
-    var $defs:D3.Selection = d3.select('#score').append('defs');
+    var $defs = d3.select('#score').append('defs');
 
     $defs.append('g')
       .attr({
