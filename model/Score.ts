@@ -1,7 +1,5 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-import Q = require('q');
-import _ = require('underscore');
 import db = require('../db/db');
 import Author = require('./Author');
 import IAuthorDocument = require('../db/IAuthorDocument');

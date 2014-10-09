@@ -18,6 +18,9 @@ var routes = require('./routes/index');
 var api = require('./routes/api');
 var admin = require('./routes/admin');
 
+global._ = require('underscore');
+global.Q = require('q');
+
 var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

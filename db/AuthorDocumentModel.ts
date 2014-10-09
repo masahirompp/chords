@@ -1,6 +1,5 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-import Q = require('q');
 import mongoose = require('mongoose');
 import IAuthorDocument = require('IAuthorDocument');
 import IAuthorDocumentModel = require('IAuthorDocumentModel');

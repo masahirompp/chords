@@ -1,6 +1,5 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-import Q = require('q');
 import mongoose = require('mongoose');
 import IScoreDocument = require('IScoreDocument');
 import IScoreDocumentModel = require('IScoreDocumentModel');

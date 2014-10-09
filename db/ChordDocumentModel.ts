@@ -1,6 +1,5 @@
 /// <reference path="../typings/tsd.d.ts" />
 
-import Q = require('q');
 import mongoose = require('mongoose');
 import IChordDocument = require('IChordDocument');
 import IChordDocumentModel = require('IChordDocumentModel');
