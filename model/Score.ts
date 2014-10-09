@@ -1,6 +1,7 @@
 /// <reference path="../typings/tsd.d.ts" />
 
 import Q = require('q');
+import _ = require('underscore');
 import db = require('../db/db');
 import Author = require('./Author');
 import IAuthorDocument = require('../db/IAuthorDocument');
@@ -9,6 +10,7 @@ import IChordDocument = require('../db/IChordDocument');
 import ScoreDTO = require('../dto/_ScoreDTO');
 
 class Score {
+
   private _score:IScoreDocument;
   private _chord:IChordDocument;
 
@@ -45,8 +47,8 @@ class Score {
       scoreNo: this._score.scoreNo,
       star: this._score.star,
       description: this._score.description,
-      chords: this._chord.chords,
-      option: this._chord.option
+      chords: this._chord ? this._chord.chords : [],
+      option: this._chord ? this._chord.option : {}
     }
   }
 
@@ -103,7 +105,6 @@ class Score {
       });
   }
 
-
   static createNewExistingScore(authorId:string,
                                 artistId:string,
                                 artistName:string,
@@ -125,9 +126,10 @@ class Score {
               authorId,
               author.name)
               .then((score:IScoreDocument) => {
-                return db.Chord.createNewChord(score._id).then((chord:IChordDocument) => {
-                  return new Score(score, chord);
-                });
+                return db.Chord.createNewChord(score._id)
+                  .then((chord:IChordDocument) => {
+                    return new Score(score, chord);
+                  });
               });
           });
 
@@ -162,7 +164,7 @@ class Score {
   static search(keyword:string):Q.Promise<Score[]> {
     var d:Q.Deferred<Score[]> = Q.defer<Score[]>();
 
-    var reg = '/' + keyword + '/';
+    var reg:RegExp = new RegExp(keyword);
     db.Score.find({$or: [
       {
         artistName: reg
@@ -180,6 +182,12 @@ class Score {
     });
 
     return d.promise;
+  }
+
+  static toJson(scores:Score[]):ScoreDTO[] {
+    return _.map(scores, (score) => {
+      return score.json;
+    });
   }
 
 }

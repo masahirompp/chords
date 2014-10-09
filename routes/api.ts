@@ -3,6 +3,7 @@
 import express = require('express');
 import Author = require('../model/Author');
 import Score = require('../model/Score');
+import ScoreDTO = require('../dto/_ScoreDTO');
 
 var router:express.Router = express.Router();
 
@@ -17,18 +18,26 @@ router.get('/user/:id', (req:express.Request, res:express.Response) => {
  * /api/user/:id POST
  */
 router.post('/user/:id', (req:express.Request, res:express.Response, next:Function) => {
-  Author.createNewAuthor(req.params.id, '').then((author:Author) => {
-    res.json(author.json);
-  }).catch((err) => {
-    next(err);
-  });
+  Author.createNewAuthor(req.params.id, '')
+    .then((author:Author) => {
+      res.json(author.json);
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 /**
  * /api/search POST
  */
-router.post('/search', (req:express.Request, res:express.Response) => {
-  res.json({search: 'search'});
+router.post('/search', (req:express.Request, res:express.Response, next:Function) => {
+  Score.search(req.body.keyword)
+    .then((scores:Score[]) => {
+      res.json(Score.toJson(scores));
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 /**
