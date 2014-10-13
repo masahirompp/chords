@@ -73,8 +73,8 @@ html.no-js(lang='ja')
           //        a(href='#') One more separated link
           form.navbar-form.navbar-left(role='search')
             .form-group
-              input.form-control(type='text', placeholder='曲名 アーティスト名')
-            button.btn.btn-default(type='submit', data-toggle='tooltip', data-placement='bottom', title='検索')
+              input#searchKeyword.form-control(type='text', placeholder='曲名 アーティスト名')
+            button#searchBtn.btn.btn-default(type='submit', data-toggle='tooltip', data-placement='bottom', title='検索')
               span.glyphicon.glyphicon-search
     .container-fluid
       block content

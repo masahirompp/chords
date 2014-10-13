@@ -23,7 +23,6 @@ class Scale {
   public floor(x:number):number {
     return Math.floor(this._scale(x));
   }
-
 }
 
 export = Scale

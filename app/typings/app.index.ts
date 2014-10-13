@@ -1,12 +1,10 @@
 /// <reference path="../../typings/requirejs/require.d.ts" />
-/// <reference path="../../typings/jquery/jquery.d.ts" />
-/// <reference path="../../typings/bootstrap/bootstrap.d.ts" />
 
 require.config(<RequireConfig>{baseUrl: '/scripts'});
 
-require([], () => {
+require(['./viewmodel/CommonEvent'], (CommonEvent) => {
   console.log('index');
   console.log('Running jQuery %s', $().jquery);
-  $('.btn').tooltip();
+  CommonEvent.init();
 });
 

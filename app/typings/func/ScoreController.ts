@@ -7,6 +7,7 @@ import SvgStaffDef = require('./../model/SvgStaffDef')
 import ViewScale = require('./../viewmodel/ViewScale')
 import SvgDrawer = require('./../viewmodel/SvgDefDrawer')
 import StaffDrawer = require('./../viewmodel/StaffDrawer')
+import AjaxScore = require('../data/AjaxScore');
 
 class ScoreController {
 
@@ -22,6 +23,16 @@ class ScoreController {
     SvgDrawer.append(viewScale, staffDef);
     StaffDrawer.draw(viewScale, d3Model);
   }
+
+  public static search(keyword:string) {
+
+    AjaxScore.search(keyword)
+      .then((data)=> {
+        console.dir(data);
+      });
+
+  }
+
 }
 
 export = ScoreController;
