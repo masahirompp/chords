@@ -6,31 +6,31 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "jquery/jquery.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
     "d3/d3.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
     "requirejs/require.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
     "underscore/underscore.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
     "mongoose/mongoose.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
     "node/node.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
     "express/express.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
     "q/Q.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
     "bootstrap/bootstrap.d.ts": {
-      "commit": "9dbc0c5a46647f93a7c4c51fec6660e0ef7c45a3"
+      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     }
   }
 }
