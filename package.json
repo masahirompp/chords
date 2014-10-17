@@ -53,6 +53,7 @@
     "imagemin-jpegtran": "^2.0.0",
     "imagemin-optipng": "^2.0.1",
     "imagemin-pngquant": "^2.0.0",
+    "js-beautify": "^1.5.4",
     "jshint-stylish": "^0.4.0",
     "load-grunt-tasks": "^0.4.0",
     "time-grunt": "^0.4.0"

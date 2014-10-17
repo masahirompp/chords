@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/underscore/underscore.d.ts" />
+/// <reference path="../../../tsd/underscore/underscore.d.ts" />
 
 import List = require('../util/List')
 import Chord = require('./Chord')

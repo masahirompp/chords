@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/d3/d3.d.ts" />
+/// <reference path="../../../tsd/d3/d3.d.ts" />
 
 class Scale {
 

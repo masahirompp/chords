@@ -1,4 +1,4 @@
-/// <reference path="../typings/tsd.d.ts" />
+/// <reference path="../tsd/tsd.d.ts" />
 
 import mongoose = require('mongoose');
 import IScoreDocument = require('IScoreDocument');

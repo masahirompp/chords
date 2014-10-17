@@ -24,20 +24,6 @@ class ScoreController {
     SvgDrawer.append(viewScale, staffDef);
     StaffDrawer.draw(viewScale, d3Model);
   }
-
-  public static search(keyword:string) {
-
-    if(!keyword.match(/\S/)) {
-      return;
-    }
-
-    AjaxScore.search(keyword)
-      .then((data)=> {
-        SearchView.drawResult(data);
-        history.pushState(data, null, '/search/?q=' + encodeURI(keyword));
-      })
-
-  }
 }
 
 export = ScoreController;
