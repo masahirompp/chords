@@ -1,3 +1,4 @@
+import AjaxScore = require('./../data/AjaxScore');
 import ScoreDTO = require('./../dto/ScoreDTO')
 import ScoreChords = require('./../model/ScoreChords')
 import StaffSettings = require('./../model/StaffSettings')
@@ -7,7 +8,7 @@ import SvgStaffDef = require('./../model/SvgStaffDef')
 import ViewScale = require('./../viewmodel/ViewScale')
 import SvgDrawer = require('./../viewmodel/SvgDefDrawer')
 import StaffDrawer = require('./../viewmodel/StaffDrawer')
-import AjaxScore = require('../data/AjaxScore');
+import SearchView = require('./../viewmodel/SearchView')
 
 class ScoreController {
 
@@ -28,8 +29,9 @@ class ScoreController {
 
     AjaxScore.search(keyword)
       .then((data)=> {
-        console.dir(data);
-      });
+        SearchView.drawResult(data);
+        history.pushState(data, keyword + 'の検索結果', '/search/?q=' + encodeURI(keyword));
+      })
 
   }
 

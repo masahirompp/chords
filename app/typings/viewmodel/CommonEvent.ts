@@ -8,12 +8,16 @@ class CommonEvent {
   static init() {
     $(()=> {
 
+      window.addEventListener('popstate', (e:PopStateEvent) => {
+        console.dir(e.state);
+      });
+
       $('.btn').tooltip();
 
       $('#searchBtn').on('click', (e) => {
+        e.preventDefault();
         var keyword = $('#searchKeyword').val();
         ScoreController.search(keyword);
-        e.preventDefault();
       });
 
     });
