@@ -8,6 +8,13 @@ class Url {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
+  static makeQueryParameter(key:string, value:string):string {
+    if(!value) {
+      return '';
+    }
+    return '?' + key + '=' + value.split(/[ 　]+/g).map(d => encodeURIComponent(d)).join('+');
+  }
+
   static getPath(url:string):string {
     if(url.match(/^http/)) {
       if(url.indexOf('/', 9) === -1) {

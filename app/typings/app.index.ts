@@ -2,9 +2,9 @@
 
 require.config(<RequireConfig>{baseUrl: '/scripts'});
 
-require(['./viewmodel/CommonEvent'], (CommonEvent) => {
+require(['./viewmodel/Event'], (CommonEvent) => {
   console.log('index');
   console.log('Running jQuery %s', $().jquery);
-  CommonEvent.init();
+  CommonEvent.initCommon();
 });
 

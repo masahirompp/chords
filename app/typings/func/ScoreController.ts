@@ -27,14 +27,17 @@ class ScoreController {
 
   public static search(keyword:string) {
 
+    if(!keyword.match(/\S/)) {
+      return;
+    }
+
     AjaxScore.search(keyword)
       .then((data)=> {
         SearchView.drawResult(data);
-        history.pushState(data, keyword + 'の検索結果', '/search/?q=' + encodeURI(keyword));
+        history.pushState(data, null, '/search/?q=' + encodeURI(keyword));
       })
 
   }
-
 }
 
 export = ScoreController;

@@ -146,7 +146,7 @@ module.exports = function(grunt) {
         files: {
           '<%= config.app %>/master.html': '<%= config.app %>/jade/master.jade',
           '<%= config.app %>/index.html': '<%= config.app %>/jade/index.jade',
-          '<%= config.app %>/list.html': '<%= config.app %>/jade/list.jade',
+          '<%= config.app %>/search.html': '<%= config.app %>/jade/search.jade',
           '<%= config.app %>/score.html': '<%= config.app %>/jade/score.jade'
         }
       }
@@ -281,17 +281,17 @@ module.exports = function(grunt) {
           mainConfigFile: '<%= config.app %>/scripts/app.index.js'
         }
       },
-      // !!! build.js options for app.list.js (list.html) !!!
+      // !!! build.js options for app.search.js (search.html) !!!
       dist2: {
         options: {
-          out: '<%= config.dist %>/scripts/app.list.js',
+          out: '<%= config.dist %>/scripts/app.search.js',
           baseUrl: '<%= config.app %>/scripts',
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
           wrap: true,
-          name: 'app.list',
-          mainConfigFile: '<%= config.app %>/scripts/app.list.js'
+          name: 'app.search',
+          mainConfigFile: '<%= config.app %>/scripts/app.search.js'
         }
       },
       // !!! build.js options for app.score.js (score.html) !!!
@@ -313,7 +313,7 @@ module.exports = function(grunt) {
       dist: {
         files: {
           '<%= config.dist %>/scripts/app.index.js': '<%= config.dist %>/scripts/app.index.js',
-          '<%= config.dist %>/scripts/app.list.js': '<%= config.dist %>/scripts/app.list.js',
+          '<%= config.dist %>/scripts/app.search.js': '<%= config.dist %>/scripts/app.search.js',
           '<%= config.dist %>/scripts/app.score.js': '<%= config.dist %>/scripts/app.score.js'
         }
       }
