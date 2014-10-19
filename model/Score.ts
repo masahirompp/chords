@@ -167,14 +167,8 @@ class Score {
 
   static search(keyword: string): Q.Promise < Score[] > {
     var d: Q.Deferred < Score[] > = Q.defer < Score[] > ();
-
-    var reg: RegExp = Score.makeRegKeyword(keyword);
     db.Score.find({
-      $or: [{
-        artistName: reg
-      }, {
-        songName: reg
-      }]
+      $and: Score.makeKeywordQuery(keyword)
     }, (err: any, scores: IScoreDocument[]) => {
       if (err) {
         return d.reject(err);
@@ -187,15 +181,30 @@ class Score {
     return d.promise;
   }
 
-  static makeRegKeyword(keyword: string) {
-    // TODO escape
-    return new RegExp(keyword.replace(' ', '|'), 'i');
-  }
-
   static toJson(scores: Score[]): ScoreDTO[] {
     return _.map(scores, (score) => {
       return score.json;
     });
+  }
+
+  static makeKeywordQuery(keyword: string) {
+    var query = [];
+    keyword.split(' ')
+      .forEach((k) => {
+        query.push(Score.makeRegKeyword(k));
+      });
+    return query
+  }
+
+  static makeRegKeyword(keyword): any {
+    var reg: RegExp = new RegExp(keyword, 'i');
+    return {
+      $or: [{
+        artistName: reg
+      }, {
+        songName: reg
+      }]
+    };
   }
 
 }
