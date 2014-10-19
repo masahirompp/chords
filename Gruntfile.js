@@ -6,8 +6,9 @@ module.exports = function(grunt) {
 
   // Configurable paths
   var config = {
-    app: 'app',
-    dist: 'dist'
+    'app': 'app',
+    'dist': 'dist',
+    'public': 'public'
   };
 
   grunt.initConfig({
@@ -17,63 +18,28 @@ module.exports = function(grunt) {
       options: {
         livereload: false
       },
-      html: {
+      jade: {
         files: ['<%= config.app %>/jade/{,*/}*.jade'],
-        tasks: ['jade',
-                'shell:cphtml']
+        tasks: ['copy:app2views']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
-        tasks: ['newer:copy:styles',
-                'autoprefixer',
-                'shell:cpcss']
+        tasks: ['copy:css2public']
       },
       tsclient: {
         files: ['<%= config.app %>/typings/{,*/}*.ts'],
-        tasks: ['clean:dist',
-                'typescript:client',
-                'shell:cpjs']
+        tasks: ['typescript:client',
+          'copy:js2public'
+        ]
       },
       tsserver: {
         files: ['db/*.ts',
-                'dto/*.ts',
-                'model/*.ts',
-                'routes/*.ts',
-                'util/*.ts'],
+          'dto/*.ts',
+          'model/*.ts',
+          'routes/*.ts',
+          'util/*.ts'
+        ],
         tasks: ['typescript:server']
-      }
-    },
-
-    // Empties folders to start fresh
-    clean: {
-      dist: {
-        files: [
-          {
-            dot: true,
-            src: [
-              '<%= config.app %>/{,*/}*.html',
-              '<%= config.app %>/scripts/{,*/}*.js',
-              '.tmp',
-              '<%= config.dist %>/*',
-              '!<%= config.dist %>/.git*'
-            ]
-          }
-        ]
-      },
-      server: {
-        files: [
-          {
-            dot: true,
-            src: [
-              '.tmp',
-              'db/*.js',
-              'dto/*.js',
-              'model/*.js',
-              'routes/*.js',
-              'util/*.js'
-            ]
-          }
-        ]
       }
     },
 
@@ -90,51 +56,6 @@ module.exports = function(grunt) {
       ]
     },
 
-    //    // Mocha testing framework configuration options
-    //    mocha: {
-    //      all: {
-    //        options: {
-    //          run: true,
-    //          urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
-    //        }
-    //      }
-    //    },
-
-    // Add vendor prefixed styles
-    autoprefixer: {
-      options: {
-        browsers: ['> 1%',
-                   'last 2 versions',
-                   'Firefox ESR',
-                   'Opera 12.1']
-      },
-      dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '.tmp/styles/',
-            src: '{,*/}*.css',
-            dest: '.tmp/styles/'
-          }
-        ]
-      }
-    },
-
-    // Renames files for browser caching purposes
-    rev: {
-      dist: {
-        files: {
-          src: [
-            '<%= config.dist %>/scripts/{,*/}*.js',
-            '<%= config.dist %>/styles/{,*/}*.css',
-            '<%= config.dist %>/images/{,*/}*.*',
-            '<%= config.dist %>/styles/fonts/{,*/}*.*',
-            '<%= config.dist %>/*.png'
-          ]
-        }
-      }
-    },
-
     jade: {
       compile: {
         options: {
@@ -145,6 +66,7 @@ module.exports = function(grunt) {
         },
         files: {
           '<%= config.app %>/master.html': '<%= config.app %>/jade/master.jade',
+          '<%= config.app %>/error.html': '<%= config.app %>/jade/error.jade',
           '<%= config.app %>/index.html': '<%= config.app %>/jade/index.jade',
           '<%= config.app %>/search.html': '<%= config.app %>/jade/search.jade',
           '<%= config.app %>/score.html': '<%= config.app %>/jade/score.jade'
@@ -166,10 +88,11 @@ module.exports = function(grunt) {
       },
       server: {
         src: ['db/*.ts',
-              'dto/*.ts',
-              'model/*.ts',
-              'routes/*.ts',
-              'util/*.ts'],
+          'dto/*.ts',
+          'model/*.ts',
+          'routes/*.ts',
+          'util/*.ts'
+        ],
         options: {
           module: 'commonjs',
           target: 'es5',
@@ -189,83 +112,60 @@ module.exports = function(grunt) {
       html: '<%= config.app %>/master.html'
     },
 
-    // Performs rewrites based on rev and the useminPrepare configuration
-    usemin: {
-      options: {
-        assetsDirs: ['<%= config.dist %>',
-                     '<%= config.dist %>/images']
-      },
-      html: ['<%= config.dist %>/{,*/}*.html'],
-      css: ['<%= config.dist %>/styles/{,*/}*.css']
+    // Run some tasks in parallel to speed up build process
+    concurrent: {
+      server: [
+        'copy:styles2tmp'
+      ],
+      test: [
+        'copy:styles2tmp'
+      ],
+      dist: [
+        'copy:styles2tmp',
+        'imagemin',
+        'svgmin'
+      ]
     },
-
     // The following *-min tasks produce minified files in the dist folder
     imagemin: {
       dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.app %>/images',
-            src: '{,*/}*.{gif,jpeg,jpg,png}',
-            dest: '<%= config.dist %>/images'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>/images',
+          src: '{,*/}*.{gif,jpeg,jpg,png}',
+          dest: '<%= config.dist %>/images'
+        }]
       }
     },
-
     svgmin: {
       dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.app %>/images',
-            src: '{,*/}*.svg',
-            dest: '<%= config.dist %>/images'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>/images',
+          src: '{,*/}*.svg',
+          dest: '<%= config.dist %>/images'
+        }]
       }
     },
 
-    htmlmin: {
+    // Add vendor prefixed styles
+    autoprefixer: {
+      options: {
+        browsers: ['> 1%',
+          'last 2 versions',
+          'Firefox ESR',
+          'Opera 12.1'
+        ]
+      },
       dist: {
-        options: {
-          collapseBooleanAttributes: true,
-          collapseWhitespace: true,
-          conservativeCollapse: true,
-          removeAttributeQuotes: true,
-          removeCommentsFromCDATA: true,
-          removeEmptyAttributes: true,
-          removeOptionalTags: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true
-        },
-        files: [
-          {
-            expand: true,
-            cwd: '<%= config.dist %>',
-            src: '{,*/}*.html',
-            dest: '<%= config.dist %>'
-          }
-        ]
+        files: [{
+          expand: true,
+          cwd: '.tmp/styles/',
+          src: '{,*/}*.css',
+          dest: '.tmp/styles/'
+        }]
       }
     },
-
-    // By default, your `index.html`'s <!-- Usemin block --> will take care
-    // of minification. These next options are pre-configured if you do not
-    // wish to use the Usemin blocks.
-    // cssmin: {
-    //   dist: {
-    //     files: {
-    //       '<%= config.dist %>/styles/main.css': [
-    //         '.tmp/styles/{,*/}*.css',
-    //         '<%= config.app %>/styles/{,*/}*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
 
     requirejs: {
       // !!! build.js options for app.index.js (index.html) !!!
@@ -319,66 +219,62 @@ module.exports = function(grunt) {
       }
     },
 
-    // Copies remaining files to places other tasks can use
-    copy: {
+    // Renames files for browser caching purposes
+    rev: {
       dist: {
-        files: [
-          {
-            expand: true,
-            dot: true,
-            cwd: '<%= config.app %>',
-            dest: '<%= config.dist %>',
-            src: [
-              '*.{ico,png,txt}',
-              'images/{,*/}*.webp',
-              '{,*/}*.html',
-              'styles/fonts/{,*/}*.*'
-            ]
-          },
-          {
-            src: 'node_modules/apache-server-configs/dist/.htaccess',
-            dest: '<%= config.dist %>/.htaccess'
-          },
-          {
-            expand: true,
-            dot: true,
-            cwd: '<%= config.app %>/bower_components/bootstrap/dist',
-            src: 'fonts/*',
-            dest: '<%= config.dist %>'
-          }
-        ]
-      },
-      styles: {
-        expand: true,
-        dot: true,
-        cwd: '<%= config.app %>/styles',
-        dest: '.tmp/styles/',
-        src: '{,*/}*.css'
-      },
-      dto: {
-        expand: true,
-        cwd: '<%= config.app %>/typings/dto',
-        src: '*.ts',
-        dest: 'dto',
-        rename: function(dest, src) {
-          return dest + '/_' + src;
+        files: {
+          src: [
+            '<%= config.dist %>/scripts/{,*/}*.js',
+            '<%= config.dist %>/styles/{,*/}*.css',
+            '<%= config.dist %>/images/{,*/}*.*',
+            '<%= config.dist %>/styles/fonts/{,*/}*.*',
+            '<%= config.dist %>/*.png'
+          ]
         }
       }
     },
 
-    // Run some tasks in parallel to speed up build process
-    concurrent: {
-      server: [
-        'copy:styles'
-      ],
-      test: [
-        'copy:styles'
-      ],
-      dist: [
-        'copy:styles',
-        'imagemin',
-        'svgmin'
-      ]
+    // Performs rewrites based on rev and the useminPrepare configuration
+    usemin: {
+      options: {
+        assetsDirs: ['<%= config.dist %>',
+          '<%= config.dist %>/images'
+        ]
+      },
+      html: ['<%= config.dist %>/{,*/}*.html'],
+      css: ['<%= config.dist %>/styles/{,*/}*.css']
+    },
+
+    htmlmin: {
+      dist: {
+        options: {
+          collapseBooleanAttributes: true,
+          collapseWhitespace: true,
+          conservativeCollapse: true,
+          removeAttributeQuotes: true,
+          removeCommentsFromCDATA: true,
+          removeEmptyAttributes: true,
+          removeOptionalTags: true,
+          removeRedundantAttributes: true,
+          useShortDoctype: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= config.dist %>',
+          src: '{,*/}*.html',
+          dest: '<%= config.dist %>'
+        }]
+      }
+    },
+
+    shell: {
+      html2jade: {
+        command: function() {
+          return [
+            'html2jade <%= config.dist %>/*.html -o view/'
+          ].join('&&');
+        }
+      }
     },
 
     open: {
@@ -386,71 +282,171 @@ module.exports = function(grunt) {
         path: 'http://localhost:3000/'
       }
     },
-    shell: {
-      cpapp: {
-        command: function() {
-          return [
-            'rm -r public',
-            'mkdir public',
-            'cp -R app/bower_components public/bower_components',
-            'cp -R app/images public/images',
-            'cp -R app/scripts public/scripts',
-            'cp -R app/styles public/styles',
-            'cp app/*.html public/',
-            'cp app/*.ico public/'
-          ].join('&&');
-        }
+
+    // Empties folders to start fresh
+    clean: {
+      app: {
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.app %>/scripts/{,*/}*.js'
+          ]
+        }]
       },
-      cphtml: {
-        command: function() {
-          return [
-            'cp -f app/*.html public/'
-          ].join('&&');
-        }
+      dist: {
+        files: [{
+          dot: true,
+          src: [
+            '<%= config.app %>/{,*/}*.html',
+            '.tmp',
+            '<%= config.dist %>/*',
+            '!<%= config.dist %>/.git*'
+          ]
+        }]
       },
-      cpjs: {
-        command: function() {
-          return [
-            'cp -r app/scripts/ public/scripts/'
-          ].join('&&');
-        }
+      views: {
+        files: [{
+          dot: true,
+          src: [
+            'views'
+          ]
+        }]
       },
-      cpcss: {
-        command: function() {
-          return [
-            'cp -f app/styles/*.css public/styles/'
-          ].join('&&');
-        }
+      server: {
+        files: [{
+          dot: true,
+          src: [
+            '.tmp',
+            'db/*.js',
+            'dto/*.js',
+            'model/*.js',
+            'routes/*.js',
+            'util/*.js'
+          ]
+        }]
       },
-      cpdist: {
-        command: function() {
-          return [
-            'rm -r public',
-            'mkdir public',
-            'cp -R dist/ public/'
-          ].join('&&');
-        }
+      'public': {
+        files: [{
+          dot: true,
+          src: ['<%= config.public %>/*']
+        }]
+      }
+    },
+
+    // Copies remaining files to places other tasks can use
+    copy: {
+      app2dist: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.dist %>',
+          src: [
+            '*.{ico,png,txt}',
+            'images/{,*/}*.*',
+            '{,*/}*.html',
+            'styles/fonts/{,*/}*.*'
+          ]
+        }, {
+          src: 'node_modules/apache-server-configs/dist/.htaccess',
+          dest: '<%= config.dist %>/.htaccess'
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist',
+          src: 'fonts/*',
+          dest: '<%= config.dist %>'
+        }]
+      },
+      styles2tmp: {
+        expand: true,
+        dot: true,
+        cwd: '<%= config.app %>/styles',
+        dest: '.tmp/styles/',
+        src: '{,*/}*.css'
+      },
+      js2public: {
+        expand: true,
+        dot: true,
+        cwd: '<%= config.app %>',
+        dest: '<%= config.public %>',
+        src: 'scripts'
+      },
+      css2public: {
+        expand: true,
+        dot: true,
+        cwd: '<%= config.app %>',
+        dest: '<%= config.public %>',
+        src: 'styles'
+      },
+      app2public: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.public %>',
+          src: [
+            '*.{ico,png,txt}',
+            'bower_components',
+            'images',
+            'scripts',
+            'styles'
+          ]
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>/bower_components/bootstrap/dist',
+          src: 'fonts/*',
+          dest: '<%= config.public %>'
+        }]
+      },
+      app2views: {
+        expand: true,
+        dot: true,
+        cwd: '<%= config.app %>/jade',
+        dest: 'views',
+        src: '*.jade'
+      },
+      dist2public: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.dist %>',
+          dest: '<%= config.public %>',
+          src: [
+            '*.{ico,png,txt}',
+            'images/{,*/}*.*',
+            'scripts/{,*/}*.*',
+            'styles/{,*/}*.*',
+            'fonts/*'
+          ]
+        }, {
+          src: 'node_modules/apache-server-configs/dist/.htaccess',
+          dest: '<%= config.public %>/.htaccess'
+        }]
       }
     }
+
   });
 
   grunt.registerTask('serve',
     'start the server and preview your app, --allow-remote for remote access',
     function(target) {
-      if(target === 'dist') {
+      if (target === 'dist') {
         return grunt.task.run(['build',
-                               'open']);
+          'open'
+        ]);
       }
 
       grunt.task.run([
         'jshint',
+        'clean:app',
         'clean:server',
-        'jade',
+        'clean:views',
         'typescript:client',
         'typescript:server',
-        'concurrent:server',
-        'autoprefixer',
-        'shell:cpapp',
+        'copy:app2public',
+        'copy:app2views',
         'open',
         'watch'
       ]);
@@ -458,34 +454,23 @@ module.exports = function(grunt) {
   grunt.registerTask('server', function(target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run([target ?
-                    ('serve:' + target) :
-                    'serve']);
+      ('serve:' + target) :
+      'serve'
+    ]);
   });
   grunt.registerTask('s', function(target) {
     grunt.task.run([target ?
-                    ('serve:' + target) :
-                    'serve']);
+      ('serve:' + target) :
+      'serve'
+    ]);
   });
-
-  //  grunt.registerTask('test', function(target) {
-  //    if(target !== 'watch') {
-  //      grunt.task.run([
-  //        'clean:server',
-  //        'concurrent:test',
-  //        'autoprefixer'
-  //      ]);
-  //    }
-  //
-  //    grunt.task.run([
-  //      'connect:test'
-  //      //'mocha'
-  //    ]);
-  //  });
 
   grunt.registerTask('build', [
     'jshint',
+    'clean:app',
     'clean:dist',
     'clean:server',
+    'clean:views',
     'jade',
     'typescript:server',
     'typescript:client',
@@ -496,11 +481,12 @@ module.exports = function(grunt) {
     'concat',
     'cssmin',
     'uglify',
-    'copy:dist',
+    'copy:app2dist',
     'rev',
     'usemin',
     'htmlmin',
-    'shell:cpdist'
+    'shell:html2jade',
+    'copy:dist2public'
   ]);
   grunt.registerTask('b', function() {
     grunt.task.run('build');
@@ -508,18 +494,17 @@ module.exports = function(grunt) {
 
   // cleanup
   grunt.registerTask('cleanup', [
+    'clean:app',
     'clean:dist',
-    'clean:server']);
+    'clean:server',
+    'clean:views'
+  ]);
   grunt.registerTask('cu', function() {
     grunt.task.run('cleanup');
   });
 
-  grunt.registerTask('copydto', [
-    'copy:dto'
-  ]);
-
   grunt.registerTask('default', [
-    'clean:dist',
+    'clean:app',
     'clean:server',
     'typescript:client',
     'typescript:server',

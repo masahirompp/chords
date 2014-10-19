@@ -404,7 +404,7 @@ routes/*.js
 util/*.js
 dto/*.js
 *.log
-
+views/
 build/
 
 ### Bower ###
