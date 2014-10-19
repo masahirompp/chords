@@ -16,20 +16,12 @@ html.no-js(lang='ja')
     //build:css(.tmp) /styles/main.css
     link(rel='stylesheet', href='/styles/main.css')
     //endbuild
-    script(type='text/javascript').
-      (function(b, o, i, l, e, r) {
-      b.GoogleAnalyticsObject = l;
-      b[l] || (b[l] = function() {
-      (b[l].q = b[l].q || []).push(arguments)
-      });
-      b[l].l = +new Date;
-      e = o.createElement(i);
-      r = o.getElementsByTagName(i)[0];
-      e.src = '//www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e, r)
-      }(window, document, 'script', 'ga'));
-      ga('create', 'UA-XXXXX-X');
-      ga('send', 'pageview');
+    //build:js /scripts/plugins.js
+    script(src='/bower_components/jquery/dist/jquery.js')
+    script(src='/bower_components/blockui/jquery.blockUI.js')
+    script(src='/scripts/viewmodel/Initialize.js')
+    script(src='/scripts/util/Analytics.js')
+    //endbuild
   body
     //if lt IE 10
       p.browsehappy
@@ -40,6 +32,8 @@ html.no-js(lang='ja')
           | upgrade
           | your browser
         | to improve your experience.
+    script.
+      $.blockUIl();
     nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
       .container-fluid
         .navbar-header
@@ -83,15 +77,11 @@ html.no-js(lang='ja')
         p.text-right Copyright @2014 ChordsCliche
     //build:js /scripts/vendor.js
     //bower:js
-    script(src='/bower_components/jquery/dist/jquery.js')
-    script(src='/bower_components/blockui/jquery.blockUI.js')
     script(src='/bower_components/growl/javascripts/jquery.growl.js')
     script(src='/bower_components/underscore/underscore.js')
     script(src='/bower_components/d3/d3.js')
     script(src='/bower_components/requirejs/require.js')
-    //endbower
-    //endbuild
-    //build:js /scripts/plugins.js
     script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
+    //endbower
     //endbuild
     block script

@@ -4,20 +4,24 @@ require.config( < RequireConfig > {
 
 require(['./viewmodel/Event',
   './viewmodel/SearchView',
-  './util/Url'
-], (Event, SearchView, Url) => {
-  console.log('list');
-  console.log('Running jQuery %s', $()
-    .jquery);
-  var replaceHistory = true;
+  './util/Url',
+  './util/ErrorHandle'
+], (Event, SearchView, Url, ErrorHandle) => {
+
+  var redirect = true;
 
   $(() => {
-    Event.initSearch();
+    try {
+      Event.initSearch();
 
-    // 初回のみ実行
-    setTimeout(() => {
+      // 初回のみ実行
       SearchView.$searchKeyword.val(Url.getQueryByName('q'));
-      SearchView.$searchBtn.trigger('click', replaceHistory);
-    }, 0);
+      SearchView.$searchBtn.trigger('click', redirect);
+
+    } catch (e) {
+      ErrorHandle.send(e);
+      $.unblockUI();
+    }
+
   });
 });

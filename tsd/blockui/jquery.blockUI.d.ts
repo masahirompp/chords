@@ -114,8 +114,6 @@ interface JQueryStatic {
   blockUI?: JQBlockUIStatic;
   /** unblock the page */
   unblockUI?: JQBlockUIStatic;
-  /** convenience method for quick growl-like notifications */
-  growlUI?: (title?:string, message?:string, timeout?:number, onClose?:(element:any, options:any) => void) => void;
 }
 
 interface JQuery {

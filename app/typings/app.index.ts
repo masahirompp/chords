@@ -4,11 +4,15 @@ require.config( < RequireConfig > {
   baseUrl: '/scripts'
 });
 
-require(['./viewmodel/Event'], (CommonEvent) => {
-  console.log('index');
-  console.log('Running jQuery %s', $()
-    .jquery);
+require(['./viewmodel/Event', './util/ErrorHandle'], (Event, ErrorHandle) => {
+
   $(() => {
-    CommonEvent.initIndex();
+    try {
+      Event.initIndex();
+      $.unblockUI();
+    } catch (e) {
+      ErrorHandle.send(e);
+      $.unblockUI();
+    }
   });
 });

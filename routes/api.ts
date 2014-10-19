@@ -70,4 +70,11 @@ router.get('/:artist/:song/:id', (req:express.Request, res:express.Response, nex
     });
 });
 
+/**
+ * /api/error POST
+ */
+router.post('/error', (req:express.Request, res:express.Response) => {
+
+});
+
 module.exports = router;

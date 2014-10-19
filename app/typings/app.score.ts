@@ -4,13 +4,25 @@ require.config( < RequireConfig > {
 
 require([
   './data/AjaxScore',
-  './func/ScoreController'
-], (AjaxScore, ScoreController) => {
-  console.log('score');
-  console.log('Running jQuery %s', $()
-    .jquery);
+  './func/ScoreController',
+  './viewmodel/Event',
+  './util/ErrorHandle'
+], (AjaxScore, ScoreController, Event, ErrorHandle) => {
+
   $(() => {
-    AjaxScore.getScore()
-      .then((data) => ScoreController.draw(data));
+    try {
+      Event.initScore();
+
+      // コード譜描画
+      AjaxScore.getScore()
+        .then((data) => ScoreController.draw(data))
+        .always(() => {
+          $.unblockUI();
+        });
+
+    } catch (e) {
+      ErrorHandle.send(e);
+      $.unblockUI();
+    }
   });
 });
