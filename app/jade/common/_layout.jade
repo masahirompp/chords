@@ -10,6 +10,7 @@ html.no-js(lang='ja')
     //build:css /styles/vendor.css
     //bower:css
     link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='/bower_components/growl/stylesheets/jquery.growl.css')
     //endbower
     //endbuild
     //build:css(.tmp) /styles/main.css
@@ -76,7 +77,7 @@ html.no-js(lang='ja')
               input#searchKeyword.form-control(type='text', placeholder='曲名 アーティスト名')
             button#searchBtn.btn.btn-default(type='submit', data-toggle='tooltip', data-placement='bottom', title='検索')
               span.glyphicon.glyphicon-search
-    .container-fluid
+    #container.container-fluid
       block content
       .footer
         p.text-right Copyright @2014 ChordsCliche
@@ -84,6 +85,7 @@ html.no-js(lang='ja')
     //bower:js
     script(src='/bower_components/jquery/dist/jquery.js')
     script(src='/bower_components/blockui/jquery.blockUI.js')
+    script(src='/bower_components/growl/javascripts/jquery.growl.js')
     script(src='/bower_components/underscore/underscore.js')
     script(src='/bower_components/d3/d3.js')
     script(src='/bower_components/requirejs/require.js')

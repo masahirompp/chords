@@ -1,10 +1,15 @@
 /// <reference path="../../../tsd/jquery/jquery.d.ts" />
+/// <reference path="../../../tsd/blockui/jquery.blockUI.d.ts" />
+/// <reference path="../../../tsd/growl/jquery.growl.d.ts" />
 /// <reference path="../../../tsd/bootstrap/bootstrap.d.ts" />
 
-import ScoreController = require('../func/ScoreController');
 import Url = require('../util/Url');
+import AjaxScore = require('../data/AjaxScore');
+import SearchView = require('./SearchView');
 
 class Event {
+
+  static $container = $('#container');
 
   static regSpace = /\s+/g;
 
@@ -24,26 +29,40 @@ class Event {
     $(() => {
       Event.initCommon();
 
-      $('#searchBtn')
+      SearchView.$searchBtn
         .on('click', (e) => {
+          e.preventDefault();
           var keyword = Event.getKeyword();
           if (!keyword) return false;
 
-          e.preventDefault();
-          $.Deferred(() => $.blockUI())
-            .promise()
-            .then(() => {
-              return AjaxScore.search(keyword)
-            })
+          Event.$container.block({
+            message: '<img src="/images/loading.gif" /> '
+          });
+          AjaxScore.search(keyword)
             .then((data) => {
               SearchView.drawResult(data);
-              history.pushState(data, null, '/search/?q=' + encodeURI(keyword));
+              history.pushState(data, null, '/search' + Url.makeQueryParameter('q', keyword));
+              if (data.length === 0) {
+                $.growl.notice({
+                  title: '検索結果0件',
+                  message: '曲名、アーティスト名を変えて検索してください。',
+                  location: 'underHeader'
+                });
+              }
             })
             .fail((e) => {
               console.dir(e);
             })
-            .always(() => $.unblockUI());
+            .always(() => {
+              Event.$container.unblock();
+            });
         });
+
+      // 初回のみ実行
+      setTimeout(() => {
+        SearchView.$searchKeyword.val(Url.getQueryByName('q'));
+        SearchView.$searchBtn.trigger('click');
+      }, 0);
 
     });
   }
@@ -58,11 +77,10 @@ class Event {
   }
 
   private static getKeyword(): string {
-    var $searchKeyword = $('#searchKeyword');
-    var keyword = $searchKeyword.val()
+    var keyword = SearchView.$searchKeyword.val()
       .replace(this.regSpace, ' ')
       .trim();
-    setTimeout(() => $searchKeyword.val(keyword), 0);
+    setTimeout(() => SearchView.$searchKeyword.val(keyword), 0);
     return keyword;
   }
 
@@ -72,11 +90,10 @@ class Event {
   }
 
   private static addEventSearchBtn() {
-    $('#searchBtn')
+    SearchView.$searchBtn
       .on('click', (e) => {
         e.preventDefault();
-        var keyword = $('#searchKeyword')
-          .val();
+        var keyword = Event.getKeyword();
         if (keyword.match(/\S/)) {
           location.href = '/search' + Url.makeQueryParameter('q', keyword);
         }
