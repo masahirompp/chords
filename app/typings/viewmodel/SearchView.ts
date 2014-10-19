@@ -7,6 +7,8 @@ class SearchView {
   public static $searchBtn = $('#searchBtn');
   public static $searchKeyword = $('#searchKeyword');
 
+  static regSpace = /\s+/g;
+
   public static drawResult(data: ScoreDTO[]) {
     this.$searchResult.empty();
     if (data.length === 0) {
@@ -20,9 +22,32 @@ class SearchView {
     this.$searchResult.append(tmp);
   }
 
+  public static getKeyword(): string {
+    var keyword = SearchView.$searchKeyword.val()
+      .replace(this.regSpace, ' ')
+      .trim();
+    setTimeout(() => SearchView.$searchKeyword.val(keyword), 0);
+    return keyword;
+  }
+
+
   public static makeRow(d: ScoreDTO): string {
     return '<tr uri="' + ScoreUtil.makeUri(d) + '"><td>' + d.song.name + '</td><td>' + d.song.artist.name + '</td><td>' + d.author.name + '</td><td>' + d.description + '</td></tr>';
   }
+
+  public static growlNoResult() {
+    $.growl.notice({
+      title: '検索結果0件',
+      message: '曲名、アーティスト名を変えて検索してください。',
+      location: 'underHeader',
+      duration: 700
+    });
+  }
+
+  public static changeDocumentTitle(keyword) {
+    document.title = keyword + 'の検索結果 | ChordCliche';
+  }
+
 
 }
 

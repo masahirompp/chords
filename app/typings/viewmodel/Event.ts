@@ -11,34 +11,24 @@ class Event {
 
   static $container = $('#container');
 
-  static regSpace = /\s+/g;
-
   static initIndex() {
-    Event.initCommon();
+    Event.addCommonEvent();
     Event.addEventSearchBtn();
   }
 
   static initSearch() {
-    Event.initCommon();
+    Event.addCommonEvent();
     Event.addEventSearchAjax();
     Event.addEventPopState();
     Event.addEventResult();
   }
 
   static initScore() {
-    Event.initCommon();
+    Event.addCommonEvent();
     Event.addEventSearchBtn();
   }
 
-  private static getKeyword(): string {
-    var keyword = SearchView.$searchKeyword.val()
-      .replace(this.regSpace, ' ')
-      .trim();
-    setTimeout(() => SearchView.$searchKeyword.val(keyword), 0);
-    return keyword;
-  }
-
-  private static initCommon() {
+  private static addCommonEvent() {
     $('.btn')
       .tooltip();
   }
@@ -47,7 +37,7 @@ class Event {
     SearchView.$searchBtn
       .on('click', (e) => {
         e.preventDefault();
-        var keyword = Event.getKeyword();
+        var keyword = SearchView.getKeyword();
         if (keyword.match(/\S/)) {
           location.href = '/search' + Url.makeQueryParameter('q', keyword);
         }
@@ -56,9 +46,9 @@ class Event {
 
   private static addEventSearchAjax() {
     SearchView.$searchBtn
-      .on('click', (e, replaceHistory ? ) => {
+      .on('click', (e, replaceHistory) => {
         e.preventDefault();
-        var keyword = Event.getKeyword();
+        var keyword = SearchView.getKeyword();
         if (!keyword) return false;
 
         $.blockUI({
@@ -68,7 +58,8 @@ class Event {
           .then((data) => {
             SearchView.drawResult(data);
             replaceHistory ? history.replaceState(data, null) : history.pushState(data, null, '/search' + Url.makeQueryParameter('q', keyword));
-            if (data.length === 0) Event.growlNoResult();
+            SearchView.changeDocumentTitle(keyword);
+            if (data.length === 0) SearchView.growlNoResult();
           })
           .fail((e) => {
             console.dir(e);
@@ -81,18 +72,11 @@ class Event {
 
   private static addEventPopState() {
     window.addEventListener('popstate', (e: PopStateEvent) => {
-      SearchView.$searchKeyword.val(Url.getQueryByName('q'));
+      var keyword = Url.getQueryByName('q');
+      SearchView.$searchKeyword.val(keyword);
+      SearchView.changeDocumentTitle(keyword);
       SearchView.drawResult(e.state);
-      if (e.state.length === 0) Event.growlNoResult();
-    });
-  }
-
-  private static growlNoResult() {
-    $.growl.notice({
-      title: '検索結果0件',
-      message: '曲名、アーティスト名を変えて検索してください。',
-      location: 'underHeader',
-      duration: 700
+      if (e.state.length === 0) SearchView.growlNoResult();
     });
   }
 
@@ -102,6 +86,7 @@ class Event {
         .attr('uri');
     });
   }
+
 
 }
 
