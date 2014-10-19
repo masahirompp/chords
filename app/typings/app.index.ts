@@ -8,5 +8,7 @@ require(['./viewmodel/Event'], (CommonEvent) => {
   console.log('index');
   console.log('Running jQuery %s', $()
     .jquery);
-  CommonEvent.initIndex();
+  $(() => {
+    CommonEvent.initIndex();
+  });
 });

@@ -187,7 +187,7 @@ class Score {
     });
   }
 
-  static makeKeywordQuery(keyword: string) {
+  private static makeKeywordQuery(keyword: string): any[] {
     var query = [];
     keyword.split(' ')
       .forEach((k) => {
@@ -196,8 +196,8 @@ class Score {
     return query
   }
 
-  static makeRegKeyword(keyword): any {
-    var reg: RegExp = new RegExp(keyword, 'i');
+  private static makeRegKeyword(keyword): any {
+    var reg = new RegExp(keyword, 'i');
     return {
       $or: [{
         artistName: reg
