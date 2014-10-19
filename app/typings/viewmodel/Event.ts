@@ -9,6 +9,8 @@ import SearchView = require('./SearchView');
 
 class Event {
 
+  static $container = $('#container');
+
   static regSpace = /\s+/g;
 
   static initIndex() {
@@ -19,7 +21,8 @@ class Event {
   static initSearch() {
     Event.initCommon();
     Event.addEventSearchAjax();
-    Event.addEventPopState()
+    Event.addEventPopState();
+    Event.addEventResult();
   }
 
   static initScore() {
@@ -53,7 +56,7 @@ class Event {
 
   private static addEventSearchAjax() {
     SearchView.$searchBtn
-      .on('click', (e) => {
+      .on('click', (e, replaceHistory ? ) => {
         e.preventDefault();
         var keyword = Event.getKeyword();
         if (!keyword) return false;
@@ -64,7 +67,7 @@ class Event {
         AjaxScore.search(keyword)
           .then((data) => {
             SearchView.drawResult(data);
-            history.pushState(data, null, '/search' + Url.makeQueryParameter('q', keyword));
+            replaceHistory ? history.replaceState(data, null) : history.pushState(data, null, '/search' + Url.makeQueryParameter('q', keyword));
             if (data.length === 0) Event.growlNoResult();
           })
           .fail((e) => {
@@ -89,7 +92,14 @@ class Event {
       title: '検索結果0件',
       message: '曲名、アーティスト名を変えて検索してください。',
       location: 'underHeader',
-      duration: 1000
+      duration: 700
+    });
+  }
+
+  private static addEventResult() {
+    Event.$container.on('click', 'tr', function() {
+      location.href = $(this)
+        .attr('uri');
     });
   }
 
