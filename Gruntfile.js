@@ -271,7 +271,8 @@ module.exports = function(grunt) {
       html2jade: {
         command: function() {
           return [
-            'html2jade <%= config.dist %>/*.html -o view/'
+            'mkdir views',
+            'html2jade <%= config.dist %>/*.html -o views/'
           ].join('&&');
         }
       }
@@ -308,7 +309,7 @@ module.exports = function(grunt) {
         files: [{
           dot: true,
           src: [
-            'views'
+            'views/'
           ]
         }]
       },
@@ -338,7 +339,7 @@ module.exports = function(grunt) {
       app2dist: {
         files: [{
           expand: true,
-          dot: true,
+          dot: false,
           cwd: '<%= config.app %>',
           dest: '<%= config.dist %>',
           src: [
@@ -352,7 +353,7 @@ module.exports = function(grunt) {
           dest: '<%= config.dist %>/.htaccess'
         }, {
           expand: true,
-          dot: true,
+          dot: false,
           cwd: '<%= config.app %>/bower_components/bootstrap/dist',
           src: 'fonts/*',
           dest: '<%= config.dist %>'
@@ -360,41 +361,41 @@ module.exports = function(grunt) {
       },
       styles2tmp: {
         expand: true,
-        dot: true,
+        dot: false,
         cwd: '<%= config.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
       },
       js2public: {
         expand: true,
-        dot: true,
+        dot: false,
         cwd: '<%= config.app %>',
         dest: '<%= config.public %>',
-        src: 'scripts'
+        src: 'scripts/{,*/}*.*'
       },
       css2public: {
         expand: true,
-        dot: true,
+        dot: false,
         cwd: '<%= config.app %>',
         dest: '<%= config.public %>',
-        src: 'styles'
+        src: 'styles/{,*/}*.*'
       },
       app2public: {
         files: [{
           expand: true,
-          dot: true,
+          dot: false,
           cwd: '<%= config.app %>',
           dest: '<%= config.public %>',
           src: [
             '*.{ico,png,txt}',
-            'bower_components',
-            'images',
-            'scripts',
-            'styles'
+            'bower_components/**',
+            'images/**',
+            'scripts/**',
+            'styles/**'
           ]
         }, {
           expand: true,
-          dot: true,
+          dot: false,
           cwd: '<%= config.app %>/bower_components/bootstrap/dist',
           src: 'fonts/*',
           dest: '<%= config.public %>'
@@ -402,7 +403,7 @@ module.exports = function(grunt) {
       },
       app2views: {
         expand: true,
-        dot: true,
+        dot: false,
         cwd: '<%= config.app %>/jade',
         dest: 'views',
         src: '*.jade'
@@ -410,7 +411,7 @@ module.exports = function(grunt) {
       dist2public: {
         files: [{
           expand: true,
-          dot: true,
+          dot: false,
           cwd: '<%= config.dist %>',
           dest: '<%= config.public %>',
           src: [
@@ -484,7 +485,7 @@ module.exports = function(grunt) {
     'copy:app2dist',
     'rev',
     'usemin',
-    'htmlmin',
+    //'htmlmin',
     'shell:html2jade',
     'copy:dist2public'
   ]);
