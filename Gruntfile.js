@@ -278,6 +278,21 @@ module.exports = function(grunt) {
       }
     },
 
+    replace: {
+      jade: {
+        src: ['views/*.jade'],
+        overwrite: true,
+        replacements: [{
+          from: 'title |title|',
+          to: 'title= title'
+        }, {
+          from: '|keyword|',
+          to: '#{keyword}'
+        }]
+      }
+
+    },
+
     open: {
       dev: {
         path: 'http://localhost:3000/'
@@ -448,6 +463,7 @@ module.exports = function(grunt) {
         'typescript:server',
         'copy:app2public',
         'copy:app2views',
+        'replace',
         'open',
         'watch'
       ]);
@@ -487,6 +503,7 @@ module.exports = function(grunt) {
     'usemin',
     //'htmlmin',
     'shell:html2jade',
+    'replace',
     'copy:dist2public'
   ]);
   grunt.registerTask('b', function() {

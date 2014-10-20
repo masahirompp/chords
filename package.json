@@ -24,8 +24,8 @@
     "underscore": "latest"
   },
   "devDependencies": {
-    "bin-version-check": "^2.1.0",
-    "grunt": "^0.4.5",
+    "bin-version-check": "latest",
+    "grunt": "latest",
     "grunt-autoprefixer": "latest",
     "grunt-concurrent": "latest",
     "grunt-contrib-clean": "latest",
@@ -43,9 +43,10 @@
     "grunt-rev": "latest",
     "grunt-shell": "latest",
     "grunt-svgmin": "latest",
+    "grunt-text-replace": "latest",
     "grunt-typescript": "latest",
     "grunt-usemin": "latest",
-    "has-ansi": "^1.0.0",
+    "has-ansi": "latest",
     "html2jade": "latest",
     "imagemin-gifsicle": "latest",
     "imagemin-jpegtran": "latest",
@@ -54,9 +55,9 @@
     "js-beautify": "latest",
     "jshint-stylish": "latest",
     "load-grunt-tasks": "latest",
-    "strip-ansi": "^2.0.0",
-    "supports-color": "^1.2.0",
-    "svgo": "^0.4.5",
+    "strip-ansi": "latest",
+    "supports-color": "latest",
+    "svgo": "latest",
     "time-grunt": "latest"
   }
 }
