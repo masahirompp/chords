@@ -15,7 +15,7 @@ class SearchView {
       return;
     }
     var tmp = '<table class="table table-hover"><thead><th>曲名</th><th>アーティスト名</th><th>作成者</th><th></th></thead><tbody>';
-    _.each(data, (d: ScoreDTO) => {
+    data.forEach((d: ScoreDTO) => {
       tmp += this.makeRow(d);
     });
     tmp += '</tbody></table>';

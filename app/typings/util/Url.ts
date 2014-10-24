@@ -2,47 +2,50 @@ import Map = require('./Dictionary');
 
 class Url {
 
-  static getQueryByName(name:string):string {
-    var regex = new RegExp("[\\?&]" + name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]") + "=([^&#]*)");
+  static getQueryByName(name: string): string {
+    var regex = new RegExp("[\\?&]" + name.replace(/[\[]/, "\\[")
+      .replace(/[\]]/, "\\]") + "=([^&#]*)");
     var results = regex.exec(location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
-  static makeQueryParameter(key:string, value:string):string {
-    if(!value) {
+  static makeQueryParameter(key: string, value: string): string {
+    if (!value) {
       return '';
     }
-    return '?' + key + '=' + value.split(/[ 　]+/g).map(d => encodeURIComponent(d)).join('+');
+    return '?' + key + '=' + value.split(/[ 　]+/g)
+      .map(d => encodeURIComponent(d))
+      .join('+');
   }
 
-  static getPath(url:string):string {
-    if(url.match(/^http/)) {
-      if(url.indexOf('/', 9) === -1) {
+  static getPath(url: string): string {
+    if (url.match(/^http/)) {
+      if (url.indexOf('/', 9) === -1) {
         return '/';
       }
       url = url.substring(url.indexOf('/', 9));
     }
-    if(!url.match(/^\//)) {
+    if (!url.match(/^\//)) {
       url = '/' + url;
     }
-    if(url.indexOf('?') > 0) {
+    if (url.indexOf('?') > 0) {
       url = url.substring(0, url.indexOf('?'));
     }
-    if(url.indexOf('#') > 0) {
+    if (url.indexOf('#') > 0) {
       url = url.substring(0, url.indexOf('#'));
     }
     return url;
   }
 
-  static getHost(url:string):string {
-    if(url.match(/^http/)) {
+  static getHost(url: string): string {
+    if (url.match(/^http/)) {
       return url.substring(0, url.indexOf('/', 9));
     }
     return location.host;
   }
 
-  static getQueryString(url:string):string {
-    if(url.indexOf('?')) {
+  static getQueryString(url: string): string {
+    if (url.indexOf('?')) {
       return url.substring(url.indexOf('?'), url.indexOf('#') === -1 ? null : url.indexOf('#'));
     }
     return '';
@@ -50,12 +53,12 @@ class Url {
 
   private _host = '';
   private _path = '';
-  private _queryMap = new Map<string>();
+  private _queryMap = new Map < string > ();
 
-  constructor(url?:string) {
+  constructor(url ? : string) {
     var query = '';
 
-    if(url) {
+    if (url) {
       this._host = Url.getHost(url);
       this._path = Url.getPath(url);
       query = Url.getQueryString(url);
@@ -65,45 +68,46 @@ class Url {
       query = location.search;
     }
 
-    _.forEach<string>(query.split(/\\?&/g), (keyValue:string) => {
-      if(keyValue.indexOf('=') > 0) {
-        var tmp = keyValue.split('=');
-        this._queryMap.add(tmp[0], decodeURIComponent(tmp[1]));
-      }
-    });
+    query.split(/\\?&/g)
+      .forEach((keyValue: string) => {
+        if (keyValue.indexOf('=') > 0) {
+          var tmp = keyValue.split('=');
+          this._queryMap.add(tmp[0], decodeURIComponent(tmp[1]));
+        }
+      });
   }
 
-  getQueryValue(key:string):string {
+  getQueryValue(key: string): string {
     return this._queryMap.get(key);
   }
 
-  updateQuery(key:string, value:string):Url {
+  updateQuery(key: string, value: string): Url {
     this._queryMap.store(key, value);
     return this;
   }
 
-  removeQuery(key:string):Url {
+  removeQuery(key: string): Url {
     this._queryMap.remove(key);
     return this;
   }
 
-  get host():string {
+  get host(): string {
     return this._host;
   }
 
-  get path():string {
+  get path(): string {
     return this._path;
   }
 
-  get url():string {
+  get url(): string {
     return this._path + this.makeQueryString();
   }
 
-  get getQueryKeys():string[] {
+  get getQueryKeys(): string[] {
     return this._queryMap.keys;
   }
 
-  private makeQueryString():string {
+  private makeQueryString(): string {
     var tmp = '';
     this._queryMap.keys.forEach((key) => {
       tmp = '&' + tmp + encodeURIComponent(key) + '=' + encodeURIComponent(this._queryMap.get(key));

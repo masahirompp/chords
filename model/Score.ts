@@ -70,12 +70,13 @@ class Score {
       if (results.length === 0) {
         return d.resolve(1);
       }
-      var maxScoreId: number = _.chain(results)
-        .map((result) => {
+      var maxScoreId = 1;
+      results.map(result => {
           return Number(result.url.substring(result.url.lastIndexOf('/') + 1));
         })
-        .max()
-        .value();
+        .forEach(n => {
+          if (n > maxScoreId) maxScoreId = n;
+        });
       d.resolve(maxScoreId + 1);
     });
 
@@ -173,7 +174,7 @@ class Score {
       if (err) {
         return d.reject(err);
       }
-      d.resolve(_.map < IScoreDocument, Score > (scores, doc => {
+      d.resolve(scores.map(doc => {
         return new Score(doc);
       }));
     });
@@ -182,7 +183,7 @@ class Score {
   }
 
   static toJson(scores: Score[]): ScoreDTO[] {
-    return _.map(scores, (score) => {
+    return scores.map((score) => {
       return score.json;
     });
   }

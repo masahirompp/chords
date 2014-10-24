@@ -14,9 +14,6 @@
     "requirejs/require.d.ts": {
       "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
-    "underscore/underscore.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
-    },
     "mongoose/mongoose.d.ts": {
       "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
     },
