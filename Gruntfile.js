@@ -346,6 +346,12 @@ module.exports = function(grunt) {
           dot: true,
           src: ['<%= config.public %>/*']
         }]
+      },
+      'html': {
+        files: [{
+          dot: false,
+          src: ['<%= config.app %>/*.html']
+        }]
       }
     },
 
@@ -373,6 +379,13 @@ module.exports = function(grunt) {
           src: 'fonts/*',
           dest: '<%= config.dist %>'
         }]
+      },
+      html2tmp: {
+        expand: true,
+        dot: false,
+        cwd: '<%= config.app %>',
+        dest: '.tmp/html/',
+        src: '*.html'
       },
       styles2tmp: {
         expand: true,
@@ -504,7 +517,9 @@ module.exports = function(grunt) {
     //'htmlmin',
     'shell:html2jade',
     'replace',
-    'copy:dist2public'
+    'copy:dist2public',
+    'copy:html2tmp',
+    'clean:html'
   ]);
   grunt.registerTask('b', function() {
     grunt.task.run('build');
