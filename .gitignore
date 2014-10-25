@@ -406,6 +406,8 @@ dto/*.js
 *.log
 views/
 build/
+log/
+config/
 
 ### Bower ###
 bower_components

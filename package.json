@@ -3,16 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./app.js"
   },
   "dependencies": {
     "body-parser": "latest",
+    "config": "latest",
     "cookie-parser": "latest",
-    "debug": "latest",
     "errorhandler": "latest",
     "express": "latest",
     "express-session": "latest",
     "jade": "latest",
+    "log4js": "^0.6.21",
     "method-override": "latest",
     "mongoose": "latest",
     "morgan": "latest",
@@ -20,8 +21,7 @@
     "passport": "latest",
     "passport-twitter": "latest",
     "q": "latest",
-    "serve-favicon": "latest",
-    "underscore": "latest"
+    "serve-favicon": "latest"
   },
   "devDependencies": {
     "bin-version-check": "latest",

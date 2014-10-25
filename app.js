@@ -1,10 +1,9 @@
 'use strict';
 
+// middleware
 var express = require('express');
 var path = require('path');
-
 var favicon = require('serve-favicon');
-var logger = require('morgan');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var bodyParser = require('body-parser');
@@ -12,41 +11,51 @@ var multer = require('multer');
 var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
 
+// app
 var db = require('./db/db');
-
+var config = require('config');
 var routes = require('./routes/index');
 var api = require('./routes/api');
 var admin = require('./routes/admin');
 
-global._ = require('underscore');
+// global
 global.Q = require('q');
+
+// Logger
+var log4js = require('log4js');
+log4js.configure('log4js_setting.json');
+var logger = log4js.getLogger('app');
+logger.setLevel(config.log.level); // ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
+logger.info('Logging start. ');
+logger.info('Log Level:' + config.log.level);
 
 var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // setup
+app.use(log4js.connectLogger(logger, {
+  level: config.log.level
+}));
 app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
 app.use(methodOverride());
-app.use(session({ resave: true,
+app.use(session({
+  resave: true,
   saveUninitialized: true,
-  secret: 'uwotm8' }));
+  secret: config.server.session
+}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(multer());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// development only
-console.log('ENV: ' + app.get('env'));
-if('development' === app.get('env')) {
-  app.use(errorHandler());
-}
+app.use(errorHandler());
 
 //db setup
-db.debug(true);
-app.set('db', 'localhost/asdf');
+db.debug(config.db.debug);
+app.set('db', config.db.host + '/' + config.db.name);
 db.connect(app.get('db'));
 
 app.use('/', routes);
@@ -70,4 +79,7 @@ app.use(function(err, req, res) {
   });
 });
 
-module.exports = app;
+var server = app.listen(config.server.port, function() {
+  logger.info('Express server listening on port ' + server.address()
+    .port);
+});
