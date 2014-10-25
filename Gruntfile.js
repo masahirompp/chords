@@ -501,6 +501,7 @@ module.exports = function(grunt) {
     'clean:dist',
     'clean:server',
     'clean:views',
+    'clean:public',
     'jade',
     'typescript:server',
     'typescript:client',
