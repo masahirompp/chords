@@ -8,6 +8,7 @@
   "dependencies": {
     "body-parser": "latest",
     "config": "latest",
+    "connect-mongo": "^0.4.1",
     "cookie-parser": "latest",
     "errorhandler": "latest",
     "express": "latest",

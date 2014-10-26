@@ -6,6 +6,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var methodOverride = require('method-override');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var cookieParser = require('cookie-parser');
@@ -40,9 +41,14 @@ app.use(log4js.connectLogger(logger, {
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(methodOverride());
 app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: config.server.session
+  secret: config.server.session,
+  store: new MongoStore({
+    db: config.db.name,
+    host: config.db.host
+  }),
+  cookie: {
+    httpOnly: false
+  }
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
