@@ -23,7 +23,7 @@ global.Q = require('q');
 
 // Logger
 var log4js = require('log4js');
-log4js.configure('log4js_setting.json');
+log4js.configure('config/log4js_setting.json');
 var logger = log4js.getLogger('app');
 logger.setLevel(config.log.level); // ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
 logger.info('Logging start. ');

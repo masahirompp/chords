@@ -1,0 +1,15 @@
+{
+  "db": {
+    "host": "localhost",
+    "name": "asdf",
+    "debug": true
+  },
+  "server": {
+    "port": 3000,
+    "session": "ebh6tt",
+    "debug": true
+  },
+  "log": {
+    "level": "DEBUG"
+  }
+}
