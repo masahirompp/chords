@@ -48,7 +48,9 @@ app.use(session({
   }),
   cookie: {
     httpOnly: false
-  }
+  },
+  resave: true,
+  saveUninitialized: true
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
