@@ -39,12 +39,12 @@ var UserSchema: mongoose.Schema = new mongoose.Schema({
   }
 });
 
-UserSchema.static('generateHash', (password: string): string => {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+UserSchema.static('generateHash', (password: string, callback: (err: any, hash: string) => void) => {
+  bcrypt.hash(password, bcrypt.genSaltSync(8), null, callback);
 });
 
-UserSchema.method('validPassword', function(password: string) {
-  return bcrypt.compareSync(password, this.local.password);
+UserSchema.method('validPassword', function(password, callback) {
+  bcrypt.compare(password, this.local.password, callback);
 });
 
 var UserDocumentModel: IUserDocumentModel = < IUserDocumentModel > mongoose.model('User', UserSchema);

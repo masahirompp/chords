@@ -46,10 +46,12 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false);
       }
-      if (!user.verifyPassword(password)) {
-        return done(null, false);
-      }
-      return done(null, user);
+      user.verifyPassword(password, function(err, result) {
+        if (err) {
+          return done(err);
+        }
+        return result ? done(null, user) : done(null, false);
+      });
     });
   }
 ));

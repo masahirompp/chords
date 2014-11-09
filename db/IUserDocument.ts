@@ -29,4 +29,8 @@ interface IUserDocument extends mongoose.Document {
   updated: Date;
 }
 
+interface IUserDocument {
+  validPassword:(password:string, callback:(err:any, result:boolean) => void) => void;
+}
+
 export = IUserDocument;
