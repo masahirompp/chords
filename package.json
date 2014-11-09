@@ -6,6 +6,7 @@
     "start": "node ./app.js"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "latest",
     "config": "latest",
     "connect-mongo": "^0.4.1",
@@ -20,6 +21,7 @@
     "morgan": "latest",
     "multer": "latest",
     "passport": "latest",
+    "passport-local": "^1.0.0",
     "passport-twitter": "latest",
     "q": "latest",
     "serve-favicon": "latest"

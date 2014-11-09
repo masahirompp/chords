@@ -5,22 +5,13 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var methodOverride = require('method-override');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
-
-// app
-var db = require('./db/db');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var config = require('config');
-var routes = require('./routes/index');
-var api = require('./routes/api');
-var admin = require('./routes/admin');
-
-// global
-global.Q = require('q');
 
 // Logger
 var log4js = require('log4js');
@@ -30,7 +21,47 @@ logger.setLevel(config.log.level); // ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATA
 logger.info('Logging start. ');
 logger.info('Log Level:' + config.log.level);
 
+// app
 var app = express();
+
+// db setup
+var db = require('./db/db');
+db.debug(config.db.debug);
+app.set('db', config.db.host + '/' + config.db.name);
+db.connect(app.get('db'));
+
+// passport
+var passport = require('passport');
+var LocalStrategy = require('passport-local')
+  .Strategy;
+//var passportTwitter = require('passport-twitter').Strategy;
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    db.User.findOne({
+      username: username
+    }, function(err, user) {
+      if (err) {
+        return done(err);
+      }
+      if (!user) {
+        return done(null, false);
+      }
+      if (!user.verifyPassword(password)) {
+        return done(null, false);
+      }
+      return done(null, user);
+    });
+  }
+));
+
+// route
+var routes = require('./routes/index');
+var api = require('./routes/api');
+var admin = require('./routes/admin');
+
+// global
+global.Q = require('q');
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -40,6 +71,16 @@ app.use(log4js.connectLogger(logger, {
 }));
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(methodOverride());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(multer());
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(errorHandler());
+
+// session auth
 app.use(session({
   secret: config.server.session,
   store: new MongoStore({
@@ -52,20 +93,11 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-app.use(multer());
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(errorHandler());
 
-//db setup
-db.debug(config.db.debug);
-app.set('db', config.db.host + '/' + config.db.name);
-db.connect(app.get('db'));
+app.use(passport.initialize());
+app.use(passport.session());
 
+// route
 app.use('/', routes);
 app.use('/api/admin', admin);
 app.use('/api', api);
@@ -87,6 +119,7 @@ app.use(function(err, req, res) {
   });
 });
 
+// start
 var server = app.listen(config.server.port, function() {
   logger.info('Express server listening on port ' + server.address()
     .port);

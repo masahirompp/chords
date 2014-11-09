@@ -1,9 +1,11 @@
 /// <reference path="../tsd/tsd.d.ts" />
 
 import mongoose = require('mongoose');
+import UserDocumentModel = require('./UserDocumentModel');
 import AuthorDocumentModel = require('./AuthorDocumentModel');
 import ScoreDocumentModel = require('./ScoreDocumentModel');
 import ChordDocumentModel = require('./ChordDocumentModel');
+import IUserDocumentModel = require('./IUserDocumentModel');
 import IAuthorDocumentModel = require('./IAuthorDocumentModel');
 import IScoreDocumentModel = require('./IScoreDocumentModel');
 import IChordDocumentModel = require('./IChordDocumentModel');
@@ -17,6 +19,10 @@ class db {
 
   static debug(debug: any) {
     mongoose.set('debug', debug);
+  }
+
+  static get User(): IUserDocumentModel {
+    return <IUserDocumentModel > UserDocumentModel;
   }
 
   static get Author(): IAuthorDocumentModel {

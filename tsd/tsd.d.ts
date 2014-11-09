@@ -2,3 +2,5 @@
 /// <reference path="node/node.d.ts" />
 /// <reference path="express/express.d.ts" />
 /// <reference path="q/Q.d.ts" />
+/// <reference path="passport/passport.d.ts" />
+/// <reference path="passport-local/passport-local.d.ts" />
