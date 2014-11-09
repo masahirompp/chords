@@ -1,14 +1,19 @@
 extends _layout
 block content
   form.form-signin(role='form')
-    h2.form-signin-heading Please sign in
-    input.form-control(type='email', placeholder='Email address', required='required', autofocus='autofocus')
-    input.form-control(type='password', placeholder='Password', required='required')
-    .checkbox
-      label
-        input(type='checkbox', value='remember-me')
-        | Remember me
-    button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
+    h2.form-signin-heading Chord Kitchen
+    .form-group
+      label(for='email') メールアドレス
+      input.form-control#email(type='email', name='email', placeholder='example@chordkitchen.net',
+      required='required', autofocus='autofocus')
+    .form-group
+      label(for='password') パスワード
+      input.form-control#password(type='password', name='password', placeholder='パスワード', required='required')
+    .form-group
+      label(for='passwordConfirm') パスワード（確認用）
+      input.form-control#passwordConfirm(type='password', name='passwordConfirm', placeholder='パスワード',
+      required='required')
+    button.btn.btn-lg.btn-primary.btn-block(type='submit') アカウント登録
 block script
   //build:js({app,.tmp}) /scripts/app.signup.js
   script(src='/scripts/app.signup.js')

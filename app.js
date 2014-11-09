@@ -35,6 +35,17 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local')
   .Strategy;
 //var passportTwitter = require('passport-twitter').Strategy;
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  db.User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
 passport.use(new LocalStrategy(
   function(username, password, done) {
     db.User.findOne({
