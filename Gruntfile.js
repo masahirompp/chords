@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       },
       jade: {
         files: ['<%= config.app %>/jade/{,*/}*.jade'],
-        tasks: ['copy:app2views']
+        tasks: ['copy:app2views', 'replace']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
