@@ -66,13 +66,14 @@ html.no-js(lang='ja')
                 li
                   a(href='#') One more separated link
             li
-              a(href='#') アカウント作成
+              a#signup(href='/signup') アカウント作成
             li
-              a(href='#') ログイン
+              a#login(href='/signin') ログイン
     #container.container-fluid
       block content
       .footer
         p.text-right Copyright @2014 ChordKitchen
+
     //build:js /scripts/vendor.js
     script(src='/bower_components/growl/javascripts/jquery.growl.js')
     script(src='/bower_components/d3/d3.js')

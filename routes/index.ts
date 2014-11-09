@@ -12,6 +12,20 @@ router.get('/', (req: express.Request, res: express.Response) => {
   });
 });
 
+router.get('/signin', (req: express.Request, res: express.Response) => {
+  res.render('signin', {
+    title: 'コード譜共有サイト ChordKitchen',
+    keyword: ''
+  });
+});
+
+router.get('/signup', (req: express.Request, res: express.Response) => {
+  res.render('signup', {
+    title: 'コード譜共有サイト ChordKitchen',
+    keyword: ''
+  });
+});
+
 router.get('/:artist/:song/:id', (req: express.Request, res: express.Response) => {
   // TODO 存在チェック
   res.render('score', {

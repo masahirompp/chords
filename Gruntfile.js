@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       },
       jade: {
         files: ['<%= config.app %>/jade/{,*/}*.jade'],
-        tasks: ['copy:app2views', 'replace']
+        tasks: ['copy:app2views','replace']
       },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
@@ -69,7 +69,9 @@ module.exports = function(grunt) {
           '<%= config.app %>/error.html': '<%= config.app %>/jade/error.jade',
           '<%= config.app %>/index.html': '<%= config.app %>/jade/index.jade',
           '<%= config.app %>/search.html': '<%= config.app %>/jade/search.jade',
-          '<%= config.app %>/score.html': '<%= config.app %>/jade/score.jade'
+          '<%= config.app %>/score.html': '<%= config.app %>/jade/score.jade',
+          '<%= config.app %>/signin.html': '<%= config.app %>/jade/signin.jade',
+          '<%= config.app %>/signup.html': '<%= config.app %>/jade/signup.jade'
         }
       }
     },
@@ -206,6 +208,32 @@ module.exports = function(grunt) {
           name: 'app.score',
           mainConfigFile: '<%= config.app %>/scripts/app.score.js'
         }
+      },
+      // !!! build.js options for app.signin.js (signin.html) !!!
+      dist4: {
+        options: {
+          out: '<%= config.dist %>/scripts/app.signin.js',
+          baseUrl: '<%= config.app %>/scripts',
+          optimize: 'none',
+          preserveLicenseComments: false,
+          useStrict: true,
+          wrap: true,
+          name: 'app.signin',
+          mainConfigFile: '<%= config.app %>/scripts/app.signin.js'
+        }
+      },
+      // !!! build.js options for app.signup.js (signup.html) !!!
+      dist5: {
+        options: {
+          out: '<%= config.dist %>/scripts/app.signup.js',
+          baseUrl: '<%= config.app %>/scripts',
+          optimize: 'none',
+          preserveLicenseComments: false,
+          useStrict: true,
+          wrap: true,
+          name: 'app.signup',
+          mainConfigFile: '<%= config.app %>/scripts/app.signup.js'
+        }
       }
     },
 
@@ -214,7 +242,9 @@ module.exports = function(grunt) {
         files: {
           '<%= config.dist %>/scripts/app.index.js': '<%= config.dist %>/scripts/app.index.js',
           '<%= config.dist %>/scripts/app.search.js': '<%= config.dist %>/scripts/app.search.js',
-          '<%= config.dist %>/scripts/app.score.js': '<%= config.dist %>/scripts/app.score.js'
+          '<%= config.dist %>/scripts/app.score.js': '<%= config.dist %>/scripts/app.score.js',
+          '<%= config.dist %>/scripts/app.signin.js': '<%= config.dist %>/scripts/app.signin.js',
+          '<%= config.dist %>/scripts/app.signup.js': '<%= config.dist %>/scripts/app.signup.js'
         }
       }
     },
