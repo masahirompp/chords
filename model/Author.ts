@@ -25,6 +25,10 @@ class Author {
     }
   }
 
+  get id(): string {
+    return this._author._id;
+  }
+
   static createNewAuthor = (name: string, email: string): Q.Promise < Author > => {
     return db.Author.createNewAuthor(name, email)
       .then((author: IAuthorDocument) => {

@@ -3,6 +3,7 @@
 import express = require('express');
 import passport = require('passport');
 import Author = require('../model/Author');
+import User = require('../model/User');
 
 class Auth {
 
@@ -10,7 +11,7 @@ class Auth {
 
     var router: express.Router = express.Router();
 
-    router.get('/logout', function(req, res){
+    router.get('/logout', function(req, res) {
       req.logout();
       res.redirect('/');
     });
@@ -21,6 +22,28 @@ class Auth {
         keyword: '',
         user: req.user
       });
+    });
+
+    router.post('/register', (req: express.Request, res: express.Response) => {
+      Author.createNewAuthor(req.param('displayName'), req.param('email'))
+        .then(author => {
+          console.log('author');
+          console.log(author);
+          return User.relateAuthor(req.user._id, author.id);
+        })
+        .then(user => {
+          console.log('user');
+          console.log(user);
+          res.render('index', {
+            title: 'コード譜共有サイト ChordKitchen',
+            keyword: '',
+            user: user
+          });
+        })
+        .fail(err => {
+          console.log(err);
+          res.redirect('/auth/register');
+        });
     });
 
     router.get('/twitter', passport.authenticate('twitter'));

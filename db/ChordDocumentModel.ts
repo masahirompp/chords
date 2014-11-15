@@ -35,8 +35,8 @@ ChordSchema.static('createNewChord', (scoreId: mongoose.Types.ObjectId): Q.Promi
         chords: [],
         option: {}
       })
-      .onFulfill(chords => {
-        resolve(chords[0]);
+      .onFulfill(chord => {
+        resolve(chord);
       })
       .onReject(err => {
         reject(err);

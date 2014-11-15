@@ -56,8 +56,8 @@ UserSchema.static('findOrCreate', (profile: IContact): Q.Promise < IUserDocument
             emails: profile.emails,
             photos: profile.photos
           })
-          .onFulfill(users => {
-            resolve(users[0]);
+          .onFulfill(user => {
+            resolve(user);
           })
           .onReject(err => {
             reject(err)

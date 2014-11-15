@@ -22,6 +22,23 @@ class User {
     });
   }
 
+  static relateAuthor = (userId: string, authorId: string): Q.Promise < IUserDocument > => {
+    return Q.promise < IUserDocument > ((resolve, reject) => {
+      db.User.findByIdAndUpdate(userId, {
+          authorId: authorId
+        })
+        .exec()
+        .onFulfill(user => {
+          resolve(user);
+        })
+        .onReject(err => {
+          reject(err);
+        });
+    });
+
+
+  }
+
 }
 
 export = User;

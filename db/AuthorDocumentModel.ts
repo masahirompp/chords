@@ -38,8 +38,8 @@ AuthorSchema.static('createNewAuthor', (name: string, email ? : string): Q.Promi
     .then(author => {
       return Q.promise < IAuthorDocument > ((resolve, reject) => {
         AuthorDocumentModel.create(author)
-          .onFulfill(authors => {
-            resolve(authors[0]);
+          .onFulfill(author => {
+            resolve(author);
           })
           .onReject(err => {
             reject(err);

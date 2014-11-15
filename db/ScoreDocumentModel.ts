@@ -84,8 +84,8 @@ ScoreSchema.static('createNewScore', (scoreNo: number,
         star: 0,
         isPublish: false
       })
-      .onFulfill(scores => {
-        resolve(scores[0]);
+      .onFulfill(score => {
+        resolve(score);
       })
       .onReject(err => {
         reject(err);
