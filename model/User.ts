@@ -10,3 +10,5 @@ class User {
   };
 
 }
+
+export = User;

@@ -43,7 +43,7 @@ var User = require('./model/User');
 passport.use(new TwitterStrategy({
     consumerKey: config.auth.twitter.TWITTER_CONSUMER_KEY,
     consumerSecret: config.auth.twitter.TWITTER_CONSUMER_SECRET,
-    callbackURL: 'http://localhost:3000/auth'
+    callbackURL: 'http://localhost:3000/auth/twitter/callback'
   },
   function(token, tokenSecret, profile, done) {
     User.findOrCreate(profile)
@@ -108,6 +108,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // route
+app.use('/auth', require('./routes/auth')
+  .init(passport));
 app.use('/api/admin', require('./routes/admin')
   .init());
 app.use('/api', require('./routes/api')
