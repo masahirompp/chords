@@ -44,7 +44,7 @@ var User = require('./model/User');
 passport.use(new TwitterStrategy({
     consumerKey: config.auth.twitter.TWITTER_CONSUMER_KEY,
     consumerSecret: config.auth.twitter.TWITTER_CONSUMER_SECRET,
-    callbackURL: 'http://localhost:3000/auth/twitter/callback'
+    callbackURL: config.auth.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
     User.findOrCreate(profile)
