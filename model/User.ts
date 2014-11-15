@@ -6,7 +6,7 @@ import IContact = require('../db/IContact');
 class User {
 
   static findOrCreate = (profile: IContact): Q.Promise < IUserDocument > => {
-    return db.User.findOrCreate(profile.provider, profile.id)
+    return db.User.findOrCreate(profile);
   };
 
   static findById = (id: string): Q.Promise < IUserDocument > => {

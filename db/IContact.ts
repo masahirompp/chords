@@ -8,7 +8,7 @@ interface IContact {
     middleName:string;
   };
   emails: any;
-  photes: any;
+  photos: any;
 }
 
 export = IContact;

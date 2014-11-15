@@ -3,6 +3,7 @@
 import mongoose = require('mongoose');
 import IUserDocument = require('IUserDocument');
 import IUserDocumentModel = require('IUserDocumentModel');
+import IContact = require('IContact');
 
 var UserSchema: mongoose.Schema = new mongoose.Schema({
   provider: {
@@ -15,8 +16,16 @@ var UserSchema: mongoose.Schema = new mongoose.Schema({
   },
   authorId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Author',
-    require: true
+    ref: 'Author'
+  },
+  displayName: {
+    type: String
+  },
+  emails: {
+    type: mongoose.Schema.Types.Mixed
+  },
+  photos: {
+    type: mongoose.Schema.Types.Mixed
   },
   created: {
     type: Date,
@@ -28,12 +37,12 @@ var UserSchema: mongoose.Schema = new mongoose.Schema({
   }
 });
 
-UserSchema.static('findOrCreate', (provider: string, id: string): Q.Promise < IUserDocument > => {
+UserSchema.static('findOrCreate', (profile: IContact): Q.Promise < IUserDocument > => {
 
   return Q.promise < IUserDocument > ((resolve, reject) => {
     UserDocumentModel.findOne({
-        provider: provider,
-        id: id
+        provider: profile.provider,
+        id: profile.id
       })
       .exec()
       .then(user => {
@@ -41,8 +50,11 @@ UserSchema.static('findOrCreate', (provider: string, id: string): Q.Promise < IU
           return resolve(user);
         }
         UserDocumentModel.create({
-            provider: provider,
-            id: id
+            provider: profile.provider,
+            id: profile.id,
+            displayName: profile.displayName,
+            emails: profile.emails,
+            photos: profile.photos
           })
           .onFulfill(users => {
             resolve(users[0]);
