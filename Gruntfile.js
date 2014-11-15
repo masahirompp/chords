@@ -87,7 +87,7 @@ module.exports = function(grunt) {
       options: {
         dest: '<%= config.dist %>'
       },
-      html: '<%= config.app %>/html/layout.ect'
+      html: '<%= config.app %>/layout.ect'
     },
 
     // Run some tasks in parallel to speed up build process
@@ -253,7 +253,7 @@ module.exports = function(grunt) {
         files: [{
           dot: true,
           src: [
-            'views/'
+            'views/*'
           ]
         }]
       },
@@ -355,7 +355,7 @@ module.exports = function(grunt) {
       app2views: {
         expand: true,
         dot: false,
-        cwd: '<%= config.app %>/html',
+        cwd: '<%= config.app %>',
         dest: 'views',
         src: '*.ect'
       },
@@ -375,6 +375,12 @@ module.exports = function(grunt) {
         }, {
           src: 'node_modules/apache-server-configs/dist/.htaccess',
           dest: '<%= config.public %>/.htaccess'
+        }, {
+          expand: true,
+          dot: false,
+          cwd: '<%= config.dist %>',
+          dest: 'views',
+          src: '*.ect'
         }]
       }
     }

@@ -7,28 +7,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%- @title %></title>
     <link rel="shortcut icon" href="/favicon.ico">
-    <!--build:css /styles/vendor.css-->
+    <!-- build:css /styles/vendor.css -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="/bower_components/growl/stylesheets/jquery.growl.css">
-    <!--endbuild-->
-    <!--build:css(.tmp) /styles/main.css-->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) /styles/main.css -->
     <link rel="stylesheet" href="/styles/main.css">
-    <!--endbuild-->
-    <!--build:js /scripts/plugins.js-->
+    <!-- endbuild -->
+    <!-- build:js /scripts/plugins.js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/blockui/jquery.blockUI.js"></script>
     <script src="/scripts/viewmodel/Initialize.js"></script>
     <script src="/scripts/util/Analytics.js"></script>
-    <!--endbuild-->
+    <!-- endbuild -->
   </head>
   <body>
     <% content %>
-    <!--build:js /scripts/vendor.js-->
+    <!--build:js /scripts/vendor.js -->
     <script src="/bower_components/growl/javascripts/jquery.growl.js"></script>
     <script src="/bower_components/d3/d3.js"></script>
     <script src="/bower_components/requirejs/require.js"></script>
     <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <!--endbuild-->
+    <!-- endbuild -->
     <% content 'script' %>
   </body>
 </html>
