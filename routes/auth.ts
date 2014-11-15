@@ -24,12 +24,13 @@ class Auth {
         failureRedirect: '/'
       }), (req: express.Request, res: express.Response) => {
         console.log(req.user);
-        Author.getById(req.user._id).then(author => {
-          if(author){
-            return res.redirect('/');
-          }
-          res.redirect('/auth/signup');
-        });
+        Author.getById(req.user.authorId)
+          .then(author => {
+            if (author) {
+              return res.redirect('/');
+            }
+            res.redirect('/auth/signup');
+          });
       });
 
     return router;

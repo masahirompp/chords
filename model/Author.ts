@@ -35,6 +35,11 @@ class Author {
   static getById = (authorId: string): Q.Promise < Author > => {
 
     return Q.promise < Author > ((resolve, reject) => {
+
+      if (!authorId) {
+        resolve(null);
+      }
+
       db.Author.findById(authorId)
         .exec()
         .onFulfill(author => {
