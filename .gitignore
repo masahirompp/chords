@@ -406,6 +406,7 @@ dto/*.js
 *.log
 views/
 build/
+config
 log
 
 ### Bower ###
