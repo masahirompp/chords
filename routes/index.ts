@@ -12,14 +12,16 @@ class Index {
     router.get('/', (req: express.Request, res: express.Response) => {
       res.render('index', {
         title: 'コード譜共有サイト ChordKitchen',
-        keyword: ''
+        keyword: '',
+        user: req.user
       });
     });
 
     router.get('/search', (req: express.Request, res: express.Response) => {
       res.render('search', {
         title: req.query.q + 'の検索結果 | ChordKitchen',
-        keyword: ''
+        keyword: '',
+        user: req.user
       });
     });
 
@@ -27,7 +29,8 @@ class Index {
       // TODO 存在チェック
       res.render('score', {
         title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
-        keyword: ''
+        keyword: '',
+        user: req.user
       });
     });
 

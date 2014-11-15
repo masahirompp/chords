@@ -18,6 +18,10 @@ module.exports = function(grunt) {
       options: {
         livereload: false
       },
+      ect: {
+        files: ['<%= config.app %>/*.ect'],
+        tasks: ['copy:app2views']
+      },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
         tasks: ['copy:css2public']

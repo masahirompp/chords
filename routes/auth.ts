@@ -10,10 +10,16 @@ class Auth {
 
     var router: express.Router = express.Router();
 
-    router.get('/signup', (req: express.Request, res: express.Response) => {
-      res.render('signup', {
+    router.get('/logout', function(req, res){
+      req.logout();
+      res.redirect('/');
+    });
+
+    router.get('/register', (req: express.Request, res: express.Response) => {
+      res.render('register', {
         title: 'コード譜共有サイト ChordKitchen',
-        keyword: ''
+        keyword: '',
+        user: req.user
       });
     });
 
@@ -29,7 +35,7 @@ class Auth {
             if (author) {
               return res.redirect('/');
             }
-            res.redirect('/auth/signup');
+            res.redirect('/auth/register');
           });
       });
 

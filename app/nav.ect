@@ -24,8 +24,12 @@
             <li><a href="#">One more separated link</a></li>
           </ul>
         </li>
-        <li><a id="signup" href="/signup">アカウント作成</a></li>
-        <li><a id="login" href="/auth/twitter">ログイン</a></li>
+        <% if @user? : %>
+        <li><a id="profile" href="/auth/twitter"><%- @user.displayName %></a></li>
+        <li><a id="logout" href="/auth/logout">ログアウト</a></li>
+        <% else : %>
+        <li><a id="login" href="/auth/twitter">twitterでログイン</a></li>
+        <% end %>
       </ul>
     </div>
   </div>
