@@ -29,18 +29,20 @@ var ChordSchema: mongoose.Schema = new mongoose.Schema({
 
 ChordSchema.static('createNewChord', (scoreId: mongoose.Types.ObjectId): Q.Promise < IChordDocument > => {
 
-  var d = Q.defer < IChordDocument > ();
-
-  var chord = new ChordDocumentModel({
-    scoreId: scoreId,
-    chords: [],
-    option: {}
+  return Q.promise < IChordDocument > ((resolve, reject) => {
+    ChordDocumentModel.create({
+        scoreId: scoreId,
+        chords: [],
+        option: {}
+      })
+      .onFulfill(chords => {
+        resolve(chords[0]);
+      })
+      .onReject(err => {
+        reject(err);
+      })
   });
-  chord.save((err) => {
-    err ? d.reject(err) : d.resolve(chord);
-  });
 
-  return d.promise;
 });
 
 var ChordDocumentModel: IChordDocumentModel = < IChordDocumentModel > mongoose.model('Chord', ChordSchema);

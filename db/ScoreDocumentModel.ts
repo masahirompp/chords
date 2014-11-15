@@ -5,57 +5,95 @@ import IScoreDocument = require('IScoreDocument');
 import IScoreDocumentModel = require('IScoreDocumentModel');
 import UriUtil = require('../util/UriUtil');
 
-var ScoreSchema:mongoose.Schema = new mongoose.Schema({
-  url: {type: String, require: true, unique: true},
-  scoreNo: {type: Number, default: 1},
-  description: {type: String, require: true},
+var ScoreSchema: mongoose.Schema = new mongoose.Schema({
+  url: {
+    type: String,
+    require: true,
+    unique: true
+  },
+  scoreNo: {
+    type: Number,
+    default: 1
+  },
+  description: {
+    type: String,
+    require: true
+  },
   artistId: String,
-  artistName: {type: String, require: true},
-  isOriginal: {type: Boolean, require: true},
+  artistName: {
+    type: String,
+    require: true
+  },
+  isOriginal: {
+    type: Boolean,
+    require: true
+  },
   songId: String,
-  songName: {type: String, require: true},
-  authorId: {type: mongoose.Schema.Types.ObjectId, ref: 'Author'},
-  authorName: {type: String, require: true},
-  star: {type: Number, default: 0},
-  isPublish: {type: Boolean, require: true},
-  created: { type: Date, default: Date.now },
-  updated: { type: Date, default: Date.now }
+  songName: {
+    type: String,
+    require: true
+  },
+  authorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Author'
+  },
+  authorName: {
+    type: String,
+    require: true
+  },
+  star: {
+    type: Number,
+    default: 0
+  },
+  isPublish: {
+    type: Boolean,
+    require: true
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  updated: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-ScoreSchema.static('createNewScore',
-  (scoreNo:number,
-   description:string,
-   artistId:string,
-   artistName:string,
-   isOriginal:boolean,
-   songId:string,
-   songName:string,
-   authorId:mongoose.Types.ObjectId,
-   authorName:string):Q.Promise<IScoreDocument> => {
+ScoreSchema.static('createNewScore', (scoreNo: number,
+  description: string,
+  artistId: string,
+  artistName: string,
+  isOriginal: boolean,
+  songId: string,
+  songName: string,
+  authorId: mongoose.Types.ObjectId,
+  authorName: string): Q.Promise < IScoreDocument > => {
 
-    var d = Q.defer<IScoreDocument>();
-
-    var score = new ScoreDocumentModel({
-      url: UriUtil.makeUri(artistName, songName, scoreNo),
-      scoreNo: scoreNo,
-      description: description,
-      artistId: artistId,
-      artistName: artistName,
-      isOriginal: isOriginal,
-      songId: songId,
-      songName: songName,
-      authorId: authorId,
-      authorName: authorName,
-      star: 0,
-      isPublish: false
-    });
-    score.save((err) => {
-      err ? d.reject(err) : d.resolve(score);
-    });
-
-    return d.promise;
+  return Q.promise < IScoreDocument > ((resolve, reject) => {
+    ScoreDocumentModel.create({
+        url: UriUtil.makeUri(artistName, songName, scoreNo),
+        scoreNo: scoreNo,
+        description: description,
+        artistId: artistId,
+        artistName: artistName,
+        isOriginal: isOriginal,
+        songId: songId,
+        songName: songName,
+        authorId: authorId,
+        authorName: authorName,
+        star: 0,
+        isPublish: false
+      })
+      .onFulfill(scores => {
+        resolve(scores[0]);
+      })
+      .onReject(err => {
+        reject(err);
+      });
   });
 
-var ScoreDocumentModel:IScoreDocumentModel = <IScoreDocumentModel> mongoose.model('Score', ScoreSchema);
+});
+
+var ScoreDocumentModel: IScoreDocumentModel = < IScoreDocumentModel > mongoose.model('Score', ScoreSchema);
 
 export = ScoreDocumentModel;

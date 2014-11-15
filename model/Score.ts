@@ -58,29 +58,31 @@ class Score {
   };
 
   private static generateScoreNo(artistId: string, songId: string): Q.Promise < number > {
-    var d = Q.defer < number > ();
 
-    db.Score.find({
-      artistId: artistId,
-      songId: songId
-    }, 'url', (err: any, results: IScoreDocument[]) => {
-      if (err) {
-        return d.reject(err);
-      }
-      if (results.length === 0) {
-        return d.resolve(1);
-      }
-      var maxScoreId = 1;
-      results.map(result => {
-          return Number(result.url.substring(result.url.lastIndexOf('/') + 1));
+    return Q.promise < number > ((resolve, reject) => {
+      db.Score.find({
+          artistId: artistId,
+          songId: songId
         })
-        .forEach(n => {
-          if (n > maxScoreId) maxScoreId = n;
-        });
-      d.resolve(maxScoreId + 1);
+        .exec()
+        .onFulfill(scores => {
+          if (scores.length === 0) {
+            return resolve(1);
+          }
+          var maxScoreId = 1;
+          scores.map(result => {
+              return Number(result.url.substring(result.url.lastIndexOf('/') + 1));
+            })
+            .forEach(n => {
+              if (n > maxScoreId) maxScoreId = n;
+            });
+          resolve(maxScoreId);
+        })
+        .onReject(err => {
+          reject(err);
+        })
     });
 
-    return d.promise;
   }
 
   static createNewOriginalScore(authorId: string, songName: string, description: string): Q.Promise < Score > {
@@ -143,43 +145,47 @@ class Score {
 
   static find(artistName: string, songName: string, scoreNo: number): Q.Promise < Score > {
 
-    var d = Q.defer < Score > ();
-
-    db.Score.findOne({
-      artistName: artistName,
-      songName: songName,
-      scoreNo: scoreNo
-    }, (err: any, score: IScoreDocument) => {
-      if (err) {
-        return d.reject(err);
-      }
-      db.Chord.findOne({
-        scoreId: score._id
-      }, (err: any, chord: IChordDocument) => {
-        if (err) {
-          return d.reject(err);
-        }
-        d.resolve(new Score(score, chord));
-      });
+    return Q.promise < Score > ((resolve, reject) => {
+      db.Score.findOne({
+          artistName: artistName,
+          songName: songName,
+          scoreNo: scoreNo
+        })
+        .exec()
+        .onFulfill(score => {
+          db.Chord.findOne({
+              scoreId: score._id
+            })
+            .exec()
+            .onFulfill(chord => {
+              resolve(new Score(score, chord));
+            })
+            .onReject(err => {
+              reject(err);
+            })
+        })
+        .onReject(err => {
+          reject(err);
+        });
     });
-
-    return d.promise;
   }
 
   static search(keyword: string): Q.Promise < Score[] > {
-    var d: Q.Deferred < Score[] > = Q.defer < Score[] > ();
-    db.Score.find({
-      $and: Score.makeKeywordQuery(keyword)
-    }, (err: any, scores: IScoreDocument[]) => {
-      if (err) {
-        return d.reject(err);
-      }
-      d.resolve(scores.map(doc => {
-        return new Score(doc);
-      }));
-    });
 
-    return d.promise;
+    return Q.promise < Score[] > ((resolve, reject) => {
+      db.Score.find({
+          $and: Score.makeKeywordQuery(keyword)
+        })
+        .exec()
+        .onFulfill(scores => {
+          resolve(scores.map(doc => {
+            return new Score(doc);
+          }));
+        })
+        .onReject(err => {
+          reject(err);
+        })
+    });
   }
 
   static toJson(scores: Score[]): ScoreDTO[] {
