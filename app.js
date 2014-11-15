@@ -14,12 +14,17 @@ var MongoStore = require('connect-mongo')(session);
 var config = require('config');
 
 // Logger
-var log4js = require('log4js');
-log4js.configure('config/log4js_setting.json');
-var logger = log4js.getLogger('app');
-logger.setLevel(config.log.level); // ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
-logger.info('Logging start. ');
-logger.info('Log Level:' + config.log.level);
+var log4js, logger, morgan;
+if (config.log.writeFile) {
+  log4js = require('log4js');
+  log4js.configure('config/log4js_setting.json');
+  logger = log4js.getLogger('app');
+  logger.setLevel(config.log.level); // ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
+  logger.info('Logging start. ');
+  logger.info('Log Level:' + config.log.level);
+} else {
+  morgan = require('morgan');
+}
 
 // app
 var app = express();
@@ -32,45 +37,34 @@ db.connect(app.get('db'));
 
 // passport
 var passport = require('passport');
-var LocalStrategy = require('passport-local')
+var TwitterStrategy = require('passport-twitter')
   .Strategy;
-//var passportTwitter = require('passport-twitter').Strategy;
+var User = require('./model/User');
+passport.use(new TwitterStrategy({
+    consumerKey: config.auth.twitter.TWITTER_CONSUMER_KEY,
+    consumerSecret: config.auth.twitter.TWITTER_CONSUMER_SECRET,
+    callbackURL: 'http://localhost:3000/auth'
+  },
+  function(token, tokenSecret, profile, done) {
+    User.findOrCreate(profile)
+      .then(function(user) {
+        done(null, user);
+      })
+      .catch(function(err) {
+        done(err);
+      });
+  }
+));
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-  db.User.findById(id, function(err, user) {
+  User.findById(id, function(err, user) {
     done(err, user);
   });
 });
-
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    db.User.findOne({
-      username: username
-    }, function(err, user) {
-      if (err) {
-        return done(err);
-      }
-      if (!user) {
-        return done(null, false);
-      }
-      user.verifyPassword(password, function(err, result) {
-        if (err) {
-          return done(err);
-        }
-        return result ? done(null, user) : done(null, false);
-      });
-    });
-  }
-));
-
-// route
-var routes = require('./routes/index');
-var api = require('./routes/api');
-var admin = require('./routes/admin');
 
 // global
 global.Q = require('q');
@@ -79,9 +73,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // setup
-app.use(log4js.connectLogger(logger, {
-  level: config.log.level
-}));
+if (config.log.writeFile) {
+  app.use(log4js.connectLogger(logger, {
+    level: config.log.level
+  }));
+} else {
+  app.use(morgan('dev'));
+}
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(methodOverride());
 app.use(bodyParser.json());
@@ -106,14 +104,16 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 // route
-app.use('/', routes);
-app.use('/api/admin', admin);
-app.use('/api', api);
+app.use('/api/admin', require('./routes/admin')
+  .init());
+app.use('/api', require('./routes/api')
+  .init());
+app.use('/', require('./routes/index')
+  .init());
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -134,6 +134,8 @@ app.use(function(err, req, res) {
 
 // start
 var server = app.listen(config.server.port, function() {
-  logger.info('Express server listening on port ' + server.address()
-    .port);
+  if (config.log.writeFile) {
+    logger.info('Express server listening on port ' + server.address()
+      .port);
+  }
 });

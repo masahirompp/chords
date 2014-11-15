@@ -4,30 +4,19 @@ import mongoose = require('mongoose');
 import IUserDocument = require('IUserDocument');
 import IUserDocumentModel = require('IUserDocumentModel');
 
-var bcrypt: any = require('bcrypt-nodejs');
-
 var UserSchema: mongoose.Schema = new mongoose.Schema({
-  local: {
-    email: String,
-    password: String
+  provider: {
+    type: String,
+    require: true
   },
-  facebook: {
-    id: String,
-    token: String,
-    email: String,
-    name: String
+  id: {
+    type: String,
+    require: true
   },
-  twitter: {
-    id: String,
-    token: String,
-    displayName: String,
-    username: String
-  },
-  google: {
-    id: String,
-    token: String,
-    email: String,
-    name: String
+  authorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Author',
+    require: true
   },
   created: {
     type: Date,
@@ -39,12 +28,39 @@ var UserSchema: mongoose.Schema = new mongoose.Schema({
   }
 });
 
-UserSchema.static('generateHash', (password: string, callback: (err: any, hash: string) => void) => {
-  bcrypt.hash(password, bcrypt.genSaltSync(8), null, callback);
-});
+UserSchema.static('findOrCreate', (provider: string, id: string): Q.Promise < IUserDocument > => {
 
-UserSchema.method('validPassword', function(password, callback) {
-  bcrypt.compare(password, this.local.password, callback);
+  return Q.promise < IUserDocument > ((resolve, reject) => {
+    UserDocumentModel.findOne({
+        provider: provider,
+        id: id
+      })
+      .exec()
+      .then(user => {
+        if (user) {
+          resolve(user);
+          return;
+        }
+        UserDocumentModel.create({
+            provider: provider,
+            id: id
+          })
+          .onFulfill(users => {
+            resolve(users[0]);
+          })
+          .onReject(err => {
+            reject(err)
+          });
+
+        //user.save((err, user) => {
+        //  if (err) {
+        //    reject(err);
+        //    return;
+        //  }
+        //  resolve(user);
+        //});
+      });
+  });
 });
 
 var UserDocumentModel: IUserDocumentModel = < IUserDocumentModel > mongoose.model('User', UserSchema);

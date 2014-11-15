@@ -1,6 +1,6 @@
 extends _layout
 block content
-  form.form-signin(role='form')
+  form.form-signin(role='form', action='/signup', method='post')
     h2.form-signin-heading Chord Kitchen
     .form-group
       label(for='email') メールアドレス
@@ -13,7 +13,7 @@ block content
       label(for='passwordConfirm') パスワード（確認用）
       input.form-control#passwordConfirm(type='password', name='passwordConfirm', placeholder='パスワード',
       required='required')
-    button.btn.btn-lg.btn-primary.btn-block(type='submit') アカウント登録
+    button.btn.btn-lg.btn-primary.btn-block(type='submit') アカウント作成
 block script
   //build:js({app,.tmp}) /scripts/app.signup.js
   script(src='/scripts/app.signup.js')

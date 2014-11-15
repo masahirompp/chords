@@ -21,7 +21,6 @@
     "morgan": "latest",
     "multer": "latest",
     "passport": "latest",
-    "passport-local": "^1.0.0",
     "passport-twitter": "latest",
     "q": "latest",
     "serve-favicon": "latest"

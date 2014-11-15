@@ -10,6 +10,13 @@
     "debug": true
   },
   "log": {
+    "writeFile" : false,
     "level": "DEBUG"
+  },
+  "auth": {
+    "twitter": {
+      "TWITTER_CONSUMER_KEY": "BTfNNadXi5KGRZ0zIUNvUJk1O",
+      "TWITTER_CONSUMER_SECRET": "EIiawTP118sByRFvyKO8xjWrlj097mKdWqhTs90wYRMpshv7Kj"
+    }
   }
 }

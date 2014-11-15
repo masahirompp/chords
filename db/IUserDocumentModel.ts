@@ -3,8 +3,8 @@
 import mongoose = require('mongoose');
 import IUserDocument = require('IUserDocument');
 
-interface IUserDocumentModel extends mongoose.Model<IUserDocument> {
-  generateHash:(password:string, callback:(err:any, hash:string) => void) => void;
+interface IUserDocumentModel extends mongoose.Model < IUserDocument > {
+  findOrCreate: (provider: string, id: string) => Q.Promise < IUserDocument > ;
 }
 
 export = IUserDocumentModel;
