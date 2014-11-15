@@ -2,6 +2,7 @@
 
 import express = require('express');
 import passport = require('passport');
+import Author = require('../model/Author');
 
 class Auth {
 
@@ -20,9 +21,16 @@ class Auth {
 
     router.get('/twitter/callback',
       passport.authenticate('twitter', {
-        successRedirect: '/',
-        failureRedirect: '/auth/signup'
-      }));
+        failureRedirect: '/'
+      }), (req: express.Request, res: express.Response) => {
+        console.log(req.user);
+        Author.getById(req.user._id).then(author => {
+          if(author){
+            return res.redirect('/');
+          }
+          res.redirect('/auth/signup');
+        });
+      });
 
     return router;
   }

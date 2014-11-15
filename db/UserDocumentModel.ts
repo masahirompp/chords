@@ -38,8 +38,7 @@ UserSchema.static('findOrCreate', (provider: string, id: string): Q.Promise < IU
       .exec()
       .then(user => {
         if (user) {
-          resolve(user);
-          return;
+          return resolve(user);
         }
         UserDocumentModel.create({
             provider: provider,

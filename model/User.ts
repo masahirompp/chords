@@ -9,6 +9,19 @@ class User {
     return db.User.findOrCreate(profile.provider, profile.id)
   };
 
+  static findById = (id: string): Q.Promise < IUserDocument > => {
+    return Q.promise < IUserDocument > ((resolve, reject) => {
+      db.User.findById(id)
+        .exec()
+        .onFulfill(user => {
+          resolve(user);
+        })
+        .onReject(err => {
+          reject(err);
+        });
+    });
+  }
+
 }
 
 export = User;

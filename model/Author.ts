@@ -38,11 +38,7 @@ class Author {
       db.Author.findById(authorId)
         .exec()
         .onFulfill(author => {
-          if (!author) {
-            reject(new Error('not found.'));
-            return;
-          }
-          resolve(new Author(author));
+          resolve(author ? new Author(author) : null);
         })
         .onReject(err => {
           reject(err);

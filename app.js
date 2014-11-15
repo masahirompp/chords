@@ -57,13 +57,17 @@ passport.use(new TwitterStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
+  User.findById(id)
+    .then(function(user) {
+      done(null, user);
+    })
+    .fail(function(err) {
+      done(err);
+    });
 });
 
 // global
