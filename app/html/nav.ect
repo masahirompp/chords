@@ -1,0 +1,38 @@
+<% extend 'layout' %>
+<script>$.blockUIl();</script>
+<nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" class="navbar-toggle collapsed"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">ChordKitchen</a>
+    </div>
+    <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
+      <form role="search" class="navbar-form navbar-left">
+        <div class="form-group">
+          <input id="searchKeyword" type="text" placeholder="曲名 アーティスト名" value="|keyword|" class="form-control">
+        </div>
+        <button id="searchBtn" type="submit" data-toggle="tooltip" data-placement="bottom" title="検索" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Dropdown<span class="caret"></span></a>
+          <ul role="menu" class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+        <li><a id="signup" href="/signup">アカウント作成</a></li>
+        <li><a id="login" href="/auth/twitter">ログイン</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div id="container" class="container-fluid">
+  <% content %>
+  <div class="footer">
+    <p class="text-right">Copyright @2014 ChordKitchen</p>
+  </div>
+</div>

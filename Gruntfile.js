@@ -18,10 +18,6 @@ module.exports = function(grunt) {
       options: {
         livereload: false
       },
-      jade: {
-        files: ['<%= config.app %>/jade/{,*/}*.jade'],
-        tasks: ['copy:app2views','replace']
-      },
       styles: {
         files: ['<%= config.app %>/styles/{,*/}*.css'],
         tasks: ['copy:css2public']
@@ -54,26 +50,6 @@ module.exports = function(grunt) {
         'app.js',
         'test/spec/{,*/}*.js'
       ]
-    },
-
-    jade: {
-      compile: {
-        options: {
-          data: {
-            debug: false
-          },
-          pretty: true
-        },
-        files: {
-          '<%= config.app %>/master.html': '<%= config.app %>/jade/master.jade',
-          '<%= config.app %>/error.html': '<%= config.app %>/jade/error.jade',
-          '<%= config.app %>/index.html': '<%= config.app %>/jade/index.jade',
-          '<%= config.app %>/search.html': '<%= config.app %>/jade/search.jade',
-          '<%= config.app %>/score.html': '<%= config.app %>/jade/score.jade',
-          '<%= config.app %>/signin.html': '<%= config.app %>/jade/signin.jade',
-          '<%= config.app %>/signup.html': '<%= config.app %>/jade/signup.jade'
-        }
-      }
     },
 
     typescript: {
@@ -111,7 +87,7 @@ module.exports = function(grunt) {
       options: {
         dest: '<%= config.dist %>'
       },
-      html: '<%= config.app %>/master.html'
+      html: '<%= config.app %>/html/layout.ect'
     },
 
     // Run some tasks in parallel to speed up build process
@@ -170,7 +146,7 @@ module.exports = function(grunt) {
     },
 
     requirejs: {
-      // !!! build.js options for app.index.js (index.html) !!!
+      // !!! build.js options for app.index.js (index.ect) !!!
       dist1: {
         options: {
           out: '<%= config.dist %>/scripts/app.index.js',
@@ -183,7 +159,7 @@ module.exports = function(grunt) {
           mainConfigFile: '<%= config.app %>/scripts/app.index.js'
         }
       },
-      // !!! build.js options for app.search.js (search.html) !!!
+      // !!! build.js options for app.search.js (search.ect) !!!
       dist2: {
         options: {
           out: '<%= config.dist %>/scripts/app.search.js',
@@ -196,7 +172,7 @@ module.exports = function(grunt) {
           mainConfigFile: '<%= config.app %>/scripts/app.search.js'
         }
       },
-      // !!! build.js options for app.score.js (score.html) !!!
+      // !!! build.js options for app.score.js (score.ect) !!!
       dist3: {
         options: {
           out: '<%= config.dist %>/scripts/app.score.js',
@@ -208,32 +184,6 @@ module.exports = function(grunt) {
           name: 'app.score',
           mainConfigFile: '<%= config.app %>/scripts/app.score.js'
         }
-      },
-      // !!! build.js options for app.signin.js (signin.html) !!!
-      dist4: {
-        options: {
-          out: '<%= config.dist %>/scripts/app.signin.js',
-          baseUrl: '<%= config.app %>/scripts',
-          optimize: 'none',
-          preserveLicenseComments: false,
-          useStrict: true,
-          wrap: true,
-          name: 'app.signin',
-          mainConfigFile: '<%= config.app %>/scripts/app.signin.js'
-        }
-      },
-      // !!! build.js options for app.signup.js (signup.html) !!!
-      dist5: {
-        options: {
-          out: '<%= config.dist %>/scripts/app.signup.js',
-          baseUrl: '<%= config.app %>/scripts',
-          optimize: 'none',
-          preserveLicenseComments: false,
-          useStrict: true,
-          wrap: true,
-          name: 'app.signup',
-          mainConfigFile: '<%= config.app %>/scripts/app.signup.js'
-        }
       }
     },
 
@@ -242,9 +192,7 @@ module.exports = function(grunt) {
         files: {
           '<%= config.dist %>/scripts/app.index.js': '<%= config.dist %>/scripts/app.index.js',
           '<%= config.dist %>/scripts/app.search.js': '<%= config.dist %>/scripts/app.search.js',
-          '<%= config.dist %>/scripts/app.score.js': '<%= config.dist %>/scripts/app.score.js',
-          '<%= config.dist %>/scripts/app.signin.js': '<%= config.dist %>/scripts/app.signin.js',
-          '<%= config.dist %>/scripts/app.signup.js': '<%= config.dist %>/scripts/app.signup.js'
+          '<%= config.dist %>/scripts/app.score.js': '<%= config.dist %>/scripts/app.score.js'
         }
       }
     },
@@ -271,56 +219,8 @@ module.exports = function(grunt) {
           '<%= config.dist %>/images'
         ]
       },
-      html: ['<%= config.dist %>/{,*/}*.html'],
+      html: ['<%= config.dist %>/{,*/}*.ect'],
       css: ['<%= config.dist %>/styles/{,*/}*.css']
-    },
-
-    htmlmin: {
-      dist: {
-        options: {
-          collapseBooleanAttributes: true,
-          collapseWhitespace: true,
-          conservativeCollapse: true,
-          removeAttributeQuotes: true,
-          removeCommentsFromCDATA: true,
-          removeEmptyAttributes: true,
-          removeOptionalTags: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%= config.dist %>',
-          src: '{,*/}*.html',
-          dest: '<%= config.dist %>'
-        }]
-      }
-    },
-
-    shell: {
-      html2jade: {
-        command: function() {
-          return [
-            'mkdir views',
-            'html2jade <%= config.dist %>/*.html -o views/'
-          ].join('&&');
-        }
-      }
-    },
-
-    replace: {
-      jade: {
-        src: ['views/*.jade'],
-        overwrite: true,
-        replacements: [{
-          from: 'title |title|',
-          to: 'title= title'
-        }, {
-          from: '|keyword|',
-          to: '#{keyword}'
-        }]
-      }
-
     },
 
     open: {
@@ -343,7 +243,6 @@ module.exports = function(grunt) {
         files: [{
           dot: true,
           src: [
-            '<%= config.app %>/{,*/}*.html',
             '.tmp',
             '<%= config.dist %>/*',
             '!<%= config.dist %>/.git*'
@@ -376,12 +275,6 @@ module.exports = function(grunt) {
           dot: true,
           src: ['<%= config.public %>/*']
         }]
-      },
-      'html': {
-        files: [{
-          dot: false,
-          src: ['<%= config.app %>/*.html']
-        }]
       }
     },
 
@@ -396,7 +289,7 @@ module.exports = function(grunt) {
           src: [
             '*.{ico,png,txt}',
             'images/{,*/}*.*',
-            '{,*/}*.html',
+            '{,*/}*.ect',
             'styles/fonts/{,*/}*.*'
           ]
         }, {
@@ -415,7 +308,7 @@ module.exports = function(grunt) {
         dot: false,
         cwd: '<%= config.app %>',
         dest: '.tmp/html/',
-        src: '*.html'
+        src: '*.ect'
       },
       styles2tmp: {
         expand: true,
@@ -462,9 +355,9 @@ module.exports = function(grunt) {
       app2views: {
         expand: true,
         dot: false,
-        cwd: '<%= config.app %>/jade',
+        cwd: '<%= config.app %>/html',
         dest: 'views',
-        src: '*.jade'
+        src: '*.ect'
       },
       dist2public: {
         files: [{
@@ -506,7 +399,6 @@ module.exports = function(grunt) {
         'typescript:server',
         'copy:app2public',
         'copy:app2views',
-        'replace',
         'open',
         'watch'
       ]);
@@ -532,7 +424,6 @@ module.exports = function(grunt) {
     'clean:server',
     'clean:views',
     'clean:public',
-    'jade',
     'typescript:server',
     'typescript:client',
     'useminPrepare',
@@ -545,12 +436,8 @@ module.exports = function(grunt) {
     'copy:app2dist',
     'rev',
     'usemin',
-    //'htmlmin',
-    'shell:html2jade',
-    'replace',
     'copy:dist2public',
-    'copy:html2tmp',
-    'clean:html'
+    'copy:html2tmp'
   ]);
   grunt.registerTask('b', function() {
     grunt.task.run('build');

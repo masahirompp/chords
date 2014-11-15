@@ -12,6 +12,7 @@ var errorHandler = require('errorhandler');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var config = require('config');
+var ECT = require('ect');
 
 // Logger
 var log4js, logger, morgan;
@@ -73,8 +74,9 @@ passport.deserializeUser(function(id, done) {
 // global
 global.Q = require('q');
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+var ectRenderer = ECT({ watch: true, root: __dirname + '/views', ext : '.ect' });
+app.set('view engine', 'ect');
+app.engine('ect', ectRenderer.render);
 
 // setup
 if (config.log.writeFile) {

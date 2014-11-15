@@ -1,0 +1,11 @@
+<% extend 'nav' %>
+<div class="row">
+  <div id="content-score">
+    <svg id="score"></svg>
+  </div>
+</div>
+<% block 'script' : %>
+<!--build:js({app,.tmp}) /scripts/app.score.js-->
+<script src="/scripts/app.score.js"></script>
+<!--endbuild-->
+<% end %>

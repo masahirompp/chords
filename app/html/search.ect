@@ -1,0 +1,9 @@
+<% extend 'nav' %>
+<div class="row">
+  <div id="searchResult" class="col-lg-9"></div>
+</div>
+<% block 'script' : %>
+<!--build:js({app,.tmp}) /scripts/app.search.js-->
+<script src="/scripts/app.search.js"></script>
+<!--endbuild-->
+<% end %>

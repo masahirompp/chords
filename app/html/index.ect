@@ -1,0 +1,18 @@
+<% extend 'nav' %>
+<div class="row">
+  <div class="col-lg-9">
+    <h1>ChordKitchen</h1>
+    <p class="lead">コード譜共有サイト コードキッチン</p>
+    <h4>検索</h4>
+    <p>上の検索ボックスから、アーティスト名、曲名でコード譜を検索できます。</p>
+    <h4>カスタマイズ</h4>
+    <p>コード譜の見た目や曲のキーを自由にカスタマイズできます。</p>
+    <h4>制作</h4>
+    <p>既存曲やオリジナル曲のコード譜を作成できます。</p>
+  </div>
+</div>
+<% block 'script' : %>
+<!--build:js({app,.tmp}) /scripts/app.index.js-->
+<script src="/scripts/app.index.js"></script>
+<!--endbuild-->
+<% end %>
