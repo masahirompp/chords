@@ -15,10 +15,13 @@
     <p>既存曲やオリジナル曲のコード譜を作成できます。</p>
   </div>
   <div class="col-md-3">
+    <% if @user? : %>
+    <% else : %>
     <a href="/auth/twitter"
       class="btn btn-block btn-lg btn-social btn-twitter">
       <i class="fa fa-twitter"></i>twitterでログイン
     </a>
+    <% end %>
   </div>
 </div>
 <% block 'script' : %>

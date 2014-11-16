@@ -31,9 +31,13 @@
           class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
       </form>
       <ul class="nav navbar-nav navbar-right">
+        <% if @user? : %>
+        <li><a id="profile"
+          href="/auth/twitter"><%- @user.displayName %></a></li>
+        <% end %>
         <li class="dropdown"><a href="#"
           data-toggle="dropdown"
-          class="dropdown-toggle">Dropdown<span
+          class="dropdown-toggle">メニュー<span
           class="caret"></span></a>
           <ul role="menu"
             class="dropdown-menu">
@@ -42,19 +46,15 @@
             <li><a href="#">Something else here</a></li>
             <li class="divider"></li>
             <li><a href="#">Separated link</a></li>
-            <li class="divider"></li>
             <li><a href="#">One more separated link</a></li>
+            <li class="divider"></li>
+            <% if @user? : %>
+            <li><a href="/auth/logout">ログアウト</a></li>
+            <% else : %>
+            <li><a href="/auth/twitter">twitterでログイン</a></li>
+            <% end %>
           </ul>
         </li>
-        <% if @user? : %>
-        <li><a id="profile"
-          href="/auth/twitter"><%- @user.displayName %></a></li>
-        <li><a id="logout"
-          href="/auth/logout">ログアウト</a></li>
-        <% else : %>
-        <li><a id="login"
-          href="/auth/twitter">twitterでログイン</a></li>
-        <% end %>
       </ul>
     </div>
   </div>
