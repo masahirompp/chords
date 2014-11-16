@@ -18,12 +18,12 @@ class Event {
     Event.addEventSearchBtn();
   }
 
-  static initSignin(){
+  static initSignin() {
     Event.addCommonEvent();
     Event.addEventSearchBtn();
   }
 
-  static initSignup(){
+  static initSignup() {
     Event.addCommonEvent();
     Event.addEventSearchBtn();
   }
@@ -43,6 +43,18 @@ class Event {
   private static addCommonEvent() {
     $('.btn')
       .tooltip();
+    $('.block-ui-logout')
+      .on('click', () => {
+        $.blockUI({
+          message: '<div class="text-muted">ログアウトしています。</div>'
+        });
+      });
+    $('.block-ui-twitter')
+      .on('click', () => {
+        $.blockUI({
+          message: '<div class="text-muted">twitterに接続しています。</div>'
+        });
+      });
   }
 
   private static addEventSearchBtn() {

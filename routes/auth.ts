@@ -13,7 +13,12 @@ class Auth {
 
     router.get('/logout', function(req, res) {
       req.logout();
-      res.redirect('/');
+      res.render('index', {
+        title: 'コード譜共有サイト ChordKitchen',
+        keyword: '',
+        user: req.user,
+        message_success: 'ログアウトしました。'
+      });
     });
 
     router.get('/register', (req: express.Request, res: express.Response) => {
@@ -37,7 +42,8 @@ class Auth {
           res.render('index', {
             title: 'コード譜共有サイト ChordKitchen',
             keyword: '',
-            user: user
+            user: user,
+            message_success: 'ユーザ登録ありがとうございます。ChordKitchenをお楽しみください。'
           });
         })
         .fail(err => {
@@ -56,7 +62,12 @@ class Auth {
         Author.getById(req.user.authorId)
           .then(author => {
             if (author) {
-              return res.redirect('/');
+              res.render('index', {
+                title: 'コード譜共有サイト ChordKitchen',
+                keyword: '',
+                user: req.user,
+                message_success: 'ログインしました。'
+              });
             }
             res.redirect('/auth/register');
           });
