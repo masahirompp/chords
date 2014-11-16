@@ -9,7 +9,7 @@ class Api {
 
   static init(): express.Router {
 
-    var router:express.Router = express.Router();
+    var router: express.Router = express.Router();
 
     /**
      * /api/user/:id GET
@@ -29,7 +29,7 @@ class Api {
           res.json(author.json);
         })
         .catch((err) => {
-          next(err);
+          res.json(err);
         });
     });
 
@@ -41,8 +41,8 @@ class Api {
         .then((scores: Score[]) => {
           res.json(Score.toJson(scores));
         })
-        .catch((err) => {
-          next(err);
+        .catch(err => {
+          res.json(err);
         });
     });
 
@@ -79,8 +79,18 @@ class Api {
         .then((score: Score) => {
           res.json(score.json);
         })
-        .catch((err) => {
-          console.dir(err);
+        .catch(err => {
+          if(err.message === 'not found.'){
+            res.status(404);
+            res.json({
+              message : 'このコード譜は見つかりません。'
+            });
+          }else{
+            res.status(500);
+            res.json({
+              message : '大変申し訳ありません。システムエラーが発生しました。時間を空けて再度お試しください。それでも解決しない場合は、お問い合わせください。'
+            });
+          }
         });
     });
 
@@ -88,7 +98,7 @@ class Api {
      * /api/error POST
      */
     router.post('/error', (req: express.Request, res: express.Response) => {
-
+      console.log(req.params)
     });
 
     return router;

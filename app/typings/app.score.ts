@@ -15,12 +15,9 @@ require([
 
       // コード譜描画
       AjaxScore.getScore()
-        .then((data) => ScoreController.draw(data)).fail(err => {
-          console.log(err);
-        })
-        .always(() => {
-          $.unblockUI();
-        });
+        .then(data => ScoreController.draw(data))
+        .fail(err => ErrorHandle.showAppError(err.responseJSON))
+        .always(() => $.unblockUI());
 
     } catch (e) {
       ErrorHandle.send(e);

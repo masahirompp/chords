@@ -153,6 +153,9 @@ class Score {
         })
         .exec()
         .onFulfill(score => {
+          if(!score || !score._id){
+            return reject(new Error('not found.'));
+          }
           db.Chord.findOne({
               scoreId: score._id
             })

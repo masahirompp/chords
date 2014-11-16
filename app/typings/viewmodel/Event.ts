@@ -18,16 +18,6 @@ class Event {
     Event.addEventSearchBtn();
   }
 
-  static initSignin() {
-    Event.addCommonEvent();
-    Event.addEventSearchBtn();
-  }
-
-  static initSignup() {
-    Event.addCommonEvent();
-    Event.addEventSearchBtn();
-  }
-
   static initSearch() {
     Event.addCommonEvent();
     Event.addEventSearchAjax();

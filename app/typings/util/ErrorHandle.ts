@@ -14,6 +14,11 @@ class ErrorHandle {
     }
   }
 
+  static showAppError(message: string) {
+    console.log(message);
+    Message.showWarning(message);
+  }
+
 }
 
 export = ErrorHandle
