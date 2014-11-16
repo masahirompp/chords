@@ -1,3 +1,5 @@
+import Message = require('../viewmodel/Message');
+
 class ErrorHandle {
 
   static send(e: Error) {
@@ -5,6 +7,7 @@ class ErrorHandle {
       $.post('/api/error', {
         err: e
       });
+      Message.showDanger(e.message);
     } catch (u) {
       console.dir(e);
       console.dir(u);

@@ -7,6 +7,7 @@ import AjaxScore = require('../data/AjaxScore');
 import SearchView = require('./SearchView');
 import Url = require('../util/Url');
 import ErrorHandle = require('../util/ErrorHandle');
+import Message = require('./Message');
 
 class Event {
 
@@ -76,6 +77,8 @@ class Event {
       .on('click', (e, redirect) => {
         try {
           e.preventDefault();
+          Message.remove();
+
           var keyword = SearchView.getKeyword();
           if (!keyword) return false;
 
@@ -118,7 +121,7 @@ class Event {
   }
 
   private static addEventResult() {
-    Event.$container.on('click', 'tr', function() {
+    Event.$container.on('click', 'tbody tr', function() {
       try {
         location.href = $(this)
           .attr('uri');
@@ -129,20 +132,7 @@ class Event {
   }
 
   private static showNoResult(keyword): void {
-    Event.showWarningMessage('「<strong>' + keyword + '</strong>」の検索結果はありませんでした。');
-  }
-
-  private static showWarningMessage(message: string): void {
-    Event.showMessage('warning', message);
-  }
-
-  /**
-   *
-   * @param level success, info, warning, danger
-   * @param message
-   */
-  private static showMessage(level: string, message: string): void {
-    Event.$container.prepend('<div class="alert alert-' + level + ' alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' + message + '</div>');
+    Message.showWarning('「<strong>' + keyword + '</strong>」の検索結果はありませんでした。');
   }
 
 }
