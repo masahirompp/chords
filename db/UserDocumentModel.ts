@@ -39,7 +39,7 @@ var UserSchema: mongoose.Schema = new mongoose.Schema({
 
 UserSchema.static('findOrCreate', (profile: IContact): Q.Promise < IUserDocument > => {
 
-  return Q.promise < IUserDocument > ((resolve, reject) => {
+  return Q.Promise < IUserDocument > ((resolve, reject) => {
     UserDocumentModel.findOne({
         provider: profile.provider,
         id: profile.id
@@ -62,14 +62,6 @@ UserSchema.static('findOrCreate', (profile: IContact): Q.Promise < IUserDocument
           .onReject(err => {
             reject(err)
           });
-
-        //user.save((err, user) => {
-        //  if (err) {
-        //    reject(err);
-        //    return;
-        //  }
-        //  resolve(user);
-        //});
       });
   });
 });

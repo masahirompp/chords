@@ -6,31 +6,31 @@
   "bundle": "tsd/tsd.d.ts",
   "installed": {
     "jquery/jquery.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     },
     "d3/d3.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     },
     "requirejs/require.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     },
     "mongoose/mongoose.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     },
     "node/node.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     },
     "express/express.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     },
     "q/Q.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     },
     "bootstrap/bootstrap.d.ts": {
-      "commit": "bba33bcb0b363ae41db8517a09d1a4d07828616b"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     },
     "passport/passport.d.ts": {
-      "commit": "cd280100a8bc1ac1604d02178cd1c54bb9b9728d"
+      "commit": "a6b1e4ff841e617e3d449189f82562143d98400d"
     }
   }
 }

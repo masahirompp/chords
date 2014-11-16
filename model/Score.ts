@@ -59,7 +59,7 @@ class Score {
 
   private static generateScoreNo(artistId: string, songId: string): Q.Promise < number > {
 
-    return Q.promise < number > ((resolve, reject) => {
+    return Q.Promise < number > ((resolve, reject) => {
       db.Score.find({
           artistId: artistId,
           songId: songId
@@ -145,7 +145,7 @@ class Score {
 
   static find(artistName: string, songName: string, scoreNo: number): Q.Promise < Score > {
 
-    return Q.promise < Score > ((resolve, reject) => {
+    return Q.Promise < Score > ((resolve, reject) => {
       db.Score.findOne({
           artistName: artistName,
           songName: songName,
@@ -175,7 +175,7 @@ class Score {
 
   static search(keyword: string): Q.Promise < Score[] > {
 
-    return Q.promise < Score[] > ((resolve, reject) => {
+    return Q.Promise < Score[] > ((resolve, reject) => {
       db.Score.find({
           $and: Score.makeKeywordQuery(keyword)
         })

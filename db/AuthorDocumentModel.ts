@@ -36,7 +36,7 @@ AuthorSchema.static('createNewAuthor', (name: string, email ? : string): Q.Promi
       };
     })
     .then(author => {
-      return Q.promise < IAuthorDocument > ((resolve, reject) => {
+      return Q.Promise < IAuthorDocument > ((resolve, reject) => {
         AuthorDocumentModel.create(author)
           .onFulfill(author => {
             resolve(author);
@@ -58,7 +58,7 @@ AuthorSchema.static('createNewAuthor', (name: string, email ? : string): Q.Promi
 
 AuthorSchema.static('findByName', (name: string): Q.Promise < IAuthorDocument > => {
 
-  return Q.promise < IAuthorDocument > ((resolve, reject) => {
+  return Q.Promise < IAuthorDocument > ((resolve, reject) => {
     AuthorDocumentModel.findOne({
         name: name
       })

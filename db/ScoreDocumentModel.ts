@@ -69,7 +69,7 @@ ScoreSchema.static('createNewScore', (scoreNo: number,
   authorId: mongoose.Types.ObjectId,
   authorName: string): Q.Promise < IScoreDocument > => {
 
-  return Q.promise < IScoreDocument > ((resolve, reject) => {
+  return Q.Promise < IScoreDocument > ((resolve, reject) => {
     ScoreDocumentModel.create({
         url: UriUtil.makeUri(artistName, songName, scoreNo),
         scoreNo: scoreNo,

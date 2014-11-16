@@ -10,7 +10,7 @@ class User {
   };
 
   static findById = (id: string): Q.Promise < IUserDocument > => {
-    return Q.promise < IUserDocument > ((resolve, reject) => {
+    return Q.Promise < IUserDocument > ((resolve, reject) => {
       db.User.findById(id)
         .exec()
         .onFulfill(user => {
@@ -23,7 +23,7 @@ class User {
   }
 
   static relateAuthor = (userId: string, authorId: string): Q.Promise < IUserDocument > => {
-    return Q.promise < IUserDocument > ((resolve, reject) => {
+    return Q.Promise < IUserDocument > ((resolve, reject) => {
       db.User.findByIdAndUpdate(userId, {
           authorId: authorId
         })

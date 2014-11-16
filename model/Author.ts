@@ -38,7 +38,7 @@ class Author {
 
   static getById = (authorId: string): Q.Promise < Author > => {
 
-    return Q.promise < Author > ((resolve, reject) => {
+    return Q.Promise < Author > ((resolve, reject) => {
 
       if (!authorId) {
         resolve(null);

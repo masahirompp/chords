@@ -29,7 +29,7 @@ var ChordSchema: mongoose.Schema = new mongoose.Schema({
 
 ChordSchema.static('createNewChord', (scoreId: mongoose.Types.ObjectId): Q.Promise < IChordDocument > => {
 
-  return Q.promise < IChordDocument > ((resolve, reject) => {
+  return Q.Promise < IChordDocument > ((resolve, reject) => {
     ChordDocumentModel.create({
         scoreId: scoreId,
         chords: [],
