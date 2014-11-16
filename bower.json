@@ -7,7 +7,9 @@
     "underscore": "~1.7.0",
     "d3": "~3.4.13",
     "blockui": "*",
-    "growl": "~1.2.4"
+    "growl": "~1.2.4",
+    "font-awesome": "~4.2.0",
+    "bootstrap-social": "~4.8.0"
   },
   "devDependencies": {}
 }
