@@ -35,15 +35,6 @@ class SearchView {
     return '<tr uri="' + ScoreUtil.makeUri(d) + '"><td>' + d.song.name + '</td><td>' + d.song.artist.name + '</td><td>' + d.author.name + '</td><td>' + d.description + '</td></tr>';
   }
 
-  public static growlNoResult() {
-    $.growl.notice({
-      title: '検索結果0件',
-      message: '曲名、アーティスト名を変えて検索してください。',
-      location: 'underHeader',
-      duration: 700
-    });
-  }
-
   public static changeDocumentTitle(keyword) {
     document.title = keyword + 'の検索結果 | ChordCliche';
   }
