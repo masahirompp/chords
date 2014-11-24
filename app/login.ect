@@ -6,7 +6,7 @@
   </a>
 </div>
 <% block 'script' : %>
-<script>
-  $.unblockUI();
-</script>
+<!-- build:js({app,.tmp}) /scripts/app.index.js -->
+<script src="/scripts/app.index.js"></script>
+<!-- endbuild -->
 <% end %>

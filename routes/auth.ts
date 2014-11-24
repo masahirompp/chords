@@ -35,20 +35,28 @@ class Auth {
     router.post('/register', (req: express.Request, res: express.Response) => {
       Author.createNewAuthor(req.param('displayName'), req.param('email'))
         .then(author => {
+          console.log('★1');
+          console.log(author);
           return User.relateAuthor(req.user._id, author.id);
         })
         .then(user => {
           // リダイレクト先が指定されていれば、リダイレクト
+          console.log('★2');
+          console.log(user);
           var redirectUrl = req.cookies.redirectUrl;
+          console.log(redirectUrl);
           if (redirectUrl) {
+            console.log('★3');
             res.clearCookie('redirectUrl');
             return res.redirect(decodeURIComponent(redirectUrl))
           }
+          console.log('★4');
           // リダイレクト先が指定されていない場合は、トップ画面へリダイレクト
           req.flash('message_success', 'ユーザ登録ありがとうございます。ChordKitchenをお楽しみください。');
           res.redirect('/');
         })
         .fail(err => {
+          console.log('★5');
           console.log(err);
           res.redirect('/auth/register');
         });
