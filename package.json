@@ -9,6 +9,7 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "latest",
     "config": "latest",
+    "connect-flash": "^0.1.1",
     "connect-mongo": "^0.4.1",
     "cookie-parser": "latest",
     "ect": "^0.5.9",

@@ -59,11 +59,18 @@
 </nav>
 <div id="container"
   class="container-fluid">
-  <% if @message_success? : %>
+  <% if @message_success?.length : %>
   <div class="alert alert-success alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span
       class="sr-only">Close</span></button>
     <%- @message_success %>
+  </div>
+  <% end %>
+  <% if @message_warning?.length : %>
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span
+      class="sr-only">Close</span></button>
+    <%- @message_warning %>
   </div>
   <% end %>
   <% content %>

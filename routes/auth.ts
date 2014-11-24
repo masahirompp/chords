@@ -11,13 +11,16 @@ class Auth {
 
     var router: express.Router = express.Router();
 
-    router.get('/logout', function(req, res) {
+    router.get('/logout', (req, res) => {
       req.logout();
-      res.render('index', {
-        title: 'コード譜共有サイト ChordKitchen',
-        keyword: '',
-        user: req.user,
-        message_success: 'ログアウトしました。'
+      req.flash('message_success', 'ログアウトしました。');
+      res.redirect('/');
+    });
+
+    router.get('/login', (req, res) => {
+      res.render('login', {
+        title: 'ログイン | コード譜共有サイト ChordKitchen',
+        message_warning: '「http://' + req.host + req.cookies.redirectUrl + '」にアクセスするためには、ログインする必要があります。'
       });
     });
 
@@ -32,19 +35,18 @@ class Auth {
     router.post('/register', (req: express.Request, res: express.Response) => {
       Author.createNewAuthor(req.param('displayName'), req.param('email'))
         .then(author => {
-          console.log('author');
-          console.log(author);
           return User.relateAuthor(req.user._id, author.id);
         })
         .then(user => {
-          console.log('user');
-          console.log(user);
-          res.render('index', {
-            title: 'コード譜共有サイト ChordKitchen',
-            keyword: '',
-            user: user,
-            message_success: 'ユーザ登録ありがとうございます。ChordKitchenをお楽しみください。'
-          });
+          // リダイレクト先が指定されていれば、リダイレクト
+          var redirectUrl = req.cookies.redirectUrl;
+          if (redirectUrl) {
+            res.clearCookie('redirectUrl');
+            return res.redirect(decodeURIComponent(redirectUrl))
+          }
+          // リダイレクト先が指定されていない場合は、トップ画面へリダイレクト
+          req.flash('message_success', 'ユーザ登録ありがとうございます。ChordKitchenをお楽しみください。');
+          res.redirect('/');
         })
         .fail(err => {
           console.log(err);
@@ -61,14 +63,20 @@ class Auth {
         console.log(req.user);
         Author.getById(req.user.authorId)
           .then(author => {
+            // ユーザ登録済みの場合
             if (author) {
-              res.render('index', {
-                title: 'コード譜共有サイト ChordKitchen',
-                keyword: '',
-                user: req.user,
-                message_success: 'ログインしました。'
-              });
+              // リダイレクト先が指定されていれば、リダイレクト
+              var redirectUrl = req.cookies.redirectUrl;
+              if (redirectUrl) {
+                res.clearCookie('redirectUrl');
+                return res.redirect(decodeURIComponent(redirectUrl))
+              }
+              // リダイレクト先が指定されていない場合は、トップ画面を表示。
+              req.flash('message_success','ログインしました。');
+              res.redirect('/');
             }
+
+            // ユーザ未登録の場合は登録画面へ
             res.redirect('/auth/register');
           });
       });

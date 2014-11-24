@@ -3,3 +3,4 @@
 /// <reference path="express/express.d.ts" />
 /// <reference path="q/Q.d.ts" />
 /// <reference path="passport/passport.d.ts" />
+/// <reference path="connect-flash/connect-flash.d.ts" />

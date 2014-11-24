@@ -13,7 +13,9 @@ class Index {
       res.render('index', {
         title: 'コード譜共有サイト ChordKitchen',
         keyword: '',
-        user: req.user
+        user: req.user,
+        message_success:req.flash('message_success'),
+        message_warning:req.flash('message_warning')
       });
     });
 
