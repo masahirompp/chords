@@ -14,78 +14,31 @@ var MongoStore = require('connect-mongo')(session);
 var config = require('config');
 var ECT = require('ect');
 
-// Logger
-var log4js, logger, morgan;
-if (config.log.writeFile) {
-  log4js = require('log4js');
-  log4js.configure('config/log4js_setting.json');
-  logger = log4js.getLogger('app');
-  logger.setLevel(config.log.level); // ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
-  logger.info('Logging start. ');
-  logger.info('Log Level:' + config.log.level);
-} else {
-  morgan = require('morgan');
-}
-
-// app
-var app = express();
-
-// db setup
-var db = require('./db/db');
-db.debug(config.db.debug);
-app.set('db', config.db.host + '/' + config.db.name);
-db.connect(app.get('db'));
-
-// passport
-var passport = require('passport');
-var TwitterStrategy = require('passport-twitter')
-  .Strategy;
-var User = require('./model/User');
-passport.use(new TwitterStrategy({
-    consumerKey: config.auth.twitter.TWITTER_CONSUMER_KEY,
-    consumerSecret: config.auth.twitter.TWITTER_CONSUMER_SECRET,
-    callbackURL: config.auth.twitter.callbackURL
-  },
-  function(token, tokenSecret, profile, done) {
-    User.findOrCreate(profile)
-      .then(function(user) {
-        done(null, user);
-      })
-      .catch(function(err) {
-        done(err);
-      });
-  }
-));
-
-passport.serializeUser(function(user, done) {
-  done(null, user._id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id)
-    .then(function(user) {
-      done(null, user);
-    })
-    .fail(function(err) {
-      done(err);
-    });
-});
-
 // global
 global.Q = require('q');
 
-var ectRenderer = ECT({ watch: true, root: __dirname + '/views', ext : '.ect' });
+// app
+var app = express();
+var logger = require('./util/Logger')
+  .init(config, app);
+
+// db setup
+var db = require('./db/db')
+  .connect(config);
+
+// auth
+var passport = require('./util/AuthUtil')
+  .init(config);
+
+var ectRenderer = ECT({
+  watch: true,
+  root: __dirname + '/views',
+  ext: '.ect'
+});
 app.set('view engine', 'ect');
 app.engine('ect', ectRenderer.render);
 
 // setup
-if (config.log.writeFile) {
-  app.use(log4js.connectLogger(logger, {
-    level: config.log.level
-  }));
-} else {
-  app.use(morgan('dev'));
-}
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(methodOverride());
 app.use(bodyParser.json());

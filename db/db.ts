@@ -13,8 +13,10 @@ import ClientErrorDocumentModel = require('./ClientErrorDocumentModel');
 
 class db {
 
-  static connect(db: string) {
-    mongoose.connect('mongodb://' + db);
+  static connect(config: any): db {
+    this.debug(config.db.debug);
+    mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name);
+    return this;
   }
 
   static debug(debug: any) {

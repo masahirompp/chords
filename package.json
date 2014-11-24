@@ -18,7 +18,6 @@
     "log4js": "^0.6.21",
     "method-override": "latest",
     "mongoose": "latest",
-    "morgan": "latest",
     "multer": "latest",
     "passport": "latest",
     "passport-twitter": "latest",
@@ -55,6 +54,7 @@
     "strip-ansi": "latest",
     "supports-color": "latest",
     "svgo": "latest",
-    "time-grunt": "latest"
+    "time-grunt": "latest",
+    "typescript": "^1.3.0"
   }
 }
