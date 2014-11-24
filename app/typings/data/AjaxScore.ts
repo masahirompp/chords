@@ -15,6 +15,17 @@ class AjaxScore {
       });
   }
 
+  public static searchByAuthor(authorName: string): JQueryPromise < ScoreDTO[] > {
+    return $.post('/api/query', {
+        query: {
+          authorName: authorName
+        }
+      })
+      .then((data) => {
+        return <ScoreDTO[] > data;
+      });
+  }
+
 }
 
 export = AjaxScore

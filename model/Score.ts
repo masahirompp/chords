@@ -153,7 +153,7 @@ class Score {
         })
         .exec()
         .onFulfill(score => {
-          if(!score || !score._id){
+          if (!score || !score._id) {
             return reject(new Error('not found.'));
           }
           db.Chord.findOne({
@@ -191,6 +191,23 @@ class Score {
     });
   }
 
+  static query(query: any): Q.Promise < Score[] > {
+
+    return Q.Promise < Score[] > ((resolve, reject) => {
+      db.Score.find(Score.normalize(query))
+        .exec()
+        .onFulfill(scores => {
+          resolve(scores.map(doc => {
+            return new Score(doc);
+          }));
+        })
+        .onReject(err => {
+          reject(err);
+        })
+    });
+
+  }
+
   static toJson(scores: Score[]): ScoreDTO[] {
     return scores.map((score) => {
       return score.json;
@@ -215,6 +232,10 @@ class Score {
         songName: reg
       }]
     };
+  }
+
+  private static normalize(query): any {
+    return query;
   }
 
 }

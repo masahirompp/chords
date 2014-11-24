@@ -120,6 +120,10 @@ app.use('/api/admin', require('./routes/admin')
   .init());
 app.use('/api', require('./routes/api')
   .init());
+app.use('/mypage', require('./routes/mypage')
+  .init());
+app.use('/edit', require('./routes/edit')
+  .init());
 app.use('/', require('./routes/index')
   .init());
 

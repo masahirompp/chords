@@ -30,6 +30,10 @@ class Event {
     Event.addEventSearchBtn();
   }
 
+  static initMypage(){
+    Event.addCommonEvent();
+  }
+
   private static addCommonEvent() {
     $('.btn')
       .tooltip();

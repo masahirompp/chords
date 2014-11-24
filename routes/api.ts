@@ -47,6 +47,19 @@ class Api {
     });
 
     /**
+     * /api/query POST
+     */
+    router.post('/query', (req: express.Request, res: express.Response, next: Function) => {
+      Score.query(req.body.query)
+        .then((scores: Score[]) => {
+          res.json(Score.toJson(scores));
+        })
+        .catch(err => {
+          res.json(err);
+        });
+    });
+
+    /**
      * /api/:artist GET
      */
     router.get('/:artist', (req: express.Request, res: express.Response) => {
@@ -80,15 +93,15 @@ class Api {
           res.json(score.json);
         })
         .catch(err => {
-          if(err.message === 'not found.'){
+          if (err.message === 'not found.') {
             res.status(404);
             res.json({
-              message : 'このコード譜は見つかりません。'
+              message: 'このコード譜は見つかりません。'
             });
-          }else{
+          } else {
             res.status(500);
             res.json({
-              message : '大変申し訳ありません。システムエラーが発生しました。時間を空けて再度お試しください。それでも解決しない場合は、お問い合わせください。'
+              message: '大変申し訳ありません。システムエラーが発生しました。時間を空けて再度お試しください。それでも解決しない場合は、お問い合わせください。'
             });
           }
         });

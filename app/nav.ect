@@ -31,17 +31,15 @@
           class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
       </form>
       <ul class="nav navbar-nav navbar-right">
-        <% if @user? : %>
-        <li><a id="profile"
-          href="/auth/twitter"><%- @user.displayName %></a></li>
-        <% end %>
         <li class="dropdown"><a href="#"
           data-toggle="dropdown"
-          class="dropdown-toggle">メニュー<span
+          class="dropdown-toggle"><% if @user? : %><%- @user.displayName %><% else : %>メニュー<% end %><span
           class="caret"></span></a>
           <ul role="menu"
             class="dropdown-menu">
-            <li><a href="#">Action</a></li>
+            <% if @user? : %>
+            <li><a href="/mypage">マイページ</a></li>
+            <% end %>
             <li><a href="#">Another action</a></li>
             <li><a href="#">Something else here</a></li>
             <li class="divider"></li>

@@ -188,6 +188,19 @@ module.exports = function(grunt) {
           name: 'app.score',
           mainConfigFile: '<%= config.app %>/scripts/app.score.js'
         }
+      },
+      // !!! build.js options for app.score.js (mypage.ect) !!!
+      dist4: {
+        options: {
+          out: '<%= config.dist %>/scripts/app.mypage.js',
+          baseUrl: '<%= config.app %>/scripts',
+          optimize: 'none',
+          preserveLicenseComments: false,
+          useStrict: true,
+          wrap: true,
+          name: 'app.mypage',
+          mainConfigFile: '<%= config.app %>/scripts/app.mypage.js'
+        }
       }
     },
 
@@ -196,7 +209,8 @@ module.exports = function(grunt) {
         files: {
           '<%= config.dist %>/scripts/app.index.js': '<%= config.dist %>/scripts/app.index.js',
           '<%= config.dist %>/scripts/app.search.js': '<%= config.dist %>/scripts/app.search.js',
-          '<%= config.dist %>/scripts/app.score.js': '<%= config.dist %>/scripts/app.score.js'
+          '<%= config.dist %>/scripts/app.score.js': '<%= config.dist %>/scripts/app.score.js',
+          '<%= config.dist %>/scripts/app.mypage.js': '<%= config.dist %>/scripts/app.mypage.js'
         }
       }
     },

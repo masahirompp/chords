@@ -39,7 +39,6 @@ class SearchView {
     document.title = keyword + 'の検索結果 | ChordCliche';
   }
 
-
 }
 
 export = SearchView;
