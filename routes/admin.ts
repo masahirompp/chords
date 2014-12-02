@@ -2,7 +2,7 @@
 
 import express = require('express');
 import passport = require('passport');
-import Score = require('../model/Score')
+import Score = require('../models/Score')
 
 class Admin {
 

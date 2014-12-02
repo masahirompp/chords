@@ -12,10 +12,11 @@ var flash = require('connect-flash');
 var errorHandler = require('errorhandler');
 var config = require('config');
 var ECT = require('ect');
+var mongoose = require('mongoose');
 
 // db setup
-require('./db/db')
-  .connect(config);
+mongoose.set('debug', config.db.debug);
+mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name);
 
 // global
 global.Q = require('q');

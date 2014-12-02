@@ -2,8 +2,8 @@
 
 import express = require('express');
 import passport = require('passport');
-import Author = require('../model/Author');
-import User = require('../model/User');
+import Author = require('../models/Author');
+import User = require('../models/User');
 
 class Auth {
 
@@ -33,7 +33,7 @@ class Auth {
     });
 
     router.post('/register', (req: express.Request, res: express.Response) => {
-      Author.createNewAuthor(req.param('displayName'), req.param('email'))
+      Author.create(req.param('displayName'), req.param('email'))
         .then(author => {
           console.log(author);
           return User.relateAuthor(req.user._id, author.id);

@@ -35,7 +35,7 @@ module.exports = function(grunt) {
       tsserver: {
         files: ['db/*.ts',
           'dto/*.ts',
-          'model/*.ts',
+          'models/*.ts',
           'routes/*.ts',
           'util/*.ts'
         ],
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
       server: {
         src: ['db/*.ts',
           'dto/*.ts',
-          'model/*.ts',
+          'models/*.ts',
           'routes/*.ts',
           'util/*.ts'
         ],
@@ -281,7 +281,7 @@ module.exports = function(grunt) {
             '.tmp',
             'db/*.js',
             'dto/*.js',
-            'model/*.js',
+            'models/*.js',
             'routes/*.js',
             'util/*.js'
           ]

@@ -3,7 +3,7 @@
 import express = require('express');
 import passport = require('passport');
 import session = require('express-session');
-import User = require('../model/User');
+import User = require('../models/User');
 
 class AuthUtil {
 

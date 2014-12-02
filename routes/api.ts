@@ -1,8 +1,8 @@
 /// <reference path="../tsd/tsd.d.ts" />
 
 import express = require('express');
-import Author = require('../model/Author');
-import Score = require('../model/Score');
+import Author = require('../models/Author');
+import Score = require('../models/Score');
 import ScoreDTO = require('../dto/_ScoreDTO');
 
 class Api {
@@ -26,7 +26,7 @@ class Api {
      * /api/user/:id POST
      */
     router.post('/user/:id', (req: express.Request, res: express.Response, next: Function) => {
-      Author.createNewAuthor(req.params.id, '')
+      Author.create(req.params.id, '')
         .then((author: Author) => {
           res.json(author.json);
         })
