@@ -7,7 +7,7 @@ import User = require('../models/User');
 
 class AuthUtil {
 
-  static init(config: any, app: express.Application) {
+  static init(config: any, mongoose: any, app: express.Application) {
     // passport
     var TwitterStrategy = require('passport-twitter')
       .Strategy;
@@ -29,15 +29,9 @@ class AuthUtil {
         .fail(err => done(err, null));
     });
 
-    var MongoStore: any = require('connect-mongo')(session);
-
     app.use(session({
       secret: config.server.session,
-      store: new MongoStore({
-        db: config.db.name,
-        host: config.db.host,
-        clear_interval: 60 * 60
-      }),
+      store: require('mongoose-session')(mongoose),
       cookie: {
         httpOnly: false,
         maxAge: Date.now() + 60 * 60 * 1000

@@ -9,7 +9,7 @@
     "body-parser": "latest",
     "config": "latest",
     "connect-flash": "^0.1.1",
-    "connect-mongo": "^0.4.1",
+    "connect-mongo": "latest",
     "cookie-parser": "latest",
     "ect": "^0.5.9",
     "errorhandler": "latest",
@@ -18,10 +18,12 @@
     "log4js": "^0.6.21",
     "method-override": "latest",
     "mongoose": "latest",
+    "mongoose-session": "0.0.2",
     "passport": "latest",
     "passport-twitter": "latest",
     "q": "latest",
-    "serve-favicon": "latest"
+    "serve-favicon": "latest",
+    "svgo": "^0.5.0"
   },
   "devDependencies": {
     "bin-version-check": "latest",

@@ -47,7 +47,7 @@ app.use(errorHandler());
 
 // auth
 var passport = require('./util/AuthUtil')
-  .init(config, app);
+  .init(config, mongoose, app);
 
 // route
 app.use('/auth', require('./routes/auth')
@@ -87,4 +87,3 @@ var server = app.listen(config.server.port, function() {
       .port);
   }
 });
-
