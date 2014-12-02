@@ -6,7 +6,6 @@
     "start": "node ./app.js"
   },
   "dependencies": {
-    "bcrypt-nodejs": "0.0.3",
     "body-parser": "latest",
     "config": "latest",
     "connect-flash": "^0.1.1",
@@ -19,7 +18,6 @@
     "log4js": "^0.6.21",
     "method-override": "latest",
     "mongoose": "latest",
-    "multer": "latest",
     "passport": "latest",
     "passport-twitter": "latest",
     "q": "latest",
@@ -49,12 +47,9 @@
     "imagemin-jpegtran": "latest",
     "imagemin-optipng": "latest",
     "imagemin-pngquant": "latest",
-    "js-beautify": "latest",
-    "jshint-stylish": "latest",
     "load-grunt-tasks": "latest",
     "strip-ansi": "latest",
     "supports-color": "latest",
-    "svgo": "latest",
     "time-grunt": "latest",
     "typescript": "^1.3.0"
   }

@@ -6,7 +6,6 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
-var multer = require('multer');
 var cookieParser = require('cookie-parser');
 var flash = require('connect-flash');
 var errorHandler = require('errorhandler');
@@ -41,7 +40,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(multer());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
@@ -89,3 +87,4 @@ var server = app.listen(config.server.port, function() {
       .port);
   }
 });
+
