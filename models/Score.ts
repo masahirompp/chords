@@ -84,7 +84,7 @@ class Score {
     }
   });
 
-  private static _model = mongoose.model('Score', Score._schema);
+  private static _model = mongoose.model < IScore > ('Score', Score._schema);
 
   private static createNewScore(scoreNo: number,
     description: string,
@@ -111,7 +111,7 @@ class Score {
           star: 0,
           isPublish: false
         })
-        .onFulfill((score:IScore) => {
+        .onFulfill(score => {
           resolve(new Score(score));
         })
         .onReject(err => {
@@ -175,7 +175,7 @@ class Score {
           scoreNo: scoreNo
         })
         .exec()
-        .onFulfill((score:IScore) => {
+        .onFulfill(score => {
           if (!score || !score._id) {
             return reject(new Error('not found.'));
           }
@@ -195,8 +195,8 @@ class Score {
         })
         .exec()
         .onFulfill(scores => {
-          resolve(scores.map((doc: IScore) => {
-            return new Score(doc);
+          resolve(scores.map(score => {
+            return new Score(score);
           }));
         })
         .onReject(err => {
@@ -211,7 +211,7 @@ class Score {
       this._model.find(Score.normalize(query))
         .exec()
         .onFulfill(scores => {
-          resolve(scores.map((doc: IScore) => {
+          resolve(scores.map(doc => {
             return new Score(doc);
           }));
         })
@@ -268,7 +268,7 @@ class Score {
             return resolve(1);
           }
           var maxScoreId = 1;
-          scores.map((result: IScore) => {
+          scores.map(result => {
               return Number(result.url.substring(result.url.lastIndexOf('/') + 1));
             })
             .forEach(n => {

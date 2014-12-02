@@ -399,7 +399,7 @@ public
 app/*.html
 app/scripts
 db/*.js
-model/*.js
+models/*.js
 routes/*.js
 util/*.js
 dto/*.js

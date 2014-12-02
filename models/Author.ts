@@ -30,7 +30,7 @@ class Author {
     }
   });
 
-  private static _model = mongoose.model('Author', Author._schema);
+  private static _model = mongoose.model<IAuthor>('Author', Author._schema);
 
   static getById = (authorId: string): Q.Promise < Author > => {
 
@@ -42,7 +42,7 @@ class Author {
 
       Author._model.findById(authorId)
         .exec()
-        .onFulfill((author:IAuthor) => {
+        .onFulfill(author => {
           resolve(author ? new Author(author) : null);
         })
         .onReject(err => {
@@ -58,7 +58,7 @@ class Author {
           name: name
         })
         .exec()
-        .onFulfill((author:IAuthor) => {
+        .onFulfill(author => {
           resolve(new Author(author));
         })
         .onReject(err => {
@@ -82,7 +82,7 @@ class Author {
       .then(author => {
         return Q.Promise < Author > ((resolve, reject) => {
           this._model.create(author)
-            .onFulfill((author:IAuthor) => {
+            .onFulfill(author => {
               resolve(new Author(author));
             })
             .onReject(err => {

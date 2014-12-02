@@ -58,7 +58,7 @@ class User {
    * @type {Model<IUser>}
    * @private
    */
-  private static _model = mongoose.model('User', User._schema);
+  private static _model = mongoose.model < IUser > ('User', User._schema);
 
   /**
    * static ユーザが存在しなければ作成して返す。
@@ -72,7 +72,7 @@ class User {
           id: profile.id
         })
         .exec()
-        .then((user: IUser) => {
+        .then(user => {
           if (user) {
             return resolve(new User(user));
           }
@@ -83,7 +83,7 @@ class User {
               emails: profile.emails,
               photos: profile.photos
             })
-            .onFulfill((user: IUser) => {
+            .onFulfill(user => {
               resolve(new User(user));
             })
             .onReject(err => {
@@ -97,6 +97,21 @@ class User {
     return Q.Promise < User > ((resolve, reject) => {
       this._model.findById(id);
     })
+  }
+
+  static relateAuthor(userId: string, authorId: string): Q.Promise < User > {
+    return Q.Promise < User > ((resolve, reject) => {
+      this._model.findByIdAndUpdate(userId, {
+          authorId: authorId
+        })
+        .exec()
+        .onFulfill(user => {
+          resolve(new User(user));
+        })
+        .onReject(err => {
+          reject(err);
+        });
+    });
   }
 
   /**

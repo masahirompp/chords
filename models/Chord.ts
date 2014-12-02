@@ -35,7 +35,7 @@ class Chord {
     }
   });
 
-  private static _model = mongoose.model('Chord', Chord._schema);
+  private static _model = mongoose.model<IChord>('Chord', Chord._schema);
 
   static createNewChord(scoreId: mongoose.Types.ObjectId): Q.Promise < Chord > {
 
@@ -45,7 +45,7 @@ class Chord {
           chords: [],
           option: {}
         })
-        .onFulfill((chord:IChord) => {
+        .onFulfill(chord => {
           resolve(new Chord(chord));
         })
         .onReject(err => {
