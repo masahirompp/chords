@@ -215,7 +215,9 @@ class Score {
   }
 
   private static makeKeywordQuery(keyword: string): any[] {
-    var query = [];
+    var query = [{
+      isPublish: true
+    }];
     keyword.split(' ')
       .forEach((k) => {
         query.push(Score.makeRegKeyword(k));
@@ -235,6 +237,7 @@ class Score {
   }
 
   private static normalize(query): any {
+    // TODO: 不要なパラメータなど除去する
     return query;
   }
 

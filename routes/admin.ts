@@ -8,15 +8,14 @@ class Admin {
 
   static init(): express.Router {
 
-    var router:express.Router = express.Router();
+    var router: express.Router = express.Router();
 
     /**
      * /api/admin GET LIST
      */
     router.get('/', (req: express.Request, res: express.Response) => {
-      res.json({
-        admin: '作成中も含めた一覧を表示'
-      });
+      Score.query(req.body.query)
+        .then(scores => res.json(scores.map(score => score.json)));
     });
 
     /**

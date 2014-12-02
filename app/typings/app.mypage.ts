@@ -4,13 +4,13 @@ require.config( < RequireConfig > {
   baseUrl: '/scripts'
 });
 
-require(['./viewmodel/Event', './viewmodel/SearchView', './data/AjaxScore', './util/ErrorHandle'], (Event, SearchView, AjaxScore, ErrorHandle) => {
+require(['./viewmodel/Event', './viewmodel/SearchView', './data/AjaxScoreAuth', './util/ErrorHandle'], (Event, SearchView, AjaxScoreAuth, ErrorHandle) => {
 
   $(() => {
     try {
       Event.initMypage();
 
-      AjaxScore.searchByAuthor('masahirompp')
+      AjaxScoreAuth.getMySocres()
         .then((data) => {
           SearchView.drawResult(data);
         })

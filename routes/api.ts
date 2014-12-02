@@ -12,6 +12,7 @@ class Api {
     var router: express.Router = express.Router();
 
     /**
+     * ユーザ取得
      * /api/user/:id GET
      */
     router.get('/user/:id', (req: express.Request, res: express.Response) => {
@@ -21,6 +22,7 @@ class Api {
     });
 
     /**
+     * ユーザ作成
      * /api/user/:id POST
      */
     router.post('/user/:id', (req: express.Request, res: express.Response, next: Function) => {
@@ -31,6 +33,26 @@ class Api {
         .catch((err) => {
           res.json(err);
         });
+    });
+
+    /**
+     * ユーザ更新
+     * /api/user/:id PUT
+     */
+    router.put('/user/:id', (req: express.Request, res: express.Response, next: Function) => {
+      res.json({
+        user: req.params.id
+      });
+    });
+
+    /**
+     * ユーザ削除
+     * /api/user/:id
+     */
+    router.delete('/user/:id', (req: express.Request, res: express.Response, next: Function) => {
+      res.json({
+        user: req.params.id
+      });
     });
 
     /**

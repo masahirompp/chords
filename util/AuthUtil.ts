@@ -50,12 +50,9 @@ class AuthUtil {
 
     // 認証領域へのアクセスで、匿名アクセスの場合、リダイレクト
     app.use((req, res, next) => {
-      console.log('★6');
       var url = req.url + '/';
       if (url.lastIndexOf('/mypage/', 0) === 0 || url.lastIndexOf('/edit/', 0) === 0) {
-        console.log('★7');
         if (req.isUnauthenticated()) {
-          console.log('★8');
           res.cookie('redirectUrl', req.url);
           return res.redirect('/auth/login');
         }
