@@ -65,8 +65,8 @@ class User {
    * @param passport.Profile
    * @returns {Promise<User>}
    */
-  static findOrCreate(profile: passport.Profile): Q.Promise < User > {
-    return Q.Promise < User > ((resolve, reject) => {
+  static findOrCreate(profile: passport.Profile): Promise < User > {
+    return new Promise < User > ((resolve, reject) => {
       this._model.findOne({
           provider: profile.provider,
           id: profile.id
@@ -93,14 +93,17 @@ class User {
     });
   }
 
-  static findById(id: string): Q.Promise < User > {
-    return Q.Promise < User > ((resolve, reject) => {
-      this._model.findById(id);
+  static findById(id: string): Promise < User > {
+    return new Promise < User > ((resolve, reject) => {
+      this._model.findById(id)
+        .exec()
+        .onFulfill(user => resolve(new User(user)))
+        .onReject(err => reject(err));
     })
   }
 
-  static relateAuthor(userId: string, authorId: string): Q.Promise < User > {
-    return Q.Promise < User > ((resolve, reject) => {
+  static relateAuthor(userId: string, authorId: string): Promise < User > {
+    return new Promise < User > ((resolve, reject) => {
       this._model.findByIdAndUpdate(userId, {
           authorId: authorId
         })

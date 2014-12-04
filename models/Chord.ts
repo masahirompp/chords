@@ -37,9 +37,9 @@ class Chord {
 
   private static _model = mongoose.model<IChord>('Chord', Chord._schema);
 
-  static createNewChord(scoreId: mongoose.Types.ObjectId): Q.Promise < Chord > {
+  static createNewChord(scoreId: mongoose.Types.ObjectId): Promise < Chord > {
 
-    return Q.Promise < Chord > ((resolve, reject) => {
+    return new Promise < Chord > ((resolve, reject) => {
       this._model.create({
           scoreId: scoreId,
           chords: [],

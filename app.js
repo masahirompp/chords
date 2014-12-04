@@ -17,9 +17,6 @@ var mongoose = require('mongoose');
 mongoose.set('debug', config.db.debug);
 mongoose.connect('mongodb://' + config.db.host + '/' + config.db.name);
 
-// global
-global.Q = require('q');
-
 // app
 var app = express();
 var logger = require('./util/Logger')

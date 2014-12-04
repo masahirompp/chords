@@ -26,7 +26,7 @@ class AuthUtil {
     passport.deserializeUser((id, done) => {
       User.findById(id)
         .then(user => done(null, user))
-        .fail(err => done(err, null));
+        .catch(err => done(err, null));
     });
 
     app.use(session({

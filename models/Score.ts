@@ -94,9 +94,9 @@ class Score {
     songId: string,
     songName: string,
     authorId: mongoose.Types.ObjectId,
-    authorName: string): Q.Promise < Score > {
+    authorName: string): Promise < Score > {
 
-    return Q.Promise < Score > ((resolve, reject) => {
+    return new Promise < Score > ((resolve, reject) => {
       this._model.create({
           url: UriUtil.makeUri(artistName, songName, scoreNo),
           scoreNo: scoreNo,
@@ -120,12 +120,12 @@ class Score {
     });
   }
 
-  static createNewOriginalScore(authorId: string, songName: string, description: string): Q.Promise < Score > {
+  static createNewOriginalScore(authorId: string, songName: string, description: string): Promise < Score > {
 
     // TODO
     var songId = songName;
 
-    return Q.all([Author.getById(authorId), Score.generateScoreNo(authorId, songId)])
+    return Promise.all([Author.getById(authorId), Score.generateScoreNo(authorId, songId)])
       .then((values: any[]) => {
         var author = < Author > values[0];
         var scoreNo = < number > values[1];
@@ -146,7 +146,7 @@ class Score {
     artistName: string,
     songId: string,
     songName: string,
-    description: string): Q.Promise < Score > {
+    description: string): Promise < Score > {
     return Author.getById(authorId)
       .then((author: Author) => {
 
@@ -166,9 +166,9 @@ class Score {
       })
   }
 
-  static find(artistName: string, songName: string, scoreNo: number): Q.Promise < Score > {
+  static find(artistName: string, songName: string, scoreNo: number): Promise < Score > {
 
-    return Q.Promise < Score > ((resolve, reject) => {
+    return new Promise < Score > ((resolve, reject) => {
       this._model.findOne({
           artistName: artistName,
           songName: songName,
@@ -187,9 +187,9 @@ class Score {
     });
   }
 
-  static search(keyword: string): Q.Promise < Score[] > {
+  static search(keyword: string): Promise < Score[] > {
 
-    return Q.Promise < Score[] > ((resolve, reject) => {
+    return new Promise < Score[] > ((resolve, reject) => {
       this._model.find({
           $and: Score.makeKeywordQuery(keyword)
         })
@@ -205,9 +205,9 @@ class Score {
     });
   }
 
-  static query(query: any): Q.Promise < Score[] > {
+  static query(query: any): Promise < Score[] > {
 
-    return Q.Promise < Score[] > ((resolve, reject) => {
+    return new Promise < Score[] > ((resolve, reject) => {
       this._model.find(Score.normalize(query))
         .exec()
         .onFulfill(scores => {
@@ -255,9 +255,9 @@ class Score {
     return query;
   }
 
-  private static generateScoreNo(artistId: string, songId: string): Q.Promise < number > {
+  private static generateScoreNo(artistId: string, songId: string): Promise < number > {
 
-    return Q.Promise < number > ((resolve, reject) => {
+    return new Promise < number > ((resolve, reject) => {
       this._model.find({
           artistId: artistId,
           songId: songId

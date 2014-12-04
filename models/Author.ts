@@ -30,11 +30,11 @@ class Author {
     }
   });
 
-  private static _model = mongoose.model<IAuthor>('Author', Author._schema);
+  private static _model = mongoose.model < IAuthor > ('Author', Author._schema);
 
-  static getById = (authorId: string): Q.Promise < Author > => {
+  static getById = (authorId: string): Promise < Author > => {
 
-    return Q.Promise < Author > ((resolve, reject) => {
+    return new Promise < Author > ((resolve, reject) => {
 
       if (!authorId) {
         resolve(null);
@@ -52,8 +52,8 @@ class Author {
 
   };
 
-  static findByName(name: string): Q.Promise < Author > {
-    return Q.Promise < Author > ((resolve, reject) => {
+  static findByName(name: string): Promise < Author > {
+    return new Promise < Author > ((resolve, reject) => {
       this._model.findOne({
           name: name
         })
@@ -67,7 +67,7 @@ class Author {
     });
   }
 
-  static create(name: string, email ? : string): Q.Promise < Author > {
+  static create(name: string, email ? : string): Promise < Author > {
 
     return this.findByName(name)
       .then(author => {
@@ -80,7 +80,7 @@ class Author {
         };
       })
       .then(author => {
-        return Q.Promise < Author > ((resolve, reject) => {
+        return new Promise < Author > ((resolve, reject) => {
           this._model.create(author)
             .onFulfill(author => {
               resolve(new Author(author));

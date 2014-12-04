@@ -51,7 +51,7 @@ class Auth {
           req.flash('message_success', 'ユーザ登録ありがとうございます。ChordKitchenをお楽しみください。');
           res.redirect('/');
         })
-        .fail(err => {
+        .catch(err => {
           console.log(err);
           res.redirect('/auth/register');
         });
@@ -75,7 +75,7 @@ class Auth {
                 return res.redirect(decodeURIComponent(redirectUrl))
               }
               // リダイレクト先が指定されていない場合は、トップ画面を表示。
-              req.flash('message_success','ログインしました。');
+              req.flash('message_success', 'ログインしました。');
               res.redirect('/');
             }
 
