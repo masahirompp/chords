@@ -34,6 +34,9 @@
     },
     "express-session/express-session.d.ts": {
       "commit": "5898d809e04403dfe5c62c0ec1713d10c54126f7"
+    },
+    "es6-promise/es6-promise.d.ts": {
+      "commit": "bd0833a22eb1c4e4a963068d4e2550fe866399d1"
     }
   }
 }
