@@ -22,20 +22,14 @@ class Works {
      * プロフィールの編集画面表示
      */
     router.get('/profile', (req: express.Request, res: express.Response) => {
-      res.render('score', {
-        title: 'マイページ',
-        user: req.user
-      });
+      // TODO
     });
 
     /**
      * プロフィールの保存
      */
     router.post('/profile', (req: express.Request, res: express.Response) => {
-      res.render('score', {
-        title: 'マイページ',
-        user: req.user
-      });
+      // TODO
     });
 
     /**
@@ -43,7 +37,8 @@ class Works {
      */
     router.get('/:artist/:song/:score', (req: express.Request, res: express.Response) => {
       res.render('score', {
-        title: 'マイページ',
+        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
+        keyword: '',
         user: req.user
       });
     });
@@ -53,7 +48,8 @@ class Works {
      */
     router.post('/:artist/:song/:score', (req: express.Request, res: express.Response) => {
       res.render('score', {
-        title: 'マイページ',
+        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
+        keyword: '',
         user: req.user
       });
     });

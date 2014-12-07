@@ -60,8 +60,7 @@ class Auth {
       passport.authenticate('twitter', {
         failureRedirect: '/'
       }), (req: express.Request, res: express.Response) => {
-        console.log(req.user);
-        Author.getById(req.user.authorId)
+        Author.findById(req.user.authorId)
           .then(author => {
             // ユーザ登録済みの場合
             if (author) {
@@ -72,7 +71,7 @@ class Auth {
                 return res.redirect(decodeURIComponent(redirectUrl))
               }
               // リダイレクト先が指定されていない場合は、トップ画面を表示。
-              req.flash('message_success','ログインしました。');
+              req.flash('message_success', 'ログインしました。');
               res.redirect('/');
             }
 

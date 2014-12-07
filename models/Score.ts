@@ -125,7 +125,7 @@ class Score {
     // TODO
     var songId = songName;
 
-    return Promise.all([Author.getById(authorId), Score.generateScoreNo(authorId, songId)])
+    return Promise.all([Author.findById(authorId), Score.generateScoreNo(authorId, songId)])
       .then((values: any[]) => {
         var author = < Author > values[0];
         var scoreNo = < number > values[1];
@@ -147,7 +147,7 @@ class Score {
     songId: string,
     songName: string,
     description: string): Promise < Score > {
-    return Author.getById(authorId)
+    return Author.findById(authorId)
       .then((author: Author) => {
 
         return Score.generateScoreNo(artistName, songName)
