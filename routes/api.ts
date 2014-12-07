@@ -1,17 +1,13 @@
 /// <reference path="../tsd/tsd.d.ts" />
-
 import express = require('express');
 import Author = require('../models/Author');
 import Score = require('../models/Score');
+import Chord = require('../models/Chord');
 import ScoreDTO = require('../dto/_ScoreDTO');
 import Util = require('../util/Util');
-
 class Api {
-
   static init(): express.Router {
-
     var router: express.Router = express.Router();
-
     /**
      * ユーザ一覧
      * /api/users GET
@@ -24,7 +20,6 @@ class Api {
         .then(authorList => res.json(authorList.map(a => Util.project(a, req.query.fields))))
         .catch(err => res.json(err));
     });
-
     /**
      * ユーザ検索
      * /api/users/search GET
@@ -37,7 +32,6 @@ class Api {
         .then(authorList => res.json(authorList.map(a => Util.project(a, req.query.fields))))
         .catch(err => res.json(err));
     });
-
     /**
      * ユーザ取得
      * /api/users/:user GET
@@ -47,7 +41,6 @@ class Api {
         .then(author => res.json(Util.project(author.json, req.query.fields)))
         .catch(err => res.json(err));
     });
-
     /**
      * 対象ユーザの譜面位置一覧取得
      * /api/users/:user/scores GET
@@ -57,7 +50,6 @@ class Api {
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
-
     /**
      * 公開中の楽譜一覧取得
      * /api/scores GET
@@ -67,7 +59,6 @@ class Api {
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
-
     /**
      * 公開中の譜面検索
      * /api/scores/search GET
@@ -77,7 +68,6 @@ class Api {
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
-
     /**
      * アーティストの譜面一覧
      * /api/scores/:artist
@@ -87,17 +77,18 @@ class Api {
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
-
     /**
      * 対象曲の譜面一覧
      * /api/scores/:artist/:song
      */
     router.get('/scores/:artist/:song', (req: express.Request, res: express.Response) => {
-      Score.findBySong(req.params.artist, req.params.song, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+      Score.findBySong(req.params.artist,
+          req.params.song,
+          Util.toNumber(req.query.skip),
+          Util.toNumber(req.query.limit))
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
-
     /**
      * 譜面取得
      * /api/:artist/:song/:id GET
@@ -112,7 +103,6 @@ class Api {
         .then(json => res.json(Util.project(json, req.query.fields)))
         .catch(err => res.json(err));
     });
-
     /**
      * 自分の譜面一覧（下書き含む）
      * /api/works
@@ -122,56 +112,46 @@ class Api {
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
-
     /**
      * 譜面新規作成
      * /api/works
      */
     router.post('/works', (req: express.Request, res: express.Response) => {
-      Score.search(req.body.keyword)
-        .then((scores: Score[]) => {
-          res.json(scores.map(u => u.json));
-        })
-        .catch(err => {
-          res.json(err);
-        });
+      var ps = req.body.isOriginal ?
+        Score.createNewOriginalScore(req.user.authorId, req.body.song, req.body.description) :
+        Score.createNewExistingScore(req.user.authorId,
+          req.body.artistId,
+          req.body.artistName,
+          req.body.songId,
+          req.body.songName,
+          req.body.description);
+      ps.then(score => res.json(score.json))
+        .catch(err => res.json(err));
     });
-
     /**
      * 譜面表示（下書き含む）
      * /api/works/:artist/:song/:score
      */
     router.get('/works/:artist/:song/:score', (req: express.Request, res: express.Response) => {
-      Score.search(req.body.keyword)
-        .then((scores: Score[]) => {
-          res.json(scores.map(u => u.json));
-        })
-        .catch(err => {
-          res.json(err);
-        });
-    });
-
-    /**
-     * 譜面保存（下書き含む）
-     * /api/works/:artist/:song/:score
-     */
-    router.post('/works/:artist/:song/:score', (req: express.Request, res: express.Response) => {
       Score.find(req.params.artist, req.params.song, Util.toNumber(req.params.id))
         .then(score => score.jsonWithChord())
         .then(json => res.json(Util.project(json, req.query.fields)))
         .catch(err => res.json(err));
     });
-
+    /**
+     * 譜面保存（下書き含む）
+     * /api/works/:artist/:song/:score
+     */
+    router.post('/works/:artist/:song/:score', (req: express.Request, res: express.Response) => {
+      // TODO
+    });
     /**
      * /api/error POST
      */
     router.post('/error', (req: express.Request, res: express.Response) => {
       console.log(req.params)
     });
-
     return router;
   }
-
 }
-
 module.exports = Api;

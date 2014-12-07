@@ -409,8 +409,12 @@ class Score {
     return !!this._score;
   }
 
-  get isPublish():boolean{
+  get isPublish(): boolean {
     return this._score.isPublish;
+  }
+
+  get objectId(): string {
+    return this._score._id;
   }
 
   get json(): ScoreDTO {
