@@ -3,6 +3,7 @@
 import mongoose = require('mongoose');
 import ScoreDTO = require('../dto/_ScoreDTO');
 import Author = require('./Author');
+import Chord = require('./Chord');
 import UriUtil = require('../util/UriUtil');
 
 interface IScore extends mongoose.Document {
@@ -18,7 +19,6 @@ interface IScore extends mongoose.Document {
   authorName: string;
   star: number
   isPublish: boolean
-  deleted: boolean
   created: Date;
   updated: Date;
 }
@@ -69,11 +69,6 @@ class Score {
       type: Boolean,
       require: true
     },
-    deleted: {
-      type: Boolean,
-      require: true,
-      default: false
-    },
     created: {
       type: Date,
       default: Date.now
@@ -111,11 +106,8 @@ class Score {
           star: 0,
           isPublish: false
         })
-        .onFulfill(score => {
-          resolve(new Score(score));
-        })
-        .onReject(err => {
-          reject(err);
+        .onResolve((err, score) => {
+          err ? reject(err) : resolve(new Score(score));
         });
     });
   }
@@ -166,6 +158,14 @@ class Score {
       })
   }
 
+  /**
+   * 楽譜を取得
+   * @param artistName
+   * @param songName
+   * @param scoreNo
+   * @returns {Promise<Score>}
+   * @desc 公開中・非公開の判定は呼び出し元で実施すること。
+   */
   static find(artistName: string, songName: string, scoreNo: number): Promise < Score > {
 
     return new Promise < Score > ((resolve, reject) => {
@@ -187,6 +187,11 @@ class Score {
     });
   }
 
+  /**
+   * キーワード検索。公開中の楽譜のみ。
+   * @param keyword
+   * @returns {Promise<Score[]>}
+   */
   static search(keyword: string): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
@@ -202,29 +207,6 @@ class Score {
         .onReject(err => {
           reject(err);
         })
-    });
-  }
-
-  static query(query: any): Promise < Score[] > {
-
-    return new Promise < Score[] > ((resolve, reject) => {
-      this._model.find(Score.normalize(query))
-        .exec()
-        .onFulfill(scores => {
-          resolve(scores.map(doc => {
-            return new Score(doc);
-          }));
-        })
-        .onReject(err => {
-          reject(err);
-        })
-    });
-
-  }
-
-  static toJson(scores: Score[]): ScoreDTO[] {
-    return scores.map((score) => {
-      return score.json;
     });
   }
 
@@ -250,11 +232,12 @@ class Score {
     };
   }
 
-  private static normalize(query): any {
-    // TODO: 不要なパラメータなど除去する
-    return query;
-  }
-
+  /**
+   * 楽譜No.生成
+   * @param artistId
+   * @param songId
+   * @returns {Promise<number>}
+   */
   private static generateScoreNo(artistId: string, songId: string): Promise < number > {
 
     return new Promise < number > ((resolve, reject) => {
@@ -314,6 +297,16 @@ class Score {
       star: this._score.star,
       description: this._score.description
     }
+  }
+
+  makeJsonWithChord(): Promise < ScoreDTO > {
+    return Chord.findByScoreId(this._score.id)
+      .then(chord => {
+        var d = this.json;
+        d.chords = chord.chords;
+        d.option = chord.option;
+        return d;
+      });
   }
 
 }

@@ -35,24 +35,31 @@ class Chord {
     }
   });
 
-  private static _model = mongoose.model<IChord>('Chord', Chord._schema);
+  private static _model = mongoose.model < IChord > ('Chord', Chord._schema);
+
+  static findByScoreId(scoreId: string): Promise < Chord > {
+    return new Promise < Chord > ((resolve, reject) => {
+      this._model.findOne({
+          scoreId: scoreId
+        })
+        .exec()
+        .onResolve((err, chord) => {
+          err ? reject(err) : resolve(new Chord(chord));
+        })
+    })
+  }
 
   static createNewChord(scoreId: mongoose.Types.ObjectId): Promise < Chord > {
-
     return new Promise < Chord > ((resolve, reject) => {
       this._model.create({
           scoreId: scoreId,
           chords: [],
           option: {}
         })
-        .onFulfill(chord => {
-          resolve(new Chord(chord));
-        })
-        .onReject(err => {
-          reject(err);
+        .onResolve((err, chord) => {
+          err ? reject(err) : resolve(new Chord(chord));
         })
     });
-
   }
 
   private _chord: IChord;
@@ -61,6 +68,13 @@ class Chord {
     this._chord = chord;
   }
 
+  get chords(): Array < Array < string >> {
+    return this._chord.chords;
+  }
+
+  get option(): any {
+    return this._chord.option;
+  }
 }
 
 export = Chord

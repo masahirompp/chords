@@ -58,7 +58,7 @@ class Api {
     router.get('/scores', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
-          res.json(Score.toJson(scores));
+          res.json(scores.map(u => u.json));
         })
         .catch(err => {
           res.json(err);
@@ -72,7 +72,7 @@ class Api {
     router.get('/scores/search', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
-          res.json(Score.toJson(scores));
+          res.json(scores.map(u => u.json));
         })
         .catch(err => {
           res.json(err);
@@ -86,7 +86,7 @@ class Api {
     router.get('/scores/:artist', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
-          res.json(Score.toJson(scores));
+          res.json(scores.map(u => u.json));
         })
         .catch(err => {
           res.json(err);
@@ -100,7 +100,7 @@ class Api {
     router.get('/scores/:artist/:song', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
-          res.json(Score.toJson(scores));
+          res.json(scores.map(u => u.json));
         })
         .catch(err => {
           res.json(err);
@@ -142,7 +142,7 @@ class Api {
     router.get('/works', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
-          res.json(Score.toJson(scores));
+          res.json(scores.map(u => u.json));
         })
         .catch(err => {
           res.json(err);
@@ -156,7 +156,7 @@ class Api {
     router.post('/works', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
-          res.json(Score.toJson(scores));
+          res.json(scores.map(u => u.json));
         })
         .catch(err => {
           res.json(err);
@@ -170,7 +170,7 @@ class Api {
     router.get('/works/:artist/:song/:score', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
-          res.json(Score.toJson(scores));
+          res.json(scores.map(u => u.json));
         })
         .catch(err => {
           res.json(err);
@@ -184,7 +184,7 @@ class Api {
     router.post('/works/:artist/:song/:score', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
-          res.json(Score.toJson(scores));
+          res.json(scores.map(u => u.json));
         })
         .catch(err => {
           res.json(err);

@@ -2,6 +2,7 @@
 
 import mongoose = require('mongoose');
 import User = require('./User');
+import AuthorDTO = require('../dto/_AuthorDTO');
 
 interface IAuthor extends mongoose.Document {
   email: string;
@@ -166,7 +167,7 @@ class Author {
     return !!this._author;
   }
 
-  get id():string{
+  get id(): string {
     return this._author.id;
   }
 
@@ -174,8 +175,8 @@ class Author {
     return this._author.name;
   }
 
-  get json(): any {
-    return {
+  get json(): AuthorDTO {
+    return <AuthorDTO > {
       id: this._author.name,
       name: this._author.name,
       profile: this._author.profile,
@@ -184,15 +185,15 @@ class Author {
     }
   }
 
-  get jsonWithAccount(): any {
-    var d = this.json;
-    d['account'] = User.findByAuthorId(this._author.id)
+  makeJsonWithAccount(): Promise < AuthorDTO > {
+    return User.findByAuthorId(this._author.id)
       .then(users => {
-        return users.map(u => {
+        var d = this.json;
+        d.account = users.map(u => {
           return u.json;
         });
+        return d;
       });
-    return d;
   }
 
 }
