@@ -23,37 +23,41 @@ class User {
    * @private
    */
   private static _schema: mongoose.Schema = new mongoose.Schema({
-    provider: {
-      type: String,
-      require: true
-    },
-    id: {
-      type: String,
-      require: true
-    },
-    authorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Author'
-    },
-    displayName: {
-      type: String
-    },
-    emails: {
-      type: mongoose.Schema.Types.Mixed
-    },
-    photos: {
-      type: mongoose.Schema.Types.Mixed
-    },
-    show: Boolean,
-    created: {
-      type: Date,
-      default: Date.now
-    },
-    updated: {
-      type: Date,
-      default: Date.now
-    }
-  });
+      provider: {
+        type: String,
+        require: true
+      },
+      id: {
+        type: String,
+        require: true
+      },
+      authorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Author'
+      },
+      displayName: {
+        type: String
+      },
+      emails: {
+        type: mongoose.Schema.Types.Mixed
+      },
+      photos: {
+        type: mongoose.Schema.Types.Mixed
+      },
+      show: Boolean,
+      created: {
+        type: Date,
+        default: Date.now
+      },
+      updated: {
+        type: Date,
+        default: Date.now
+      }
+    })
+    .pre('save', function(next) {
+      this.updated = new Date();
+      next();
+    });
 
   /**
    * Mongoose.Model

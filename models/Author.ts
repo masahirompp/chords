@@ -1,10 +1,12 @@
 /// <reference path="../tsd/tsd.d.ts" />
 
 import mongoose = require('mongoose');
+import uniqueValidator = require('mongoose-unique-validator');
 import User = require('./User');
 import AuthorDTO = require('../dto/_AuthorDTO');
 
 interface IAuthor extends mongoose.Document {
+  id: string;
   email: string;
   name: string;
   profile: string;
@@ -16,25 +18,37 @@ interface IAuthor extends mongoose.Document {
 class Author {
 
   private static _schema = new mongoose.Schema({
-    email: String,
-    name: {
-      type: String,
-      required: true,
-      index: {
-        unique: true
+      id: {
+        type: String,
+        required: 'idを入力してください。',
+        index: {
+          unique: true
+        },
+        validate: /^\w+$/i
+      },
+      email: String,
+      name: {
+        type: String,
+        required: 'ニックネームを入力してください。'
+      },
+      profile: String,
+      icon: String,
+      created: {
+        type: Date,
+        default: Date.now
+      },
+      updated: {
+        type: Date,
+        default: Date.now
       }
-    },
-    profile: String,
-    icon: String,
-    created: {
-      type: Date,
-      default: Date.now
-    },
-    updated: {
-      type: Date,
-      default: Date.now
-    }
-  });
+    })
+    .plugin( < (schema: mongoose.Schema, options ? : Object) => void > uniqueValidator, {
+      message: 'そのidは既に使用されているため、使用できません。'
+    })
+    .pre('save', function(next) {
+      this.updated = new Date();
+      next();
+    });
 
   private static _model = mongoose.model < IAuthor > ('Author', Author._schema);
 
@@ -59,6 +73,23 @@ class Author {
   };
 
   /**
+   * アカウントIDからAuthorを取得
+   * @param id
+   * @returns {Promise<Author>}
+   */
+  static findByAccountId(id: string): Promise < Author > {
+    return new Promise < Author > ((resolve, reject) => {
+      this._model.findOne({
+          id: id
+        })
+        .exec()
+        .onResolve((err, author) => {
+          err ? reject(err) : resolve(new Author(author));
+        });
+    });
+  }
+
+  /**
    * nameからAuthorを取得する。基本的にnameの存在確認用。
    * @param name
    * @returns {Promise<Author>}
@@ -73,6 +104,40 @@ class Author {
           err ? reject(err) : resolve(new Author(author));
         })
     });
+  }
+
+  /**
+   * ユーザの検索
+   * @param keyword
+   * @param skip
+   * @param limit
+   * @returns {Promise<Author[]>}
+   */
+  static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Author[] > {
+    return new Promise < Author[] > ((resolve, reject) => {
+      this._model.find({
+          $and: Author.makeKeywordQuery(keyword)
+        })
+        .sort({
+          name: 1
+        })
+        .skip(skip)
+        .limit(limit)
+        .exec()
+        .onResolve((err, authors) => {
+          err ? reject(err) : resolve(authors.map(a => new Author(a)));
+        });
+    });
+  }
+
+  /**
+   * 一覧表示
+   * @param skip
+   * @param limit
+   * @returns {Promise<Author[]>}
+   */
+  static list(skip ? : number, limit ? : number): Promise < Author[] > {
+    return Author.search(null, skip, limit);
   }
 
   /**
@@ -153,6 +218,28 @@ class Author {
     });
   }
 
+  private static makeKeywordQuery(keyword: String): any {
+    if (!keyword) return {};
+
+    var query = [];
+    keyword.split(' ')
+      .forEach((k) => {
+        query.push(Author.makeRegKeyword(k));
+      });
+    return query
+  }
+
+  private static makeRegKeyword(keyword): any {
+    var reg = new RegExp(keyword, 'i');
+    return {
+      $or: [{
+        name: reg
+      }, {
+        profile: reg
+      }]
+    };
+  }
+
   private _author: IAuthor;
 
   /**
@@ -165,6 +252,10 @@ class Author {
 
   get isValid(): boolean {
     return !!this._author;
+  }
+
+  get objectId(): string{
+    return this._author._id;
   }
 
   get id(): string {
@@ -185,7 +276,7 @@ class Author {
     }
   }
 
-  makeJsonWithAccount(): Promise < AuthorDTO > {
+  gerRelatedUsers(): Promise < AuthorDTO > {
     return User.findByAuthorId(this._author.id)
       .then(users => {
         var d = this.json;

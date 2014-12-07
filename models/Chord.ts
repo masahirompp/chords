@@ -13,27 +13,31 @@ interface IChord extends mongoose.Document {
 class Chord {
 
   private static _schema = new mongoose.Schema({
-    scoreId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Score',
-      require: true
-    },
-    chords: {
-      type: Array
-    },
-    option: {
-      type: mongoose.Schema.Types.Mixed,
-      require: true
-    },
-    created: {
-      type: Date,
-      default: Date.now
-    },
-    updated: {
-      type: Date,
-      default: Date.now
-    }
-  });
+      scoreId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Score',
+        require: true
+      },
+      chords: {
+        type: Array
+      },
+      option: {
+        type: mongoose.Schema.Types.Mixed,
+        require: true
+      },
+      created: {
+        type: Date,
+        default: Date.now
+      },
+      updated: {
+        type: Date,
+        default: Date.now
+      }
+    })
+    .pre('save', function(next) {
+      this.updated = new Date();
+      next();
+    });
 
   private static _model = mongoose.model < IChord > ('Chord', Chord._schema);
 

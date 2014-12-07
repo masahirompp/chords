@@ -18,6 +18,7 @@
     "method-override": "latest",
     "mongoose": "latest",
     "mongoose-session": "0.0.2",
+    "mongoose-unique-validator": "^0.4.1",
     "passport": "latest",
     "passport-twitter": "latest",
     "q": "latest",

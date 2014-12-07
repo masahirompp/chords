@@ -4,6 +4,7 @@ import express = require('express');
 import Author = require('../models/Author');
 import Score = require('../models/Score');
 import ScoreDTO = require('../dto/_ScoreDTO');
+import Util = require('../util/Util');
 
 class Api {
 
@@ -16,9 +17,12 @@ class Api {
      * /api/users GET
      */
     router.get('/users', (req: express.Request, res: express.Response) => {
-      res.json({
-        user: req.params.id
-      });
+      Author.list(Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(authors => {
+          return Promise.all(authors.map(a => a.gerRelatedUsers()));
+        })
+        .then(authorList => res.json(authorList.map(a => Util.project(a, req.query.fields))))
+        .catch(err => res.json(err));
     });
 
     /**
@@ -26,9 +30,12 @@ class Api {
      * /api/users/search GET
      */
     router.get('/users/search', (req: express.Request, res: express.Response) => {
-      res.json({
-        user: req.params.id
-      });
+      Author.search(req.query.q, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(authors => {
+          return Promise.all(authors.map(a => a.gerRelatedUsers()));
+        })
+        .then(authorList => res.json(authorList.map(a => Util.project(a, req.query.fields))))
+        .catch(err => res.json(err));
     });
 
     /**
@@ -36,9 +43,9 @@ class Api {
      * /api/users/:user GET
      */
     router.get('/users/:user', (req: express.Request, res: express.Response) => {
-      res.json({
-        user: req.params.user
-      });
+      Author.findByAccountId(req.params.user)
+        .then(author => res.json(Util.project(author.json, req.query.fields)))
+        .catch(err => res.json(err));
     });
 
     /**
@@ -46,9 +53,9 @@ class Api {
      * /api/users/:user/scores GET
      */
     router.get('/users/:user/scores', (req: express.Request, res: express.Response) => {
-      res.json({
-        user: req.params.user
-      });
+      Score.findByAuthor(req.params.user, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .catch(err => res.json(err));
     });
 
     /**

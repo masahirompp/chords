@@ -4,7 +4,7 @@ import mongoose = require('mongoose');
 import ScoreDTO = require('../dto/_ScoreDTO');
 import Author = require('./Author');
 import Chord = require('./Chord');
-import UriUtil = require('../util/UriUtil');
+import UriUtil = require('../util/Util');
 
 interface IScore extends mongoose.Document {
   url: string;
@@ -26,58 +26,62 @@ interface IScore extends mongoose.Document {
 class Score {
 
   private static _schema = new mongoose.Schema({
-    url: {
-      type: String,
-      require: true,
-      unique: true
-    },
-    scoreNo: {
-      type: Number,
-      default: 1
-    },
-    description: {
-      type: String,
-      require: true
-    },
-    artistId: String,
-    artistName: {
-      type: String,
-      require: true
-    },
-    isOriginal: {
-      type: Boolean,
-      require: true
-    },
-    songId: String,
-    songName: {
-      type: String,
-      require: true
-    },
-    authorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Author'
-    },
-    authorName: {
-      type: String,
-      require: true
-    },
-    star: {
-      type: Number,
-      default: 0
-    },
-    isPublish: {
-      type: Boolean,
-      require: true
-    },
-    created: {
-      type: Date,
-      default: Date.now
-    },
-    updated: {
-      type: Date,
-      default: Date.now
-    }
-  });
+      url: {
+        type: String,
+        require: true,
+        unique: true
+      },
+      scoreNo: {
+        type: Number,
+        default: 1
+      },
+      description: {
+        type: String,
+        require: '説明文が入力されていません。'
+      },
+      artistId: String,
+      artistName: {
+        type: String,
+        require: true
+      },
+      isOriginal: {
+        type: Boolean,
+        require: true
+      },
+      songId: String,
+      songName: {
+        type: String,
+        require: true
+      },
+      authorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Author'
+      },
+      authorName: {
+        type: String,
+        require: true
+      },
+      star: {
+        type: Number,
+        default: 0
+      },
+      isPublish: {
+        type: Boolean,
+        require: true
+      },
+      created: {
+        type: Date,
+        default: Date.now
+      },
+      updated: {
+        type: Date,
+        default: Date.now
+      }
+    })
+    .pre('save', function(next) {
+      this.updated = new Date();
+      next();
+    });
 
   private static _model = mongoose.model < IScore > ('Score', Score._schema);
 
@@ -159,7 +163,7 @@ class Score {
   }
 
   /**
-   * 楽譜を取得
+   * 対象の楽譜を取得
    * @param artistName
    * @param songName
    * @param scoreNo
@@ -175,14 +179,112 @@ class Score {
           scoreNo: scoreNo
         })
         .exec()
-        .onFulfill(score => {
-          if (!score || !score._id) {
-            return reject(new Error('not found.'));
-          }
-          return resolve(new Score(score));
+        .onResolve((err, score) => {
+          err ? reject(err) : resolve(new Score(score));
+        });
+    });
+  }
+
+  /**
+   * 対象曲の楽譜一覧を取得（公開中のみ）
+   * @param artistName
+   * @param songName
+   * @returns {Promise<Score>}
+   */
+  static findBySong(artistName: string, songName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+
+    return new Promise < Score[] > ((resolve, reject) => {
+      this._model.find({
+          artistName: artistName,
+          songName: songName,
+          isPublish: true
         })
-        .onReject(err => {
-          reject(err);
+        .sort({
+          url: 1
+        })
+        .skip(skip)
+        .limit(limit)
+        .exec()
+        .onResolve((err, scores) => {
+          err ? reject(err) : resolve(scores.map(s => new Score(s)));
+        });
+    });
+  }
+
+  /**
+   * 対象アーティストの楽譜を取得（公開中のみ）
+   * @param artistName
+   * @returns {Promise<Score>}
+   */
+  static findByArtist(artistName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+
+    return new Promise < Score[] > ((resolve, reject) => {
+      this._model.find({
+          artistName: artistName,
+          isPublish: true
+        })
+        .sort({
+          url: 1
+        })
+        .skip(skip)
+        .limit(limit)
+        .exec()
+        .onResolve((err, scores) => {
+          err ? reject(err) : resolve(scores.map(s => new Score(s)));
+        });
+    });
+  }
+
+  /**
+   * 作成者で楽譜を検索
+   * @param accountId
+   * @param skip
+   * @param limit
+   * @returns {Promise<Score[]>}
+   */
+  static findByAuthor(accountId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+
+    return new Promise < Score[] > ((resolve, reject) => {
+      Author.findByAccountId(accountId)
+        .then(author => {
+          if (!author.isValid) return reject(new Error('not found.'))
+          this._model.find({
+              authorId: author.objectId,
+              isPublish: true
+            })
+            .sort({
+              url: 1
+            })
+            .skip(skip)
+            .limit(limit)
+            .exec()
+            .onResolve((err, scores) => {
+              err ? reject(err) : resolve(scores.map(s => new Score(s)));
+            });
+        })
+    });
+  }
+
+  /**
+   * 自分が作成した作品一覧を取得
+   * @param authorId 自分のID
+   * @param skip
+   * @param limit
+   * @returns {Promise<Score[]>}
+   */
+  static findMyWorks(authorId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+    return new Promise < Score[] > ((resolve, reject) => {
+      this._model.find({
+          authorId: authorId
+        })
+        .sort({
+          url: 1
+        })
+        .skip(skip)
+        .limit(limit)
+        .exec()
+        .onResolve((err, scores) => {
+          err ? reject(err) : resolve(scores.map(s => new Score(s)));
         });
     });
   }
@@ -190,23 +292,25 @@ class Score {
   /**
    * キーワード検索。公開中の楽譜のみ。
    * @param keyword
+   * @param skip
+   * @param limit
    * @returns {Promise<Score[]>}
    */
-  static search(keyword: string): Promise < Score[] > {
+  static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
       this._model.find({
           $and: Score.makeKeywordQuery(keyword)
         })
+        .sort({
+          url: 1
+        })
+        .skip(skip)
+        .limit(limit)
         .exec()
-        .onFulfill(scores => {
-          resolve(scores.map(score => {
-            return new Score(score);
-          }));
-        })
-        .onReject(err => {
-          reject(err);
-        })
+        .onResolve((err, scores) => {
+          err ? reject(err) : resolve(scores.map(s => new Score(s)));
+        });
     });
   }
 
@@ -276,6 +380,10 @@ class Score {
 
   constructor(score: IScore) {
     this._score = score;
+  }
+
+  get isValid(): boolean {
+    return !!this._score;
   }
 
   get json(): ScoreDTO {
