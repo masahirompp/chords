@@ -49,13 +49,9 @@ var passport = require('./util/AuthUtil')
 // route
 app.use('/auth', require('./routes/auth')
   .init(passport));
-app.use('/api/admin', require('./routes/admin')
-  .init());
 app.use('/api', require('./routes/api')
   .init());
-app.use('/mypage', require('./routes/mypage')
-  .init());
-app.use('/edit', require('./routes/edit')
+app.use('/works', require('./routes/works')
   .init());
 app.use('/', require('./routes/index')
   .init());

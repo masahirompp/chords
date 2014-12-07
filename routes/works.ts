@@ -2,7 +2,7 @@
 
 import express = require('express');
 
-class MyPage {
+class Works {
 
   static init(): express.Router {
 
@@ -39,9 +39,19 @@ class MyPage {
     });
 
     /**
-     * 自分が作成した曲の一覧
+     * 譜面編集画面
      */
-    router.get('/songs', (req: express.Request, res: express.Response) => {
+    router.get('/:artist/:song/:score', (req: express.Request, res: express.Response) => {
+      res.render('score', {
+        title: 'マイページ',
+        user: req.user
+      });
+    });
+
+    /**
+     * 譜面保存
+     */
+    router.post('/:artist/:song/:score', (req: express.Request, res: express.Response) => {
       res.render('score', {
         title: 'マイページ',
         user: req.user
@@ -52,4 +62,4 @@ class MyPage {
   }
 }
 
-export = MyPage;
+export = Works;

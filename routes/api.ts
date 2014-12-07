@@ -12,53 +12,50 @@ class Api {
     var router: express.Router = express.Router();
 
     /**
+     * ユーザ一覧
+     * /api/users GET
+     */
+    router.get('/users', (req: express.Request, res: express.Response) => {
+      res.json({
+        user: req.params.id
+      });
+    });
+
+    /**
+     * ユーザ検索
+     * /api/users/search GET
+     */
+    router.get('/users/search', (req: express.Request, res: express.Response) => {
+      res.json({
+        user: req.params.id
+      });
+    });
+
+    /**
      * ユーザ取得
-     * /api/user/:id GET
+     * /api/users/:user GET
      */
-    router.get('/user/:id', (req: express.Request, res: express.Response) => {
+    router.get('/users/:user', (req: express.Request, res: express.Response) => {
       res.json({
-        user: req.params.id
+        user: req.params.user
       });
     });
 
     /**
-     * ユーザ作成
-     * /api/user/:id POST
+     * 対象ユーザの譜面位置一覧取得
+     * /api/users/:user/scores GET
      */
-    router.post('/user/:id', (req: express.Request, res: express.Response, next: Function) => {
-      Author.create(req.params.id, '')
-        .then((author: Author) => {
-          res.json(author.json);
-        })
-        .catch((err) => {
-          res.json(err);
-        });
-    });
-
-    /**
-     * ユーザ更新
-     * /api/user/:id PUT
-     */
-    router.put('/user/:id', (req: express.Request, res: express.Response, next: Function) => {
+    router.get('/users/:user/scores', (req: express.Request, res: express.Response) => {
       res.json({
-        user: req.params.id
+        user: req.params.user
       });
     });
 
     /**
-     * ユーザ削除
-     * /api/user/:id
+     * 公開中の楽譜一覧取得
+     * /api/scores GET
      */
-    router.delete('/user/:id', (req: express.Request, res: express.Response, next: Function) => {
-      res.json({
-        user: req.params.id
-      });
-    });
-
-    /**
-     * /api/search POST
-     */
-    router.post('/search', (req: express.Request, res: express.Response, next: Function) => {
+    router.get('/scores', (req: express.Request, res: express.Response) => {
       Score.search(req.body.keyword)
         .then((scores: Score[]) => {
           res.json(Score.toJson(scores));
@@ -69,10 +66,11 @@ class Api {
     });
 
     /**
-     * /api/query POST
+     * 譜面検索
+     * /api/scores/search GET
      */
-    router.post('/query', (req: express.Request, res: express.Response, next: Function) => {
-      Score.query(req.body.query)
+    router.get('/scores/search', (req: express.Request, res: express.Response) => {
+      Score.search(req.body.keyword)
         .then((scores: Score[]) => {
           res.json(Score.toJson(scores));
         })
@@ -82,27 +80,35 @@ class Api {
     });
 
     /**
-     * /api/:artist GET
+     * アーティストの譜面一覧
+     * /api/scores/:artist
      */
-    router.get('/:artist', (req: express.Request, res: express.Response) => {
-      var q = req.params;
-      res.json({
-        artist: q.artist
-      });
+    router.get('/scores/:artist', (req: express.Request, res: express.Response) => {
+      Score.search(req.body.keyword)
+        .then((scores: Score[]) => {
+          res.json(Score.toJson(scores));
+        })
+        .catch(err => {
+          res.json(err);
+        });
     });
 
     /**
-     * /api/:artist/:song GET
+     * アーティストの曲の譜面一覧
+     * /api/scores/:artist/:song
      */
-    router.get('/:artist/:song', (req: express.Request, res: express.Response) => {
-      var q = req.params;
-      res.json({
-        artist: q.artist,
-        song: q.song
-      });
+    router.get('/scores/:artist/:song', (req: express.Request, res: express.Response) => {
+      Score.search(req.body.keyword)
+        .then((scores: Score[]) => {
+          res.json(Score.toJson(scores));
+        })
+        .catch(err => {
+          res.json(err);
+        });
     });
 
     /**
+     * 譜面取得
      * /api/:artist/:song/:id GET
      */
     router.get('/:artist/:song/:id', (req: express.Request, res: express.Response, next: Function) => {
@@ -126,6 +132,62 @@ class Api {
               message: '大変申し訳ありません。システムエラーが発生しました。時間を空けて再度お試しください。それでも解決しない場合は、お問い合わせください。'
             });
           }
+        });
+    });
+
+    /**
+     * 自分の譜面一覧（下書き含む）
+     * /api/works
+     */
+    router.get('/works', (req: express.Request, res: express.Response) => {
+      Score.search(req.body.keyword)
+        .then((scores: Score[]) => {
+          res.json(Score.toJson(scores));
+        })
+        .catch(err => {
+          res.json(err);
+        });
+    });
+
+    /**
+     * 譜面新規作成
+     * /api/works
+     */
+    router.post('/works', (req: express.Request, res: express.Response) => {
+      Score.search(req.body.keyword)
+        .then((scores: Score[]) => {
+          res.json(Score.toJson(scores));
+        })
+        .catch(err => {
+          res.json(err);
+        });
+    });
+
+    /**
+     * 譜面表示（下書き含む）
+     * /api/works/:artist/:song/:score
+     */
+    router.get('/works/:artist/:song/:score', (req: express.Request, res: express.Response) => {
+      Score.search(req.body.keyword)
+        .then((scores: Score[]) => {
+          res.json(Score.toJson(scores));
+        })
+        .catch(err => {
+          res.json(err);
+        });
+    });
+
+    /**
+     * 譜面保存（下書き含む）
+     * /api/works/:artist/:song/:score
+     */
+    router.post('/works/:artist/:song/:score', (req: express.Request, res: express.Response) => {
+      Score.search(req.body.keyword)
+        .then((scores: Score[]) => {
+          res.json(Score.toJson(scores));
+        })
+        .catch(err => {
+          res.json(err);
         });
     });
 

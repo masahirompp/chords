@@ -8,7 +8,6 @@ class Index {
 
     var router: express.Router = express.Router();
 
-    /* GET home page. */
     router.get('/', (req: express.Request, res: express.Response) => {
       res.render('index', {
         title: 'コード譜共有サイト ChordKitchen',
@@ -27,7 +26,34 @@ class Index {
       });
     });
 
+    router.get('/:artist', (req: express.Request, res: express.Response) => {
+      // TODO 存在チェック
+      res.render('score', {
+        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
+        keyword: '',
+        user: req.user
+      });
+    });
+
+    router.get('/:artist/:song', (req: express.Request, res: express.Response) => {
+      // TODO 存在チェック
+      res.render('score', {
+        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
+        keyword: '',
+        user: req.user
+      });
+    });
+
     router.get('/:artist/:song/:id', (req: express.Request, res: express.Response) => {
+      // TODO 存在チェック
+      res.render('score', {
+        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
+        keyword: '',
+        user: req.user
+      });
+    });
+
+    router.get('/users/:user', (req: express.Request, res: express.Response) => {
       // TODO 存在チェック
       res.render('score', {
         title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
