@@ -12,7 +12,6 @@
     "connect-mongo": "latest",
     "cookie-parser": "latest",
     "ect": "^0.5.9",
-    "errorhandler": "latest",
     "express": "latest",
     "express-session": "latest",
     "log4js": "^0.6.21",

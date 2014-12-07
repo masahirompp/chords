@@ -35,14 +35,11 @@ class Auth {
     router.post('/register', (req: express.Request, res: express.Response) => {
       Author.create(req.param('displayName'), req.param('email'))
         .then(author => {
-          console.log(author);
           return User.relateAuthor(req.user._id, author.id);
         })
         .then(user => {
           // リダイレクト先が指定されていれば、リダイレクト
-          console.log(user);
           var redirectUrl = req.cookies.redirectUrl;
-          console.log(redirectUrl);
           if (redirectUrl) {
             res.clearCookie('redirectUrl');
             return res.redirect(decodeURIComponent(redirectUrl))
@@ -75,7 +72,7 @@ class Auth {
                 return res.redirect(decodeURIComponent(redirectUrl))
               }
               // リダイレクト先が指定されていない場合は、トップ画面を表示。
-              req.flash('message_success', 'ログインしました。');
+              req.flash('message_success','ログインしました。');
               res.redirect('/');
             }
 

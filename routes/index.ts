@@ -8,6 +8,10 @@ class Index {
 
     var router: express.Router = express.Router();
 
+    /**
+     * トップ画面
+     * / GET
+     */
     router.get('/', (req: express.Request, res: express.Response) => {
       res.render('index', {
         title: 'コード譜共有サイト ChordKitchen',
@@ -18,6 +22,10 @@ class Index {
       });
     });
 
+    /**
+     * 検索結果一覧画面
+     * /search GET
+     */
     router.get('/search', (req: express.Request, res: express.Response) => {
       res.render('search', {
         title: req.query.q + 'の検索結果 | ChordKitchen',
@@ -26,26 +34,27 @@ class Index {
       });
     });
 
+    /**
+     * アーティストページ
+     * /:artist
+     */
     router.get('/:artist', (req: express.Request, res: express.Response) => {
-      // TODO 存在チェック
-      res.render('score', {
-        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
-        keyword: '',
-        user: req.user
-      });
+      // TODO
     });
 
+    /**
+     * 曲ページ
+     * /:artist/:song
+     */
     router.get('/:artist/:song', (req: express.Request, res: express.Response) => {
-      // TODO 存在チェック
-      res.render('score', {
-        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
-        keyword: '',
-        user: req.user
-      });
+      // TODO
     });
 
+    /**
+     * 譜面ページ
+     * /:artist/:song/:score
+     */
     router.get('/:artist/:song/:id', (req: express.Request, res: express.Response) => {
-      // TODO 存在チェック
       res.render('score', {
         title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
         keyword: '',
@@ -53,13 +62,12 @@ class Index {
       });
     });
 
+    /**
+     * ユーザページ
+     * /users/:user
+     */
     router.get('/users/:user', (req: express.Request, res: express.Response) => {
-      // TODO 存在チェック
-      res.render('score', {
-        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
-        keyword: '',
-        user: req.user
-      });
+      // TODO
     });
 
     return router;

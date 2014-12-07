@@ -8,7 +8,6 @@ var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var flash = require('connect-flash');
-var errorHandler = require('errorhandler');
 var config = require('config');
 var ECT = require('ect');
 var mongoose = require('mongoose');
@@ -40,7 +39,6 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
-app.use(errorHandler());
 
 // auth
 var passport = require('./util/AuthUtil')
@@ -72,6 +70,8 @@ app.use(function(err, req, res) {
     error: {}
   });
 });
+
+console.log(app.routes);
 
 // start
 var server = app.listen(config.server.port, function() {
