@@ -191,6 +191,10 @@ class User {
     return this._document.show;
   }
 
+  get authorId(): string {
+    return this._document.authorId;
+  }
+
   get json(): any {
     return {
       provider: this.provider,

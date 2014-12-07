@@ -63,27 +63,19 @@ class Api {
      * /api/scores GET
      */
     router.get('/scores', (req: express.Request, res: express.Response) => {
-      Score.search(req.body.keyword)
-        .then((scores: Score[]) => {
-          res.json(scores.map(u => u.json));
-        })
-        .catch(err => {
-          res.json(err);
-        });
+      Score.list(Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .catch(err => res.json(err));
     });
 
     /**
-     * 譜面検索
+     * 公開中の譜面検索
      * /api/scores/search GET
      */
     router.get('/scores/search', (req: express.Request, res: express.Response) => {
-      Score.search(req.body.keyword)
-        .then((scores: Score[]) => {
-          res.json(scores.map(u => u.json));
-        })
-        .catch(err => {
-          res.json(err);
-        });
+      Score.search(req.body.keyword, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .catch(err => res.json(err));
     });
 
     /**
@@ -91,27 +83,19 @@ class Api {
      * /api/scores/:artist
      */
     router.get('/scores/:artist', (req: express.Request, res: express.Response) => {
-      Score.search(req.body.keyword)
-        .then((scores: Score[]) => {
-          res.json(scores.map(u => u.json));
-        })
-        .catch(err => {
-          res.json(err);
-        });
+      Score.findByArtist(req.params.artist, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .catch(err => res.json(err));
     });
 
     /**
-     * アーティストの曲の譜面一覧
+     * 対象曲の譜面一覧
      * /api/scores/:artist/:song
      */
     router.get('/scores/:artist/:song', (req: express.Request, res: express.Response) => {
-      Score.search(req.body.keyword)
-        .then((scores: Score[]) => {
-          res.json(scores.map(u => u.json));
-        })
-        .catch(err => {
-          res.json(err);
-        });
+      Score.findBySong(req.params.artist, req.params.song, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .catch(err => res.json(err));
     });
 
     /**
@@ -119,27 +103,14 @@ class Api {
      * /api/:artist/:song/:id GET
      */
     router.get('/:artist/:song/:id', (req: express.Request, res: express.Response, next: Function) => {
-      var q = req.params;
-
-      console.log(q);
-
-      Score.find(q.artist, q.song, q.id)
-        .then((score: Score) => {
-          res.json(score.json);
+      Score.find(req.params.artist, req.params.song, Util.toNumber(req.params.id))
+        .then(score => {
+          if (!score.isValid) throw new Error('この楽譜は存在しません。');
+          if (!score.isPublish) throw new Error('この楽譜は非公開です。');
+          return score.jsonWithChord
         })
-        .catch(err => {
-          if (err.message === 'not found.') {
-            res.status(404);
-            res.json({
-              message: 'このコード譜は見つかりません。'
-            });
-          } else {
-            res.status(500);
-            res.json({
-              message: '大変申し訳ありません。システムエラーが発生しました。時間を空けて再度お試しください。それでも解決しない場合は、お問い合わせください。'
-            });
-          }
-        });
+        .then(json => res.json(Util.project(json, req.query.fields)))
+        .catch(err => res.json(err));
     });
 
     /**
@@ -147,13 +118,9 @@ class Api {
      * /api/works
      */
     router.get('/works', (req: express.Request, res: express.Response) => {
-      Score.search(req.body.keyword)
-        .then((scores: Score[]) => {
-          res.json(scores.map(u => u.json));
-        })
-        .catch(err => {
-          res.json(err);
-        });
+      Score.findMyWorks(req.user.authorId, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .catch(err => res.json(err));
     });
 
     /**
@@ -189,13 +156,10 @@ class Api {
      * /api/works/:artist/:song/:score
      */
     router.post('/works/:artist/:song/:score', (req: express.Request, res: express.Response) => {
-      Score.search(req.body.keyword)
-        .then((scores: Score[]) => {
-          res.json(scores.map(u => u.json));
-        })
-        .catch(err => {
-          res.json(err);
-        });
+      Score.find(req.params.artist, req.params.song, Util.toNumber(req.params.id))
+        .then(score => score.jsonWithChord())
+        .then(json => res.json(Util.project(json, req.query.fields)))
+        .catch(err => res.json(err));
     });
 
     /**

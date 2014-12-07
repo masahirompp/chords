@@ -290,6 +290,29 @@ class Score {
   }
 
   /**
+   * 公開中の楽譜一覧取得（最新順）
+   * @param skip
+   * @param limit
+   * @returns {Promise<Score[]>}
+   */
+  static list(skip: number = 0, limit: number = 20): Promise < Score[] > {
+    return new Promise < Score[] > ((resolve, reject) => {
+      this._model.find({
+          isPublish: true
+        })
+        .sort({
+          created: -1
+        })
+        .skip(skip)
+        .limit(limit)
+        .exec()
+        .onResolve((err, scores) => {
+          err ? reject(err) : resolve(scores.map(s => new Score(s)));
+        });
+    });
+  }
+
+  /**
    * キーワード検索。公開中の楽譜のみ。
    * @param keyword
    * @param skip
@@ -386,6 +409,10 @@ class Score {
     return !!this._score;
   }
 
+  get isPublish():boolean{
+    return this._score.isPublish;
+  }
+
   get json(): ScoreDTO {
     return <ScoreDTO > {
       author: {
@@ -407,7 +434,7 @@ class Score {
     }
   }
 
-  makeJsonWithChord(): Promise < ScoreDTO > {
+  jsonWithChord(): Promise < ScoreDTO > {
     return Chord.findByScoreId(this._score.id)
       .then(chord => {
         var d = this.json;
