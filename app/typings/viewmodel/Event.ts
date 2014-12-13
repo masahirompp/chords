@@ -3,9 +3,9 @@
 /// <reference path="../../../tsd/bootstrap/bootstrap.d.ts" />
 /// <reference path="../../../tsd/ext/ext.d.ts" />
 
-import AjaxScore = require('../data/AjaxScore');
+import AjaxScore = require('../data/Ajax');
 import SearchView = require('./SearchView');
-import Url = require('../util/Url');
+import Url = require('../util/Util');
 import ErrorHandle = require('../util/ErrorHandle');
 import Message = require('./Message');
 

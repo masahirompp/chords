@@ -1,8 +1,12 @@
 import ScoreDTO = require('../dto/ScoreDTO')
+import Util = require('../util/Util');
 
-class AjaxScore {
+class Ajax {
 
-  public static getScore(): JQueryXHR {
+  public static getScore(artist?: string, song?: string, score?: string): JQueryXHR {
+    if (arguments.length === 3) {
+      return $.getJSON('/api/' + Util.joinUrl(artist, song, score));
+    }
     return $.getJSON('/api' + location.pathname);
   }
 
@@ -18,4 +22,4 @@ class AjaxScore {
 
 }
 
-export = AjaxScore
+export = Ajax

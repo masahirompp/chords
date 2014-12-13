@@ -4,7 +4,7 @@ require.config( < RequireConfig > {
 
 require(['./viewmodel/Event',
   './viewmodel/SearchView',
-  './util/Url',
+  './util/Util',
   './util/ErrorHandle'
 ], (Event, SearchView, Url, ErrorHandle) => {
 

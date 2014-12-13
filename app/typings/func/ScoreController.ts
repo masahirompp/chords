@@ -1,4 +1,4 @@
-import AjaxScore = require('./../data/AjaxScore');
+import AjaxScore = require('./../data/Ajax');
 import ScoreDTO = require('./../dto/ScoreDTO')
 import ScoreChords = require('./../model/ScoreChords')
 import StaffSettings = require('./../model/StaffSettings')

@@ -3,7 +3,7 @@ require.config( < RequireConfig > {
 });
 
 require([
-  './data/AjaxScore',
+  './data/Ajax',
   './func/ScoreController',
   './viewmodel/Event',
   './util/ErrorHandle'

@@ -1,5 +1,5 @@
 import ScoreDTO = require('../dto/ScoreDTO')
-import ScoreUtil = require('../util/ScoreUtil')
+import Util = require('../util/Util')
 
 class SearchView {
 
@@ -32,7 +32,7 @@ class SearchView {
 
 
   public static makeRow(d: ScoreDTO): string {
-    return '<tr uri="' + ScoreUtil.makeUri(d) + '"><td>' + d.song.name + '</td><td>' + d.song.artist.name + '</td><td>' + d.author.name + '</td><td>' + d.description + '</td></tr>';
+    return '<tr uri="' + Util.joinUrl(d.song.artist.name, d.song.name, d.scoreNo.toString()) + '"><td>' + d.song.name + '</td><td>' + d.song.artist.name + '</td><td>' + d.author.name + '</td><td>' + d.description + '</td></tr>';
   }
 
   public static changeDocumentTitle(keyword) {
