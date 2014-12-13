@@ -3,9 +3,9 @@
 /// <reference path="../../../tsd/bootstrap/bootstrap.d.ts" />
 /// <reference path="../../../tsd/ext/ext.d.ts" />
 
-import AjaxScore = require('../data/Ajax');
+import Ajax = require('../data/Ajax');
 import SearchView = require('./SearchView');
-import Url = require('../util/Util');
+import Util = require('../util/Util');
 import ErrorHandle = require('../util/ErrorHandle');
 import Message = require('./Message');
 
@@ -58,7 +58,7 @@ class Event {
           e.preventDefault();
           var keyword = SearchView.getKeyword();
           if (keyword.match(/\S/)) {
-            location.href = '/search' + Url.makeQueryParameter('q', keyword);
+            location.href = '/search' + Util.makeQueryParameter('q', keyword);
           }
         } catch (e) {
           ErrorHandle.send(e);
@@ -77,10 +77,10 @@ class Event {
           if (!keyword) return false;
 
           if (!redirect) $.blockUIl();
-          AjaxScore.search(keyword)
+          Ajax.searchScores(keyword)
             .then((data) => {
               SearchView.drawResult(data);
-              redirect ? history.replaceState(data, null) : history.pushState(data, null, '/search' + Url.makeQueryParameter('q', keyword));
+              redirect ? history.replaceState(data, null) : history.pushState(data, null, '/search' + Util.makeQueryParameter('q', keyword));
               SearchView.changeDocumentTitle(keyword);
               if (data.length === 0) Event.showNoResult(keyword);
             })
@@ -101,7 +101,7 @@ class Event {
     window.addEventListener('popstate', (e: PopStateEvent) => {
       try {
         $.blockUIl();
-        var keyword = Url.getQueryByName('q');
+        var keyword = Util.getQueryByName('q');
         SearchView.$searchKeyword.val(keyword);
         SearchView.changeDocumentTitle(keyword);
         SearchView.drawResult(e.state);
