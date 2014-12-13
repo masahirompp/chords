@@ -2,6 +2,11 @@ import Map = require('./Dictionary');
 
 class Util {
 
+  /**
+   * クエリパラメータを取得
+   * @param name
+   * @returns {string}
+   */
   static getQueryByName(name: string): string {
     var regex = new RegExp("[\\?&]" + name.replace(/[\[]/, "\\[")
       .replace(/[\]]/, "\\]") + "=([^&#]*)");
@@ -9,6 +14,12 @@ class Util {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
+  /**
+   * クエリパラメータ作成
+   * @param key
+   * @param value
+   * @returns {string}
+   */
   static makeQueryParameter(key: string, value: string): string {
     if (!value) {
       return '';
@@ -18,42 +29,26 @@ class Util {
       .join('+');
   }
 
-  static getPath(url: string): string {
-    if (url.match(/^http/)) {
-      if (url.indexOf('/', 9) === -1) {
-        return '/';
-      }
-      url = url.substring(url.indexOf('/', 9));
-    }
-    if (!url.match(/^\//)) {
-      url = '/' + url;
-    }
-    if (url.indexOf('?') > 0) {
-      url = url.substring(0, url.indexOf('?'));
-    }
-    if (url.indexOf('#') > 0) {
-      url = url.substring(0, url.indexOf('#'));
-    }
-    return url;
-  }
-
-  static getHostName(url: string): string {
-    if (url.match(/^http/)) {
-      return url.substring(0, url.indexOf('/', 9));
-    }
-    return location.host;
-  }
-
-  static getQueryString(url: string): string {
-    if (url.indexOf('?')) {
-      return url.substring(url.indexOf('?'), url.indexOf('#') === -1 ? null : url.indexOf('#'));
-    }
-    return '';
-  }
-
+  /**
+   * URL生成
+   * @param paths
+   * @returns {string}
+   */
   static joinUrl(...paths: string[]): string {
     return paths.map(path => encodeURIComponent(path))
       .join('/');
+  }
+
+  /**
+   * URLから階層の配列を取得
+   * @returns {string[]}
+   */
+  static splitUrl(): string[] {
+    var cache = {};
+    var path = location.pathname;
+    return (path in cache) ? cache[path] : cache[path] = location.pathname.split('/')
+      .filter(path => !!path)
+      .map(path => decodeURIComponent(path));
   }
 
 }

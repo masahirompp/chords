@@ -6,19 +6,19 @@ require([
   './data/Ajax',
   './func/ScoreController',
   './viewmodel/Event',
+  './util/Util',
   './util/ErrorHandle'
-], (AjaxScore, ScoreController, Event, ErrorHandle) => {
+], (Ajax, ScoreController, Event, Util, ErrorHandle) => {
 
   $(() => {
     try {
       Event.initScore();
 
       // コード譜描画
-      AjaxScore.getScore()
+      Ajax.getScore(Util.splitUrl()[0], Util.splitUrl()[1], Util.splitUrl()[2])
         .then(data => ScoreController.draw(data))
         .fail(err => ErrorHandle.showAppError(err.responseJSON))
         .always(() => $.unblockUI());
-
     } catch (e) {
       ErrorHandle.send(e);
       $.unblockUI();
