@@ -7,24 +7,14 @@ class AjaxScore {
   }
 
   public static search(keyword: string): JQueryPromise < ScoreDTO[] > {
-    return $.post('/api/search', {
-        keyword: keyword
+    return $.get('/api/scores/search', {
+        q: keyword
       })
       .then((data) => {
         return <ScoreDTO[] > data;
       });
   }
 
-  public static searchByAuthor(authorName: string): JQueryPromise < ScoreDTO[] > {
-    return $.post('/api/query', {
-        query: {
-          authorName: authorName
-        }
-      })
-      .then((data) => {
-        return <ScoreDTO[] > data;
-      });
-  }
 
 }
 

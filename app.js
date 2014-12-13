@@ -71,8 +71,6 @@ app.use(function(err, req, res) {
   });
 });
 
-console.log(app.routes);
-
 // start
 var server = app.listen(config.server.port, function() {
   if (config.log.writeFile) {

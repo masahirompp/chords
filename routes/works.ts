@@ -43,17 +43,6 @@ class Works {
       });
     });
 
-    /**
-     * 譜面保存
-     */
-    router.post('/:artist/:song/:score', (req: express.Request, res: express.Response) => {
-      res.render('score', {
-        title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
-        keyword: '',
-        user: req.user
-      });
-    });
-
     return router;
   }
 }
