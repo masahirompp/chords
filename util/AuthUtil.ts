@@ -16,9 +16,11 @@ class AuthUtil {
       consumerSecret: config.auth.twitter.TWITTER_CONSUMER_SECRET,
       callbackURL: config.auth.twitter.callbackURL
     }, (token, tokenSecret, profile, done) => {
-      User.findOrCreate(profile)
-        .then(user => done(null, user))
-        .catch(err => done(err));
+      process.nextTick(() => {
+        User.findOrCreate(profile)
+          .then(user => done(null, user))
+          .catch(err => done(err));
+      });
     }));
 
     passport.serializeUser((user, done) => done(null, user._id));
@@ -34,7 +36,7 @@ class AuthUtil {
       store: require('mongoose-session')(mongoose),
       cookie: {
         httpOnly: false,
-        maxAge: Date.now() + 60 * 60 * 1000
+        maxAge: 60 * 60 * 1000
       },
       resave: true,
       saveUninitialized: true
