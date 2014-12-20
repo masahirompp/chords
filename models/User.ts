@@ -71,8 +71,8 @@ class User {
    * @param passport.Profile
    * @returns {Promise<User>}
    */
-  static findOrCreate(profile: passport.Profile): Promise < User > {
-    return new Promise < User > ((resolve, reject) => {
+  static findOrCreate(profile: passport.Profile): Promise < IUser > {
+    return new Promise < IUser > ((resolve, reject) => {
       this._model.findOne({
           provider: profile.provider,
           id: profile.id
@@ -80,7 +80,7 @@ class User {
         .exec()
         .then(user => {
           if (user) {
-            return resolve(new User(user));
+            return resolve(user);
           }
           this._model.create({
               provider: profile.provider,
@@ -90,7 +90,7 @@ class User {
               photos: profile.photos
             })
             .onResolve((err, user) => {
-              err ? reject(err) : resolve(new User(user));
+              err ? reject(err) : resolve(user);
             });
         });
     });
@@ -101,12 +101,12 @@ class User {
    * @param id
    * @returns {Promise<User>}
    */
-  static findById(id: string): Promise < User > {
-    return new Promise < User > ((resolve, reject) => {
+  static findById(id: string): Promise < IUser > {
+    return new Promise < IUser > ((resolve, reject) => {
       this._model.findById(id)
         .exec()
         .onResolve((err, user) => {
-          err ? reject(err) : resolve(new User(user));
+          err ? reject(err) : resolve(user);
         });
     })
   }

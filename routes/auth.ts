@@ -49,7 +49,7 @@ class Auth {
           res.redirect('/');
         })
         .catch(err => {
-          console.log(err);
+          req.flash('message_warning', err);
           res.redirect('/auth/register');
         });
     });

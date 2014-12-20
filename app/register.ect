@@ -3,6 +3,14 @@
   <form role="form" action="/auth/register" method="post" class="form-signin">
     <h2 class="form-signin-heading">Chord Kitchen</h2>
 
+    <% if @message_warning?.length : %>
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span
+        class="sr-only">Close</span></button>
+      <%- @message_warning %>
+    </div>
+    <% end %>
+
     <div class="form-group">
       <label for="displayName">ニックネーム</label>
       <input id="displayName" type="text" name="displayName" placeholder="コードキッチン" required="required"
