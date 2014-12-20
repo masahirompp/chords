@@ -53,6 +53,16 @@ class Util {
       }, < T > {});
   }
 
+  /**
+   * 配列の要素が同じか比較する
+   * @param a1
+   * @param a2
+   * @returns {boolean}
+   */
+  static isEqual(a1: any[], a2: any[]) {
+    return a1.toString() === a2.toString();
+  }
+
 }
 
 export = Util
