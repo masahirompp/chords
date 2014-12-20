@@ -10,40 +10,40 @@ interface IChord extends mongoose.Document {
   updated: Date;
 }
 
+var _schema = new mongoose.Schema({
+    scoreId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Score',
+      require: true
+    },
+    chords: {
+      type: Array
+    },
+    option: {
+      type: mongoose.Schema.Types.Mixed,
+      require: true
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    },
+    updated: {
+      type: Date,
+      default: Date.now
+    }
+  })
+  .pre('save', function(next) {
+    this.updated = new Date();
+    next();
+  });
+
+var _model = mongoose.model < IChord > ('Chord', _schema);
+
 class Chord {
-
-  private static _schema = new mongoose.Schema({
-      scoreId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Score',
-        require: true
-      },
-      chords: {
-        type: Array
-      },
-      option: {
-        type: mongoose.Schema.Types.Mixed,
-        require: true
-      },
-      created: {
-        type: Date,
-        default: Date.now
-      },
-      updated: {
-        type: Date,
-        default: Date.now
-      }
-    })
-    .pre('save', function(next) {
-      this.updated = new Date();
-      next();
-    });
-
-  private static _model = mongoose.model < IChord > ('Chord', Chord._schema);
 
   static findByScoreId(scoreId: string): Promise < Chord > {
     return new Promise < Chord > ((resolve, reject) => {
-      this._model.findOne({
+      _model.findOne({
           scoreId: scoreId
         })
         .exec()
@@ -55,7 +55,7 @@ class Chord {
 
   static createNewChord(scoreId: mongoose.Types.ObjectId): Promise < Chord > {
     return new Promise < Chord > ((resolve, reject) => {
-      this._model.create({
+      _model.create({
           scoreId: scoreId,
           chords: [],
           option: {}

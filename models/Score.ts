@@ -23,67 +23,67 @@ interface IScore extends mongoose.Document {
   updated: Date;
 }
 
+var _schema = new mongoose.Schema({
+    url: {
+      type: String,
+      require: true,
+      unique: true
+    },
+    scoreNo: {
+      type: Number,
+      default: 1
+    },
+    description: {
+      type: String,
+      require: '説明文が入力されていません。'
+    },
+    artistId: String,
+    artistName: {
+      type: String,
+      require: true
+    },
+    isOriginal: {
+      type: Boolean,
+      require: true
+    },
+    songId: String,
+    songName: {
+      type: String,
+      require: true
+    },
+    authorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Author'
+    },
+    authorName: {
+      type: String,
+      require: true
+    },
+    star: {
+      type: Number,
+      default: 0
+    },
+    isPublish: {
+      type: Boolean,
+      require: true
+    },
+    created: {
+      type: Date,
+      default: Date.now
+    },
+    updated: {
+      type: Date,
+      default: Date.now
+    }
+  })
+  .pre('save', function(next) {
+    this.updated = new Date();
+    next();
+  });
+
+var _model = mongoose.model < IScore > ('Score', _schema);
+
 class Score {
-
-  private static _schema = new mongoose.Schema({
-      url: {
-        type: String,
-        require: true,
-        unique: true
-      },
-      scoreNo: {
-        type: Number,
-        default: 1
-      },
-      description: {
-        type: String,
-        require: '説明文が入力されていません。'
-      },
-      artistId: String,
-      artistName: {
-        type: String,
-        require: true
-      },
-      isOriginal: {
-        type: Boolean,
-        require: true
-      },
-      songId: String,
-      songName: {
-        type: String,
-        require: true
-      },
-      authorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Author'
-      },
-      authorName: {
-        type: String,
-        require: true
-      },
-      star: {
-        type: Number,
-        default: 0
-      },
-      isPublish: {
-        type: Boolean,
-        require: true
-      },
-      created: {
-        type: Date,
-        default: Date.now
-      },
-      updated: {
-        type: Date,
-        default: Date.now
-      }
-    })
-    .pre('save', function(next) {
-      this.updated = new Date();
-      next();
-    });
-
-  private static _model = mongoose.model < IScore > ('Score', Score._schema);
 
   private static createNewScore(scoreNo: number,
     description: string,
@@ -96,7 +96,7 @@ class Score {
     authorName: string): Promise < Score > {
 
     return new Promise < Score > ((resolve, reject) => {
-      this._model.create({
+      _model.create({
           url: UriUtil.makeUri(artistName, songName, scoreNo),
           scoreNo: scoreNo,
           description: description,
@@ -173,7 +173,7 @@ class Score {
   static find(artistName: string, songName: string, scoreNo: number): Promise < Score > {
 
     return new Promise < Score > ((resolve, reject) => {
-      this._model.findOne({
+      _model.findOne({
           artistName: artistName,
           songName: songName,
           scoreNo: scoreNo
@@ -194,7 +194,7 @@ class Score {
   static findBySong(artistName: string, songName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
-      this._model.find({
+      _model.find({
           artistName: artistName,
           songName: songName,
           isPublish: true
@@ -219,7 +219,7 @@ class Score {
   static findByArtist(artistName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
-      this._model.find({
+      _model.find({
           artistName: artistName,
           isPublish: true
         })
@@ -248,7 +248,7 @@ class Score {
       Author.findByAccountId(accountId)
         .then(author => {
           if (!author.isValid) return reject(new Error('not found.'))
-          this._model.find({
+          _model.find({
               authorId: author.objectId,
               isPublish: true
             })
@@ -274,7 +274,7 @@ class Score {
    */
   static findMyWorks(authorId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
     return new Promise < Score[] > ((resolve, reject) => {
-      this._model.find({
+      _model.find({
           authorId: authorId
         })
         .sort({
@@ -297,7 +297,7 @@ class Score {
    */
   static list(skip: number = 0, limit: number = 20): Promise < Score[] > {
     return new Promise < Score[] > ((resolve, reject) => {
-      this._model.find({
+      _model.find({
           isPublish: true
         })
         .sort({
@@ -322,7 +322,7 @@ class Score {
   static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
-      this._model.find({
+      _model.find({
           $and: Score.makeKeywordQuery(keyword)
         })
         .sort({
@@ -368,7 +368,7 @@ class Score {
   private static generateScoreNo(artistId: string, songId: string): Promise < number > {
 
     return new Promise < number > ((resolve, reject) => {
-      this._model.find({
+      _model.find({
           artistId: artistId,
           songId: songId
         })

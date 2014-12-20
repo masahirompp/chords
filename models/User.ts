@@ -15,56 +15,56 @@ interface IUser extends mongoose.Document {
   updated: Date;
 }
 
+/**
+ * MongooseSchema
+ * @type {"mongoose".Schema}
+ * @private
+ */
+var _schema: mongoose.Schema = new mongoose.Schema({
+    provider: {
+      type: String,
+      require: true
+    },
+    id: {
+      type: String,
+      require: true
+    },
+    authorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Author'
+    },
+    displayName: {
+      type: String
+    },
+    emails: {
+      type: mongoose.Schema.Types.Mixed
+    },
+    photos: {
+      type: mongoose.Schema.Types.Mixed
+    },
+    show: Boolean,
+    created: {
+      type: Date,
+      default: Date.now
+    },
+    updated: {
+      type: Date,
+      default: Date.now
+    }
+  })
+  .pre('save', function(next) {
+    this.updated = new Date();
+    next();
+  });
+
+/**
+ * Mongoose.Model
+ * @type {Model<IUser>}
+ * @private
+ */
+var _model = mongoose.model < IUser > ('User', _schema);
+
 class User {
-
-  /**
-   * MongooseSchema
-   * @type {"mongoose".Schema}
-   * @private
-   */
-  private static _schema: mongoose.Schema = new mongoose.Schema({
-      provider: {
-        type: String,
-        require: true
-      },
-      id: {
-        type: String,
-        require: true
-      },
-      authorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Author'
-      },
-      displayName: {
-        type: String
-      },
-      emails: {
-        type: mongoose.Schema.Types.Mixed
-      },
-      photos: {
-        type: mongoose.Schema.Types.Mixed
-      },
-      show: Boolean,
-      created: {
-        type: Date,
-        default: Date.now
-      },
-      updated: {
-        type: Date,
-        default: Date.now
-      }
-    })
-    .pre('save', function(next) {
-      this.updated = new Date();
-      next();
-    });
-
-  /**
-   * Mongoose.Model
-   * @type {Model<IUser>}
-   * @private
-   */
-  private static _model = mongoose.model < IUser > ('User', User._schema);
 
   /**
    * static ユーザが存在しなければ作成して返す。
@@ -73,7 +73,7 @@ class User {
    */
   static findOrCreate(profile: passport.Profile): Promise < IUser > {
     return new Promise < IUser > ((resolve, reject) => {
-      this._model.findOne({
+      _model.findOne({
           provider: profile.provider,
           id: profile.id
         })
@@ -82,7 +82,7 @@ class User {
           if (user) {
             return resolve(user);
           }
-          this._model.create({
+          _model.create({
               provider: profile.provider,
               id: profile.id,
               displayName: profile.displayName,
@@ -103,7 +103,7 @@ class User {
    */
   static findById(id: string): Promise < IUser > {
     return new Promise < IUser > ((resolve, reject) => {
-      this._model.findById(id)
+      _model.findById(id)
         .exec()
         .onResolve((err, user) => {
           err ? reject(err) : resolve(user);
@@ -118,7 +118,7 @@ class User {
    */
   static findByAuthorId(authorId: string): Promise < User[] > {
     return new Promise < User[] > ((resolve, reject) => {
-      this._model.find({
+      _model.find({
           authorId: authorId
         })
         .exec()
@@ -138,7 +138,7 @@ class User {
    */
   static relateAuthor(userId: string, authorId: string): Promise < User > {
     return new Promise < User > ((resolve, reject) => {
-      this._model.findByIdAndUpdate(userId, {
+      _model.findByIdAndUpdate(userId, {
           authorId: authorId
         })
         .exec()
@@ -155,7 +155,7 @@ class User {
    */
   static remove(id: string): Promise < boolean > {
     return new Promise((resolve, reject) => {
-      this._model.findByIdAndRemove(id)
+      _model.findByIdAndRemove(id)
         .exec()
         .onResolve((err, user) => {
           err ? reject(err) : resolve(true);

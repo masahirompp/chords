@@ -15,42 +15,42 @@ interface IAuthor extends mongoose.Document {
   updated: Date;
 }
 
+var _schema = new mongoose.Schema({
+    id: {
+      type: String,
+      required: 'idを入力してください。',
+      index: {
+        unique: true
+      },
+      validate: /^\w+$/i
+    },
+    email: String,
+    name: {
+      type: String,
+      required: 'ニックネームを入力してください。'
+    },
+    profile: String,
+    icon: String,
+    created: {
+      type: Date,
+      default: Date.now
+    },
+    updated: {
+      type: Date,
+      default: Date.now
+    }
+  })
+  .plugin( < (schema: mongoose.Schema, options ? : Object) => void > uniqueValidator, {
+    message: 'そのidは既に使用されているため、使用できません。'
+  })
+  .pre('save', function(next) {
+    this.updated = new Date();
+    next();
+  });
+
+var _model = mongoose.model < IAuthor > ('Author', _schema);
+
 class Author {
-
-  private static _schema = new mongoose.Schema({
-      id: {
-        type: String,
-        required: 'idを入力してください。',
-        index: {
-          unique: true
-        },
-        validate: /^\w+$/i
-      },
-      email: String,
-      name: {
-        type: String,
-        required: 'ニックネームを入力してください。'
-      },
-      profile: String,
-      icon: String,
-      created: {
-        type: Date,
-        default: Date.now
-      },
-      updated: {
-        type: Date,
-        default: Date.now
-      }
-    })
-    .plugin( < (schema: mongoose.Schema, options ? : Object) => void > uniqueValidator, {
-      message: 'そのidは既に使用されているため、使用できません。'
-    })
-    .pre('save', function(next) {
-      this.updated = new Date();
-      next();
-    });
-
-  private static _model = mongoose.model < IAuthor > ('Author', Author._schema);
 
   /**
    * IDからAuthorを取得する。
@@ -63,7 +63,7 @@ class Author {
 
       if (!authorId) resolve(null);
 
-      Author._model.findById(authorId)
+      _model.findById(authorId)
         .exec()
         .onResolve((err, author) => {
           err ? reject(err) : resolve(new Author(author));
@@ -79,7 +79,7 @@ class Author {
    */
   static findByAccountId(id: string): Promise < Author > {
     return new Promise < Author > ((resolve, reject) => {
-      this._model.findOne({
+      _model.findOne({
           id: id
         })
         .exec()
@@ -96,7 +96,7 @@ class Author {
    */
   static findByName(name: string): Promise < Author > {
     return new Promise < Author > ((resolve, reject) => {
-      this._model.findOne({
+      _model.findOne({
           name: name
         })
         .exec()
@@ -115,7 +115,7 @@ class Author {
    */
   static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Author[] > {
     return new Promise < Author[] > ((resolve, reject) => {
-      this._model.find({
+      _model.find({
           $and: Author.makeKeywordQuery(keyword)
         })
         .sort({
@@ -160,7 +160,7 @@ class Author {
       })
       .then(author => {
         return new Promise < Author > ((resolve, reject) => {
-          this._model.create(author)
+          _model.create(author)
             .onResolve((err, author) => {
               err ? reject(err) : resolve(new Author(author));
             })
@@ -194,7 +194,7 @@ class Author {
           if (profile) d['profile'] = profile;
           if (icon) d['icon'] = icon;
           // 更新処理
-          this._model.findByIdAndUpdate(id, d)
+          _model.findByIdAndUpdate(id, d)
             .exec()
             .onResolve((err, updated) => {
               err ? reject(err) : resolve(new Author(updated));
@@ -210,7 +210,7 @@ class Author {
    */
   static remove(id: string): Promise < boolean > {
     return new Promise < boolean > ((resolve, reject) => {
-      this._model.findByIdAndRemove(id)
+      _model.findByIdAndRemove(id)
         .exec()
         .onResolve((err, author) => {
           err ? reject(err) : resolve(true);
@@ -254,7 +254,7 @@ class Author {
     return !!this._author;
   }
 
-  get objectId(): string{
+  get objectId(): string {
     return this._author._id;
   }
 
