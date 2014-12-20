@@ -2,6 +2,7 @@
 
 import mongoose = require('mongoose');
 import passport = require('passport');
+import BaseModel = require('./BaseModel');
 import util = require('../util/Util');
 
 /**
@@ -50,9 +51,8 @@ interface IUser extends mongoose.Document, User {}
 
 var _model = mongoose.model < IUser > ('User', _schema);
 
-class User {
+class User extends BaseModel{
   provider: string;
-  pid: string;
   authorId: string;
   displayName: string;
   emails: any;
@@ -161,6 +161,7 @@ class User {
    * @param user
    */
   constructor(user: IUser) {
+    super();
     if(user){
       util.extend(this, user.toObject());
     }

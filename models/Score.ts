@@ -2,26 +2,10 @@
 
 import mongoose = require('mongoose');
 import ScoreDTO = require('../dto/_ScoreDTO');
+import BaseModel = require('./BaseModel');
 import Author = require('./Author');
 import Chord = require('./Chord');
-import UriUtil = require('../util/Util');
-
-interface IScore extends mongoose.Document {
-  url: string;
-  scoreNo: number;
-  description: string;
-  artistId: string;
-  artistName: string;
-  isOriginal: boolean;
-  songId: string;
-  songName: string;
-  authorId: mongoose.Types.ObjectId;
-  authorName: string;
-  star: number
-  isPublish: boolean
-  created: Date;
-  updated: Date;
-}
+import util = require('../util/Util');
 
 var _schema = new mongoose.Schema({
     url: {
@@ -81,9 +65,23 @@ var _schema = new mongoose.Schema({
     next();
   });
 
+interface IScore extends mongoose.Document, Score {}
+
 var _model = mongoose.model < IScore > ('Score', _schema);
 
-class Score {
+class Score extends BaseModel {
+  url: string;
+  scoreNo: number;
+  description: string;
+  artistId: string;
+  artistName: string;
+  isOriginal: boolean;
+  songId: string;
+  songName: string;
+  authorId: mongoose.Types.ObjectId;
+  authorName: string;
+  star: number;
+  isPublish: boolean;
 
   private static createNewScore(scoreNo: number,
     description: string,
@@ -97,7 +95,7 @@ class Score {
 
     return new Promise < Score > ((resolve, reject) => {
       _model.create({
-          url: UriUtil.makeUri(artistName, songName, scoreNo),
+          url: util.makeUri(artistName, songName, scoreNo),
           scoreNo: scoreNo,
           description: description,
           artistId: artistId,
@@ -116,7 +114,7 @@ class Score {
     });
   }
 
-  static createNewOriginalScore(authorId: string, songName: string, description: string): Promise < Score > {
+    static createNewOriginalScore(authorId: string, songName: string, description: string): Promise < Score > {
 
     // TODO
     var songId = songName;
@@ -137,7 +135,7 @@ class Score {
       });
   }
 
-  static createNewExistingScore(authorId: string,
+    static createNewExistingScore(authorId: string,
     artistId: string,
     artistName: string,
     songId: string,
@@ -170,7 +168,7 @@ class Score {
    * @returns {Promise<Score>}
    * @desc 公開中・非公開の判定は呼び出し元で実施すること。
    */
-  static find(artistName: string, songName: string, scoreNo: number): Promise < Score > {
+    static find(artistName: string, songName: string, scoreNo: number): Promise < Score > {
 
     return new Promise < Score > ((resolve, reject) => {
       _model.findOne({
@@ -191,7 +189,7 @@ class Score {
    * @param songName
    * @returns {Promise<Score>}
    */
-  static findBySong(artistName: string, songName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+    static findBySong(artistName: string, songName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
       _model.find({
@@ -216,7 +214,7 @@ class Score {
    * @param artistName
    * @returns {Promise<Score>}
    */
-  static findByArtist(artistName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+    static findByArtist(artistName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
       _model.find({
@@ -242,10 +240,10 @@ class Score {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-  static findByAuthor(accountId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+    static findByAuthor(accountId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
-      Author.findByAuthorId(accountId)
+      Author.findByAccountId(accountId)
         .then(author => {
           if (!author.isValid) return reject(new Error('not found.'))
           _model.find({
@@ -272,7 +270,7 @@ class Score {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-  static findMyWorks(authorId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+    static findMyWorks(authorId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
     return new Promise < Score[] > ((resolve, reject) => {
       _model.find({
           authorId: authorId
@@ -295,7 +293,7 @@ class Score {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-  static list(skip: number = 0, limit: number = 20): Promise < Score[] > {
+    static list(skip: number = 0, limit: number = 20): Promise < Score[] > {
     return new Promise < Score[] > ((resolve, reject) => {
       _model.find({
           isPublish: true
@@ -319,7 +317,7 @@ class Score {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-  static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+    static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
       _model.find({
@@ -337,7 +335,7 @@ class Score {
     });
   }
 
-  private static makeKeywordQuery(keyword: string): any[] {
+    private static makeKeywordQuery(keyword: string): any[] {
     var query = [{
       isPublish: true
     }];
@@ -348,7 +346,7 @@ class Score {
     return query
   }
 
-  private static makeRegKeyword(keyword): any {
+    private static makeRegKeyword(keyword): any {
     var reg = new RegExp(keyword, 'i');
     return {
       $or: [{
@@ -365,7 +363,7 @@ class Score {
    * @param songId
    * @returns {Promise<number>}
    */
-  private static generateScoreNo(artistId: string, songId: string): Promise < number > {
+    private static generateScoreNo(artistId: string, songId: string): Promise < number > {
 
     return new Promise < number > ((resolve, reject) => {
       _model.find({
@@ -392,54 +390,43 @@ class Score {
     });
   }
 
-  private static CONST = {
+    private static CONST = {
     ORIGINAL: true,
     EXISTING: false,
     STAR_DEFAULT: 0,
     DRAFT: false
   };
 
-  private _score: IScore;
-
   constructor(score: IScore) {
-    this._score = score;
-  }
-
-  get isValid(): boolean {
-    return !!this._score;
-  }
-
-  get isPublish(): boolean {
-    return this._score.isPublish;
-  }
-
-  get objectId(): string {
-    return this._score._id;
+    super();
+    if (score) {
+      util.extend(this, score.toObject());
+    }
   }
 
   get json(): ScoreDTO {
     return <ScoreDTO > {
       author: {
-        id: this._score.authorName,
-        name: this._score.authorName
+        id: this.authorName,
+        name: this.authorName
       },
       song: {
-        id: this._score.songId,
-        name: this._score.songName,
+        id: this.songId,
+        name: this.songName,
         artist: {
-          id: this._score.artistId,
-          name: this._score.artistName,
-          isOriginal: this._score.isOriginal
+          id: this.artistId,
+          name: this.artistName,
+          isOriginal: this.isOriginal
         }
       },
-      scoreNo: this._score.scoreNo,
-      star: this._score.star,
-      description: this._score.description
+      scoreNo: this.scoreNo,
+      star: this.star,
+      description: this.description
     }
   }
 
   jsonWithChord(): Promise < ScoreDTO > {
-    return Chord.findByScoreId(this._score.id)
+    return Chord.findByScoreId(this._id)
       .then(chord => {
         var d = this.json;
         d.chords = chord.chords;

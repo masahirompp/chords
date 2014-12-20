@@ -2,12 +2,13 @@
 
 import mongoose = require('mongoose');
 import uniqueValidator = require('mongoose-unique-validator');
+import BaseModel = require('./BaseModel');
 import User = require('./User');
 import AuthorDTO = require('../dto/_AuthorDTO');
 import util = require('../util/Util');
 
 var _schema = new mongoose.Schema({
-    authorId: {
+    accountId: {
       type: String,
       required: 'idを入力してください。',
       index: {
@@ -43,9 +44,8 @@ interface IAuthor extends mongoose.Document, Author {}
 
 var _model = mongoose.model < IAuthor > ('Author', _schema);
 
-class Author {
-  _id: string; // ObjectId
-  authorId: string; // URL等に使用する一意のID。変更不可。
+class Author extends BaseModel {
+  accountId: string; // URL等に使用する一意のID。変更不可。
   email: string;
   name: string;
   profile: string;
@@ -73,10 +73,10 @@ class Author {
    * @param id
    * @returns {Promise<Author>}
    */
-  static findByAuthorId(authorId: string): Promise < Author > {
+  static findByAccountId(accountId: string): Promise < Author > {
     return new Promise < Author > ((resolve, reject) => {
       _model.findOne({
-          authorId: authorId
+          accountId: accountId
         })
         .exec()
         .onResolve((err, author) => {
@@ -241,22 +241,15 @@ class Author {
    * @param author
    */
   constructor(author: IAuthor) {
-    if(author){
+    super();
+    if (author) {
       util.extend(this, author);
     }
   }
 
-  /**
-   * 有効なAuthorか？
-   * @returns {boolean}
-   */
-  get isValid(): boolean {
-    return !!this.authorId;
-  }
-
   get json(): AuthorDTO {
     return <AuthorDTO > {
-      id: this.authorId,
+      id: this.accountId,
       name: this.name,
       profile: this.profile,
       email: this.email,
@@ -269,7 +262,7 @@ class Author {
    * @returns {Promise<AuthorDTO>}
    */
   gerRelatedUsers(): Promise < AuthorDTO > {
-    return User.findByAuthorId(this.authorId)
+    return User.findByAuthorId(this.accountId)
       .then(users => {
         var d = this.json;
         d.account = users.map(u => {
