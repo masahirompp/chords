@@ -30,14 +30,14 @@ var _schema = new mongoose.Schema({
     next();
   });
 
-var _model = mongoose.model('Chord', _schema);
+interface IChord extends mongoose.Document, Chord {}
+
+var _model = mongoose.model<IChord>('Chord', _schema);
 
 class Chord {
   scoreId: mongoose.Types.ObjectId;
   chords: Array < Array < string >> ;
   option: any;
-  private created: Date;
-  private updated: Date;
 
   constructor(chord: any) {
     util.extend(this, chord);
@@ -46,8 +46,8 @@ class Chord {
   static findByScoreId(scoreId: string): Promise < Chord > {
     return new Promise < Chord > ((resolve, reject) => {
       _model.findOne({
-        scoreId: scoreId
-      })
+          scoreId: scoreId
+        })
         .exec()
         .onResolve((err, chord) => {
           err ? reject(err) : resolve(new Chord(chord.toObject()));
@@ -58,10 +58,10 @@ class Chord {
   static createNewChord(scoreId: mongoose.Types.ObjectId): Promise < Chord > {
     return new Promise < Chord > ((resolve, reject) => {
       _model.create({
-        scoreId: scoreId,
-        chords: [],
-        option: {}
-      })
+          scoreId: scoreId,
+          chords: [],
+          option: {}
+        })
         .onResolve((err, chord) => {
           err ? reject(err) : resolve(new Chord(chord.toObject()));
         })

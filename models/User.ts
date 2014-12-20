@@ -2,18 +2,7 @@
 
 import mongoose = require('mongoose');
 import passport = require('passport');
-
-interface IUser extends mongoose.Document {
-  provider: string;
-  id: string;
-  authorId: string;
-  displayName: string;
-  emails: any;
-  photos: any;
-  show: boolean;
-  created: Date;
-  updated: Date;
-}
+import util = require('../util/Util');
 
 /**
  * MongooseSchema
@@ -25,7 +14,7 @@ var _schema: mongoose.Schema = new mongoose.Schema({
       type: String,
       require: true
     },
-    id: {
+    pid: {
       type: String,
       require: true
     },
@@ -57,40 +46,44 @@ var _schema: mongoose.Schema = new mongoose.Schema({
     next();
   });
 
-/**
- * Mongoose.Model
- * @type {Model<IUser>}
- * @private
- */
+interface IUser extends mongoose.Document, User {}
+
 var _model = mongoose.model < IUser > ('User', _schema);
 
 class User {
+  provider: string;
+  pid: string;
+  authorId: string;
+  displayName: string;
+  emails: any;
+  photos: any;
+  show: boolean;
 
   /**
    * static ユーザが存在しなければ作成して返す。
    * @param passport.Profile
    * @returns {Promise<User>}
    */
-  static findOrCreate(profile: passport.Profile): Promise < IUser > {
-    return new Promise < IUser > ((resolve, reject) => {
+  static findOrCreate(profile: passport.Profile): Promise < User > {
+    return new Promise < User > ((resolve, reject) => {
       _model.findOne({
           provider: profile.provider,
-          id: profile.id
+          pid: profile.id
         })
         .exec()
         .then(user => {
           if (user) {
-            return resolve(user);
+            return resolve(new User(user.toObject()));
           }
           _model.create({
               provider: profile.provider,
-              id: profile.id,
+              pid: profile.id,
               displayName: profile.displayName,
               emails: profile.emails,
               photos: profile.photos
             })
             .onResolve((err, user) => {
-              err ? reject(err) : resolve(user);
+              err ? reject(err) : resolve(new User(user.toObject()));
             });
         });
     });
@@ -101,12 +94,12 @@ class User {
    * @param id
    * @returns {Promise<User>}
    */
-  static findById(id: string): Promise < IUser > {
-    return new Promise < IUser > ((resolve, reject) => {
+  static findById(id: string): Promise < User > {
+    return new Promise < User > ((resolve, reject) => {
       _model.findById(id)
         .exec()
         .onResolve((err, user) => {
-          err ? reject(err) : resolve(user);
+          err ? reject(err) : resolve(new User(user.toObject()));
         });
     })
   }
@@ -164,35 +157,18 @@ class User {
   }
 
   /**
-   * インスタンス変数
-   */
-  private _document: IUser;
-
-  /**
    * コンストラクタ
-   * @param mongoose.Document<IUser>
+   * @param mongoose.Document
    */
-  constructor(document: IUser) {
-    this._document = document;
-  }
-
-  get provider(): string {
-    return this._document.provider;
+  constructor(user: any) {
+    util.extend(this, user);
   }
 
   get image(): string {
-    if (Array.isArray(this._document.photos)) {
-      return this._document.photos.length > 0 ? this._document.photos[0] : null;
+    if (Array.isArray(this.photos)) {
+      return this.photos.length > 0 ? this.photos[0] : null;
     }
-    return this._document.photos;
-  }
-
-  get show(): boolean {
-    return this._document.show;
-  }
-
-  get authorId(): string {
-    return this._document.authorId;
+    return this.photos;
   }
 
   get json(): any {
