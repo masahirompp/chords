@@ -1,0 +1,42 @@
+{
+  "repos": [
+    {
+      "url": "https://github.com/borisyankov/DefinitelyTyped.git",
+      "ref": "master"
+    }
+  ],
+  "path": "tsd",
+  "bundle": "tsd/tsd.d.ts",
+  "dependencies": {
+    "jquery/jquery.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "d3/d3.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "requirejs/require.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "node/node.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "express/express.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "mongoose/mongoose.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "express-session/express-session.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "es6-promise/es6-promise.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "passport/passport.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "bootstrap/bootstrap.d.ts": {
+      "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    }
+  }
+}

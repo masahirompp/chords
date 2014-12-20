@@ -1,3 +1,5 @@
+/// <reference path="../tsd/tsd.d.ts" />
+
 class Util {
 
   /**
