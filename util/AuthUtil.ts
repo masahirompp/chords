@@ -7,7 +7,7 @@ import User = require('../models/User');
 
 class AuthUtil {
 
-  static init(config: any, mongoose: any, app: express.Application) {
+  static init(config:any, mongoose:any, app:express.Application) {
     // passport
     var TwitterStrategy = require('passport-twitter')
       .Strategy;
@@ -47,8 +47,8 @@ class AuthUtil {
     // 認証領域へのアクセスで、匿名アクセスの場合、リダイレクト
     app.use((req, res, next) => {
       var url = req.url + '/';
-      if (url.lastIndexOf('/works/', 0) === 0 || url.lastIndexOf('/api/works/', 0) === 0) {
-        if (req.isUnauthenticated()) {
+      if(url.lastIndexOf('/works/', 0) === 0 || url.lastIndexOf('/api/works/', 0) === 0) {
+        if(req.isUnauthenticated()) {
           res.cookie('redirectUrl', req.url);
           return res.redirect('/auth/login');
         }

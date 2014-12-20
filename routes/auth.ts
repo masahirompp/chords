@@ -63,7 +63,7 @@ class Auth {
         Author.findById(req.user.authorId)
           .then(author => {
             // ユーザ登録済みの場合
-            if (author) {
+            if (author.isValid) {
               // リダイレクト先が指定されていれば、リダイレクト
               var redirectUrl = req.cookies.redirectUrl;
               if (redirectUrl) {
@@ -73,9 +73,10 @@ class Auth {
               // リダイレクト先が指定されていない場合は、トップ画面を表示。
               req.flash('message_success', 'ログインしました。');
               res.redirect('/');
+              return;
             }
 
-            // ユーザ未登録の場合は登録画面へ
+            // ユーザ未登録の場合は、登録画面へ
             res.redirect('/auth/register');
           });
       });

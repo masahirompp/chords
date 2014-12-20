@@ -2,7 +2,12 @@
 
 class Util {
 
-  static _util: any = require('util');
+  private static _util: any = require('util');
+  private static _shortId: any = require('../node_modules/shortid');
+
+  /**
+   * extend
+   */
   static extend: (...args: any[]) => any = Util._util._extend;
 
   /**
@@ -23,6 +28,14 @@ class Util {
    */
   static toNumber(num: string): number {
     return ((n: number) => isNaN(n) ? null : n)(Number(num));
+  }
+
+  /**
+   * 一意のIDを生成
+   * @returns {any}
+   */
+  static makeUniqueId(): string {
+    return this._shortId.generate();
   }
 
   /**

@@ -10,11 +10,10 @@ import util = require('../util/Util');
 var _schema = new mongoose.Schema({
     accountId: {
       type: String,
-      required: 'idを入力してください。',
+      required: true,
       index: {
         unique: true
-      },
-      validate: /^\w+$/i
+      }
     },
     email: String,
     name: {
@@ -90,7 +89,7 @@ class Author extends BaseModel {
    * @param name
    * @returns {Promise<Author>}
    */
-  static findByName(name: string): Promise < Author > {
+    static findByName(name: string): Promise < Author > {
     return new Promise < Author > ((resolve, reject) => {
       _model.findOne({
           name: name
@@ -109,7 +108,7 @@ class Author extends BaseModel {
    * @param limit
    * @returns {Promise<Author[]>}
    */
-  static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Author[] > {
+    static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Author[] > {
     return new Promise < Author[] > ((resolve, reject) => {
       _model.find({
           $and: Author.makeKeywordQuery(keyword)
@@ -132,7 +131,7 @@ class Author extends BaseModel {
    * @param limit
    * @returns {Promise<Author[]>}
    */
-  static list(skip ? : number, limit ? : number): Promise < Author[] > {
+    static list(skip ? : number, limit ? : number): Promise < Author[] > {
     return Author.search(null, skip, limit);
   }
 
@@ -142,7 +141,7 @@ class Author extends BaseModel {
    * @param email
    * @returns {Promise<U>|Promise<Promise<Author>>}
    */
-  static create(name: string, email ? : string): Promise < Author > {
+    static create(name: string, email ? : string): Promise < Author > {
 
     return this.findByName(name)
       .then(author => {
@@ -150,6 +149,7 @@ class Author extends BaseModel {
           throw new Error('already exists');
         }
         return {
+          accountId: util.makeUniqueId(),
           name: name,
           email: email || ''
         };
@@ -174,7 +174,7 @@ class Author extends BaseModel {
    * @param icon
    * @returns {Promise<Author>}
    */
-  static update(id: string, oldName: string, newName: string, email: string, profile: string, icon: string): Promise < Author > {
+    static update(id: string, oldName: string, newName: string, email: string, profile: string, icon: string): Promise < Author > {
 
     return new Promise < Author > ((resolve, reject) => {
       this.findById(id)
@@ -204,7 +204,7 @@ class Author extends BaseModel {
    * @param id
    * @returns {Promise<Author>}
    */
-  static remove(id: string): Promise < boolean > {
+    static remove(id: string): Promise < boolean > {
     return new Promise < boolean > ((resolve, reject) => {
       _model.findByIdAndRemove(id)
         .exec()
@@ -214,7 +214,7 @@ class Author extends BaseModel {
     });
   }
 
-  private static makeKeywordQuery(keyword: String): any {
+    private static makeKeywordQuery(keyword: String): any {
     if (!keyword) return {};
 
     var query = [];
@@ -225,7 +225,7 @@ class Author extends BaseModel {
     return query
   }
 
-  private static makeRegKeyword(keyword): any {
+    private static makeRegKeyword(keyword): any {
     var reg = new RegExp(keyword, 'i');
     return {
       $or: [{
@@ -240,14 +240,14 @@ class Author extends BaseModel {
    * コンストラクタ
    * @param author
    */
-  constructor(author: IAuthor) {
+    constructor(author: IAuthor) {
     super();
     if (author) {
       util.extend(this, author);
     }
   }
 
-  get json(): AuthorDTO {
+    get json(): AuthorDTO {
     return <AuthorDTO > {
       id: this.accountId,
       name: this.name,
@@ -261,7 +261,7 @@ class Author extends BaseModel {
    * ログイン方法の一覧を取得
    * @returns {Promise<AuthorDTO>}
    */
-  gerRelatedUsers(): Promise < AuthorDTO > {
+    gerRelatedUsers(): Promise < AuthorDTO > {
     return User.findByAuthorId(this.accountId)
       .then(users => {
         var d = this.json;
