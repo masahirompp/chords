@@ -1,14 +1,7 @@
 /// <reference path="../tsd/tsd.d.ts" />
 
 import mongoose = require('mongoose');
-
-interface IChord extends mongoose.Document {
-  scoreId: mongoose.Types.ObjectId
-  chords: Array < Array < string >> ;
-  option: any;
-  created: Date;
-  updated: Date;
-}
+import util = require('../util/Util');
 
 var _schema = new mongoose.Schema({
     scoreId: {
@@ -37,18 +30,27 @@ var _schema = new mongoose.Schema({
     next();
   });
 
-var _model = mongoose.model < IChord > ('Chord', _schema);
+var _model = mongoose.model('Chord', _schema);
 
 class Chord {
+  scoreId: mongoose.Types.ObjectId;
+  chords: Array < Array < string >> ;
+  option: any;
+  created: Date;
+  updated: Date;
+
+  constructor(chord: any) {
+    util.extend(this, chord);
+  }
 
   static findByScoreId(scoreId: string): Promise < Chord > {
     return new Promise < Chord > ((resolve, reject) => {
       _model.findOne({
-          scoreId: scoreId
-        })
+        scoreId: scoreId
+      })
         .exec()
         .onResolve((err, chord) => {
-          err ? reject(err) : resolve(new Chord(chord));
+          err ? reject(err) : resolve(new Chord(chord.toObject()));
         })
     })
   }
@@ -56,28 +58,14 @@ class Chord {
   static createNewChord(scoreId: mongoose.Types.ObjectId): Promise < Chord > {
     return new Promise < Chord > ((resolve, reject) => {
       _model.create({
-          scoreId: scoreId,
-          chords: [],
-          option: {}
-        })
+        scoreId: scoreId,
+        chords: [],
+        option: {}
+      })
         .onResolve((err, chord) => {
-          err ? reject(err) : resolve(new Chord(chord));
+          err ? reject(err) : resolve(new Chord(chord.toObject()));
         })
     });
-  }
-
-  private _chord: IChord;
-
-  constructor(chord: IChord) {
-    this._chord = chord;
-  }
-
-  get chords(): Array < Array < string >> {
-    return this._chord.chords;
-  }
-
-  get option(): any {
-    return this._chord.option;
   }
 }
 

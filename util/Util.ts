@@ -2,6 +2,9 @@
 
 class Util {
 
+  static _util = require('util');
+  static extend: (...args: any[]) => any = Util._util._extend;
+
   /**
    * URL生成
    * @param artistName
