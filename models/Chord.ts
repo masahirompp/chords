@@ -36,8 +36,8 @@ class Chord {
   scoreId: mongoose.Types.ObjectId;
   chords: Array < Array < string >> ;
   option: any;
-  created: Date;
-  updated: Date;
+  private created: Date;
+  private updated: Date;
 
   constructor(chord: any) {
     util.extend(this, chord);
