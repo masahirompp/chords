@@ -32,15 +32,21 @@ var _schema = new mongoose.Schema({
 
 interface IChord extends mongoose.Document, Chord {}
 
-var _model = mongoose.model<IChord>('Chord', _schema);
+var _model = mongoose.model < IChord > ('Chord', _schema);
 
 class Chord {
   scoreId: mongoose.Types.ObjectId;
   chords: Array < Array < string >> ;
   option: any;
 
-  constructor(chord: any) {
-    util.extend(this, chord);
+  /**
+   * コンストラクタ
+   * @param chord
+   */
+  constructor(chord: IChord) {
+    if (chord) {
+      util.extend(this, chord.toObject());
+    }
   }
 
   static findByScoreId(scoreId: string): Promise < Chord > {
@@ -50,7 +56,7 @@ class Chord {
         })
         .exec()
         .onResolve((err, chord) => {
-          err ? reject(err) : resolve(new Chord(chord.toObject()));
+          err ? reject(err) : resolve(new Chord(chord));
         })
     })
   }
@@ -63,7 +69,7 @@ class Chord {
           option: {}
         })
         .onResolve((err, chord) => {
-          err ? reject(err) : resolve(new Chord(chord.toObject()));
+          err ? reject(err) : resolve(new Chord(chord));
         })
     });
   }

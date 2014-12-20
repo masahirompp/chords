@@ -35,7 +35,7 @@ class Auth {
     router.post('/register', (req: express.Request, res: express.Response) => {
       Author.create(req.param('displayName'), req.param('email'))
         .then(author => {
-          return User.relateAuthor(req.user._id, author.id);
+          return User.relateAuthor(req.user._id, author._id);
         })
         .then(user => {
           // リダイレクト先が指定されていれば、リダイレクト

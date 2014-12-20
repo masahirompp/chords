@@ -37,7 +37,7 @@ class Api {
      * /api/users/:user GET
      */
     router.get('/users/:user', (req: express.Request, res: express.Response) => {
-      Author.findByAccountId(req.params.user)
+      Author.findByAuthorId(req.params.user)
         .then(author => res.json(Util.project(author.json, req.query.fields)))
         .catch(err => res.json(err));
     });

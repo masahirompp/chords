@@ -73,7 +73,7 @@ class User {
         .exec()
         .then(user => {
           if (user) {
-            return resolve(new User(user.toObject()));
+            return resolve(new User(user));
           }
           _model.create({
               provider: profile.provider,
@@ -83,7 +83,7 @@ class User {
               photos: profile.photos
             })
             .onResolve((err, user) => {
-              err ? reject(err) : resolve(new User(user.toObject()));
+              err ? reject(err) : resolve(new User(user));
             });
         });
     });
@@ -99,7 +99,7 @@ class User {
       _model.findById(id)
         .exec()
         .onResolve((err, user) => {
-          err ? reject(err) : resolve(new User(user.toObject()));
+          err ? reject(err) : resolve(new User(user));
         });
     })
   }
@@ -158,10 +158,12 @@ class User {
 
   /**
    * コンストラクタ
-   * @param mongoose.Document
+   * @param user
    */
-  constructor(user: any) {
-    util.extend(this, user);
+  constructor(user: IUser) {
+    if(user){
+      util.extend(this, user.toObject());
+    }
   }
 
   get image(): string {

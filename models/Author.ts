@@ -4,19 +4,10 @@ import mongoose = require('mongoose');
 import uniqueValidator = require('mongoose-unique-validator');
 import User = require('./User');
 import AuthorDTO = require('../dto/_AuthorDTO');
-
-interface IAuthor extends mongoose.Document {
-  id: string;
-  email: string;
-  name: string;
-  profile: string;
-  icon: string;
-  created: Date;
-  updated: Date;
-}
+import util = require('../util/Util');
 
 var _schema = new mongoose.Schema({
-    id: {
+    authorId: {
       type: String,
       required: 'idを入力してください。',
       index: {
@@ -48,22 +39,27 @@ var _schema = new mongoose.Schema({
     next();
   });
 
+interface IAuthor extends mongoose.Document, Author {}
+
 var _model = mongoose.model < IAuthor > ('Author', _schema);
 
 class Author {
+  _id: string; // ObjectId
+  authorId: string; // URL等に使用する一意のID。変更不可。
+  email: string;
+  name: string;
+  profile: string;
+  icon: string;
 
   /**
    * IDからAuthorを取得する。
    * @param authorId
    * @returns {Promise<Author>}
    */
-  static findById = (authorId: string): Promise < Author > => {
+  static findById = (id: string): Promise < Author > => {
 
     return new Promise < Author > ((resolve, reject) => {
-
-      if (!authorId) resolve(null);
-
-      _model.findById(authorId)
+      _model.findById(id)
         .exec()
         .onResolve((err, author) => {
           err ? reject(err) : resolve(new Author(author));
@@ -77,10 +73,10 @@ class Author {
    * @param id
    * @returns {Promise<Author>}
    */
-  static findByAccountId(id: string): Promise < Author > {
+  static findByAuthorId(authorId: string): Promise < Author > {
     return new Promise < Author > ((resolve, reject) => {
       _model.findOne({
-          id: id
+          authorId: authorId
         })
         .exec()
         .onResolve((err, author) => {
@@ -240,44 +236,40 @@ class Author {
     };
   }
 
-  private _author: IAuthor;
-
   /**
    * コンストラクタ
    * @param author
    */
   constructor(author: IAuthor) {
-    this._author = author;
+    if(author){
+      util.extend(this, author);
+    }
   }
 
+  /**
+   * 有効なAuthorか？
+   * @returns {boolean}
+   */
   get isValid(): boolean {
-    return !!this._author;
-  }
-
-  get objectId(): string {
-    return this._author._id;
-  }
-
-  get id(): string {
-    return this._author.id;
-  }
-
-  get name(): string {
-    return this._author.name;
+    return !!this.authorId;
   }
 
   get json(): AuthorDTO {
     return <AuthorDTO > {
-      id: this._author.name,
-      name: this._author.name,
-      profile: this._author.profile,
-      email: this._author.email,
-      icon: this._author.icon
+      id: this.authorId,
+      name: this.name,
+      profile: this.profile,
+      email: this.email,
+      icon: this.icon
     }
   }
 
+  /**
+   * ログイン方法の一覧を取得
+   * @returns {Promise<AuthorDTO>}
+   */
   gerRelatedUsers(): Promise < AuthorDTO > {
-    return User.findByAuthorId(this._author.id)
+    return User.findByAuthorId(this.authorId)
       .then(users => {
         var d = this.json;
         d.account = users.map(u => {

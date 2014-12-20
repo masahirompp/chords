@@ -245,11 +245,11 @@ class Score {
   static findByAuthor(accountId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
 
     return new Promise < Score[] > ((resolve, reject) => {
-      Author.findByAccountId(accountId)
+      Author.findByAuthorId(accountId)
         .then(author => {
           if (!author.isValid) return reject(new Error('not found.'))
           _model.find({
-              authorId: author.objectId,
+              authorId: author._id,
               isPublish: true
             })
             .sort({
