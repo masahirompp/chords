@@ -3,124 +3,125 @@
 import mongoose = require('mongoose');
 import ScoreDTO = require('../dto/_ScoreDTO');
 import BaseModel = require('./BaseModel');
-import Author = require('./Author');
+import Author = require('./User');
 import Chord = require('./Chord');
 import util = require('../util/Util');
 
 var _schema = new mongoose.Schema({
-    url: {
-      type: String,
-      require: true,
-      unique: true
-    },
-    scoreNo: {
-      type: Number,
-      default: 1
-    },
-    description: {
-      type: String,
-      require: '説明文が入力されていません。'
-    },
-    artistId: String,
-    artistName: {
-      type: String,
-      require: true
-    },
-    isOriginal: {
-      type: Boolean,
-      require: true
-    },
-    songId: String,
-    songName: {
-      type: String,
-      require: true
-    },
-    authorId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Author'
-    },
-    authorName: {
-      type: String,
-      require: true
-    },
-    star: {
-      type: Number,
-      default: 0
-    },
-    isPublish: {
-      type: Boolean,
-      require: true
-    },
-    created: {
-      type: Date,
-      default: Date.now
-    },
-    updated: {
-      type: Date,
-      default: Date.now
-    }
-  })
+  url: {
+    type: String,
+    require: true,
+    unique: true
+  },
+  scoreNo: {
+    type: Number,
+    default: 1
+  },
+  description: {
+    type: String,
+    require: '説明文が入力されていません。'
+  },
+  artistId: String,
+  artistName: {
+    type: String,
+    require: true
+  },
+  isOriginal: {
+    type: Boolean,
+    require: true
+  },
+  songId: String,
+  songName: {
+    type: String,
+    require: true
+  },
+  authorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  authorName: {
+    type: String,
+    require: true
+  },
+  star: {
+    type: Number,
+    default: 0
+  },
+  isPublish: {
+    type: Boolean,
+    require: true
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  },
+  updated: {
+    type: Date,
+    default: Date.now
+  }
+})
   .pre('save', function(next) {
     this.updated = new Date();
     next();
   });
 
-interface IScore extends mongoose.Document, Score {}
+interface IScore extends mongoose.Document, Score {
+}
 
-var _model = mongoose.model < IScore > ('Score', _schema);
+var _model = mongoose.model < IScore >('Score', _schema);
 
 class Score extends BaseModel {
-  url: string;
-  scoreNo: number;
-  description: string;
-  artistId: string;
-  artistName: string;
-  isOriginal: boolean;
-  songId: string;
-  songName: string;
-  authorId: mongoose.Types.ObjectId;
-  authorName: string;
-  star: number;
-  isPublish: boolean;
+  url:string;
+  scoreNo:number;
+  description:string;
+  artistId:string;
+  artistName:string;
+  isOriginal:boolean;
+  songId:string;
+  songName:string;
+  authorId:mongoose.Types.ObjectId;
+  authorName:string;
+  star:number;
+  isPublish:boolean;
 
-  private static createNewScore(scoreNo: number,
-    description: string,
-    artistId: string,
-    artistName: string,
-    isOriginal: boolean,
-    songId: string,
-    songName: string,
-    authorId: mongoose.Types.ObjectId,
-    authorName: string): Promise < Score > {
+  private static createNewScore(scoreNo:number,
+                                description:string,
+                                artistId:string,
+                                artistName:string,
+                                isOriginal:boolean,
+                                songId:string,
+                                songName:string,
+                                authorId:mongoose.Types.ObjectId,
+                                authorName:string):Promise < Score > {
 
-    return new Promise < Score > ((resolve, reject) => {
+    return new Promise < Score >((resolve, reject) => {
       _model.create({
-          url: util.makeUri(artistName, songName, scoreNo),
-          scoreNo: scoreNo,
-          description: description,
-          artistId: artistId,
-          artistName: artistName,
-          isOriginal: isOriginal,
-          songId: songId,
-          songName: songName,
-          authorId: authorId,
-          authorName: authorName,
-          star: 0,
-          isPublish: false
-        })
+        url: util.makeUri(artistName, songName, scoreNo),
+        scoreNo: scoreNo,
+        description: description,
+        artistId: artistId,
+        artistName: artistName,
+        isOriginal: isOriginal,
+        songId: songId,
+        songName: songName,
+        authorId: authorId,
+        authorName: authorName,
+        star: 0,
+        isPublish: false
+      })
         .onResolve((err, score) => {
           err ? reject(err) : resolve(new Score(score));
         });
     });
   }
 
-    static createNewOriginalScore(authorId: string, songName: string, description: string): Promise < Score > {
+  static createNewOriginalScore(authorId:string, songName:string, description:string):Promise < Score > {
 
     // TODO
     var songId = songName;
 
     return Promise.all([Author.findById(authorId), Score.generateScoreNo(authorId, songId)])
-      .then((values: any[]) => {
+      .then((values:any[]) => {
         var author = < Author > values[0];
         var scoreNo = < number > values[1];
         return this.createNewScore(scoreNo,
@@ -135,17 +136,17 @@ class Score extends BaseModel {
       });
   }
 
-    static createNewExistingScore(authorId: string,
-    artistId: string,
-    artistName: string,
-    songId: string,
-    songName: string,
-    description: string): Promise < Score > {
+  static createNewExistingScore(authorId:string,
+                                artistId:string,
+                                artistName:string,
+                                songId:string,
+                                songName:string,
+                                description:string):Promise < Score > {
     return Author.findById(authorId)
-      .then((author: Author) => {
+      .then((author:Author) => {
 
         return Score.generateScoreNo(artistName, songName)
-          .then((scoreNo: number) => {
+          .then((scoreNo:number) => {
             return this.createNewScore(scoreNo,
               description,
               artistId,
@@ -168,14 +169,14 @@ class Score extends BaseModel {
    * @returns {Promise<Score>}
    * @desc 公開中・非公開の判定は呼び出し元で実施すること。
    */
-    static find(artistName: string, songName: string, scoreNo: number): Promise < Score > {
+  static find(artistName:string, songName:string, scoreNo:number):Promise < Score > {
 
-    return new Promise < Score > ((resolve, reject) => {
+    return new Promise < Score >((resolve, reject) => {
       _model.findOne({
-          artistName: artistName,
-          songName: songName,
-          scoreNo: scoreNo
-        })
+        artistName: artistName,
+        songName: songName,
+        scoreNo: scoreNo
+      })
         .exec()
         .onResolve((err, score) => {
           err ? reject(err) : resolve(new Score(score));
@@ -189,14 +190,14 @@ class Score extends BaseModel {
    * @param songName
    * @returns {Promise<Score>}
    */
-    static findBySong(artistName: string, songName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+  static findBySong(artistName:string, songName:string, skip:number = 0, limit:number = 20):Promise < Score[] > {
 
-    return new Promise < Score[] > ((resolve, reject) => {
+    return new Promise < Score[] >((resolve, reject) => {
       _model.find({
-          artistName: artistName,
-          songName: songName,
-          isPublish: true
-        })
+        artistName: artistName,
+        songName: songName,
+        isPublish: true
+      })
         .sort({
           url: 1
         })
@@ -214,13 +215,13 @@ class Score extends BaseModel {
    * @param artistName
    * @returns {Promise<Score>}
    */
-    static findByArtist(artistName: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+  static findByArtist(artistName:string, skip:number = 0, limit:number = 20):Promise < Score[] > {
 
-    return new Promise < Score[] > ((resolve, reject) => {
+    return new Promise < Score[] >((resolve, reject) => {
       _model.find({
-          artistName: artistName,
-          isPublish: true
-        })
+        artistName: artistName,
+        isPublish: true
+      })
         .sort({
           url: 1
         })
@@ -240,16 +241,16 @@ class Score extends BaseModel {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-    static findByAuthor(accountId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+  static findByAuthor(accountId:string, skip:number = 0, limit:number = 20):Promise < Score[] > {
 
-    return new Promise < Score[] > ((resolve, reject) => {
-      Author.findByAccountId(accountId)
+    return new Promise < Score[] >((resolve, reject) => {
+      Author.findByAccount(accountId)
         .then(author => {
-          if (!author.isValid) return reject(new Error('not found.'))
+          if(!author.isValid) return reject(new Error('not found.'))
           _model.find({
-              authorId: author._id,
-              isPublish: true
-            })
+            authorId: author._id,
+            isPublish: true
+          })
             .sort({
               url: 1
             })
@@ -270,11 +271,11 @@ class Score extends BaseModel {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-    static findMyWorks(authorId: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
-    return new Promise < Score[] > ((resolve, reject) => {
+  static findMyWorks(authorId:string, skip:number = 0, limit:number = 20):Promise < Score[] > {
+    return new Promise < Score[] >((resolve, reject) => {
       _model.find({
-          authorId: authorId
-        })
+        authorId: authorId
+      })
         .sort({
           url: 1
         })
@@ -293,11 +294,11 @@ class Score extends BaseModel {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-    static list(skip: number = 0, limit: number = 20): Promise < Score[] > {
-    return new Promise < Score[] > ((resolve, reject) => {
+  static list(skip:number = 0, limit:number = 20):Promise < Score[] > {
+    return new Promise < Score[] >((resolve, reject) => {
       _model.find({
-          isPublish: true
-        })
+        isPublish: true
+      })
         .sort({
           created: -1
         })
@@ -317,12 +318,12 @@ class Score extends BaseModel {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-    static search(keyword: string, skip: number = 0, limit: number = 20): Promise < Score[] > {
+  static search(keyword:string, skip:number = 0, limit:number = 20):Promise < Score[] > {
 
-    return new Promise < Score[] > ((resolve, reject) => {
+    return new Promise < Score[] >((resolve, reject) => {
       _model.find({
-          $and: Score.makeKeywordQuery(keyword)
-        })
+        $and: Score.makeKeywordQuery(keyword)
+      })
         .sort({
           url: 1
         })
@@ -335,10 +336,10 @@ class Score extends BaseModel {
     });
   }
 
-    private static makeKeywordQuery(keyword: string): any[] {
+  private static makeKeywordQuery(keyword:string):any[] {
     var query = [{
-      isPublish: true
-    }];
+                   isPublish: true
+                 }];
     keyword.split(' ')
       .forEach((k) => {
         query.push(Score.makeRegKeyword(k));
@@ -346,14 +347,14 @@ class Score extends BaseModel {
     return query
   }
 
-    private static makeRegKeyword(keyword): any {
+  private static makeRegKeyword(keyword):any {
     var reg = new RegExp(keyword, 'i');
     return {
       $or: [{
-        artistName: reg
-      }, {
-        songName: reg
-      }]
+              artistName: reg
+            }, {
+              songName: reg
+            }]
     };
   }
 
@@ -363,24 +364,24 @@ class Score extends BaseModel {
    * @param songId
    * @returns {Promise<number>}
    */
-    private static generateScoreNo(artistId: string, songId: string): Promise < number > {
+  private static generateScoreNo(artistId:string, songId:string):Promise < number > {
 
-    return new Promise < number > ((resolve, reject) => {
+    return new Promise < number >((resolve, reject) => {
       _model.find({
-          artistId: artistId,
-          songId: songId
-        })
+        artistId: artistId,
+        songId: songId
+      })
         .exec()
         .onFulfill(scores => {
-          if (scores.length === 0) {
+          if(scores.length === 0) {
             return resolve(1);
           }
           var maxScoreId = 1;
           scores.map(result => {
-              return Number(result.url.substring(result.url.lastIndexOf('/') + 1));
-            })
+            return Number(result.url.substring(result.url.lastIndexOf('/') + 1));
+          })
             .forEach(n => {
-              if (n > maxScoreId) maxScoreId = n;
+              if(n > maxScoreId) maxScoreId = n;
             });
           resolve(maxScoreId);
         })
@@ -390,21 +391,21 @@ class Score extends BaseModel {
     });
   }
 
-    private static CONST = {
+  private static CONST = {
     ORIGINAL: true,
     EXISTING: false,
     STAR_DEFAULT: 0,
     DRAFT: false
   };
 
-  constructor(score: IScore) {
+  constructor(score:IScore) {
     super();
-    if (score) {
+    if(score) {
       util.extend(this, score.toObject());
     }
   }
 
-  get json(): ScoreDTO {
+  get json():ScoreDTO {
     return <ScoreDTO > {
       author: {
         id: this.authorName,
@@ -425,7 +426,7 @@ class Score extends BaseModel {
     }
   }
 
-  jsonWithChord(): Promise < ScoreDTO > {
+  jsonWithChord():Promise < ScoreDTO > {
     return Chord.findByScoreId(this._id)
       .then(chord => {
         var d = this.json;

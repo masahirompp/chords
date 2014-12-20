@@ -4,6 +4,7 @@ interface AuthorDTO {
   profile: string;
   email: string;
   icon: string;
+  image: string;
   account: {
     id: string;
     image: string;

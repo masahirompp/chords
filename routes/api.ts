@@ -1,6 +1,6 @@
 /// <reference path="../tsd/tsd.d.ts" />
 import express = require('express');
-import Author = require('../models/Author');
+import Author = require('../models/User');
 import Score = require('../models/Score');
 import Chord = require('../models/Chord');
 import ScoreDTO = require('../dto/_ScoreDTO');
@@ -37,7 +37,7 @@ class Api {
      * /api/users/:user GET
      */
     router.get('/users/:user', (req: express.Request, res: express.Response) => {
-      Author.findByAccountId(req.params.user)
+      Author.findByAccount(req.params.user)
         .then(author => res.json(Util.project(author.json, req.query.fields)))
         .catch(err => res.json(err));
     });
@@ -115,7 +115,7 @@ class Api {
      * /api/works
      */
     router.get('/works', (req: express.Request, res: express.Response) => {
-      Score.findMyWorks(req.user.authorId, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+      Score.findMyWorks(req.user.userId, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
@@ -126,8 +126,8 @@ class Api {
      */
     router.post('/works', (req: express.Request, res: express.Response) => {
       var ps = req.body.isOriginal ?
-        Score.createNewOriginalScore(req.user.authorId, req.body.song, req.body.description) :
-        Score.createNewExistingScore(req.user.authorId,
+        Score.createNewOriginalScore(req.user.userId, req.body.song, req.body.description) :
+        Score.createNewExistingScore(req.user.userId,
           req.body.artistId,
           req.body.artistName,
           req.body.songId,

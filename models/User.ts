@@ -1,39 +1,34 @@
 /// <reference path="../tsd/tsd.d.ts" />
 
 import mongoose = require('mongoose');
-import passport = require('passport');
+import uniqueValidator = require('mongoose-unique-validator');
 import BaseModel = require('./BaseModel');
-import Author = require('./Author');
+import Provider = require('./Provider');
+import AuthorDTO = require('../dto/_AuthorDTO');
 import util = require('../util/Util');
 
-/**
- * MongooseSchema
- * @type {"mongoose".Schema}
- * @private
- */
-var _schema:mongoose.Schema = new mongoose.Schema({
-  provider: {
+var _schema = new mongoose.Schema({
+  account: {
     type: String,
-    require: true
+    required: true,
+    index: {
+      unique: true
+    }
   },
-  pid: {
+  email: String,
+  name: {
     type: String,
-    require: true
+    required: 'ニックネームを入力してください。'
   },
-  authorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Author'
+  profile: String,
+  icon: {
+    type: String,
+    required: true
   },
-  displayName: {
-    type: String
+  image: {
+    type: String,
+    required: true
   },
-  emails: {
-    type: mongoose.Schema.Types.Mixed
-  },
-  photos: {
-    type: mongoose.Schema.Types.Mixed
-  },
-  show: Boolean,
   created: {
     type: Date,
     default: Date.now
@@ -43,6 +38,9 @@ var _schema:mongoose.Schema = new mongoose.Schema({
     default: Date.now
   }
 })
+  .plugin(< (schema:mongoose.Schema, options ?:Object) => void > uniqueValidator, {
+    message: 'そのidは既に使用されているため、使用できません。'
+  })
   .pre('save', function(next) {
     this.updated = new Date();
     next();
@@ -54,87 +52,45 @@ interface IUser extends mongoose.Document, User {
 var _model = mongoose.model < IUser >('User', _schema);
 
 class User extends BaseModel {
-  provider:string;
-  authorId:string;
-  displayName:string;
-  emails:any;
-  photos:any;
-  show:boolean;
+  account:string; // URL等に使用する一意のID。変更不可。
+  email:string;
+  name:string;
+  profile:string;
+  icon:string;
+  image:string;
+
+  private static ICON = {
+    IDENTICON: 'i',
+    TWITTER: 'f',
+    FACEBOOK: 'b'
+  };
 
   /**
-   * static ユーザが存在しなければ作成して返す。
-   * @param passport.Profile
-   * @returns {Promise<User>}
-   */
-  static findOrCreate(profile:passport.Profile):Promise < User > {
-    return new Promise < User >((resolve, reject) => {
-      _model.findOne({
-        provider: profile.provider,
-        pid: profile.id
-      })
-        .exec()
-        .then(user => {
-          if(user) {
-            return resolve(new User(user));
-          }
-          _model.create({
-            provider: profile.provider,
-            pid: profile.id,
-            displayName: profile.displayName,
-            emails: profile.emails,
-            photos: profile.photos
-          })
-            .onResolve((err, user) => {
-              err ? reject(err) : resolve(new User(user));
-            });
-        });
-    });
-  }
-
-  /**
-   * static idからUserオブジェクトを取得
+   * IDからUserを取得する。
    * @param id
    * @returns {Promise<User>}
    */
-  static findById(id:string):Promise < User > {
+  static findById = (id:string):Promise < User > => {
+
     return new Promise < User >((resolve, reject) => {
       _model.findById(id)
         .exec()
         .onResolve((err, user) => {
           err ? reject(err) : resolve(new User(user));
         });
-    })
-  }
-
-  /**
-   * AuthorIdからUserを取得する。
-   * @param authorId
-   * @returns {Promise<User[]>}
-   */
-  static findByAuthorId(authorId:string):Promise < User[] > {
-    return new Promise < User[] >((resolve, reject) => {
-      _model.find({
-        authorId: authorId
-      })
-        .exec()
-        .onResolve((err, user) => {
-          err ? reject(err) : resolve(user.map(u => {
-            return new User(u);
-          }));
-        });
     });
-  }
+
+  };
 
   /**
-   * ユーザIDとAuthorIDを紐つける。
-   * @param userId
-   * @param authorId
+   * アカウントIDからUserを取得
+   * @param account
    * @returns {Promise<User>}
    */
-  static relateAuthor(userId:string, authorId:string):Promise < User > {
+  static findByAccount(account:string):Promise < User > {
     return new Promise < User >((resolve, reject) => {
-      _model.findByIdAndUpdate(userId, {
-        authorId: authorId
+      _model.findOne({
+        accountId: account
       })
         .exec()
         .onResolve((err, user) => {
@@ -144,18 +100,165 @@ class User extends BaseModel {
   }
 
   /**
-   * 削除
-   * @param id
-   * @returns {Promise}
+   * nameからAuthorを取得する。基本的にnameの存在確認用。
+   * @param name
+   * @returns {Promise<User>}
    */
-  static remove(id:string):Promise < boolean > {
-    return new Promise((resolve, reject) => {
-      _model.findByIdAndRemove(id)
+  static findByName(name:string):Promise < User > {
+    return new Promise < User >((resolve, reject) => {
+      _model.findOne({
+        name: name
+      })
         .exec()
         .onResolve((err, user) => {
+          err ? reject(err) : resolve(new User(user));
+        })
+    });
+  }
+
+  /**
+   * ユーザの検索
+   * @param keyword
+   * @param skip
+   * @param limit
+   * @returns {Promise<User[]>}
+   */
+  static search(keyword:string, skip:number = 0, limit:number = 20):Promise < User[] > {
+    return new Promise < User[] >((resolve, reject) => {
+      _model.find({
+        $and: User.makeKeywordQuery(keyword)
+      })
+        .sort({
+          name: 1
+        })
+        .skip(skip)
+        .limit(limit)
+        .exec()
+        .onResolve((err, user) => {
+          err ? reject(err) : resolve(user.map(u => new User(u)));
+        });
+    });
+  }
+
+  /**
+   * 一覧表示
+   * @param skip
+   * @param limit
+   * @returns {Promise<User[]>}
+   */
+  static list(skip ?:number, limit ?:number):Promise < User[] > {
+    return User.search(null, skip, limit);
+  }
+
+  /**
+   * 新規Author作成。情報は最低限。
+   * @param name
+   * @param email
+   * @returns {Promise<U>|Promise<Promise<User>>}
+   */
+  static create(name:string, email ?:string):Promise < User > {
+
+    return this.findByName(name)
+      .then(author => {
+        if(author.isValid) {
+          throw new Error('already exists');
+        }
+        return {
+          account: util.makeUniqueId(),
+          name: name,
+          email: email || '',
+          icon: User.ICON.IDENTICON,
+          image: ''
+        };
+      })
+      .then(user => {
+        return new Promise < User >((resolve, reject) => {
+          _model.create(user)
+            .onResolve((err, u) => {
+              err ? reject(err) : resolve(new User(u));
+            })
+        });
+      });
+  }
+
+  /**
+   * 更新処理
+   * @param id
+   * @param oldName
+   * @param newName
+   * @param email
+   * @param profile
+   * @param icon
+   * @param image
+   * @returns {Promise<User>}
+   */
+  static update(id:string,
+                oldName:string,
+                newName:string,
+                email:string,
+                profile:string,
+                icon:string,
+                image:string):Promise < User > {
+
+    return new Promise < User >((resolve, reject) => {
+      this.findById(id)
+        .then(user => {
+          // 存在確認
+          if(!user.isValid || user.name !== oldName) {
+            throw new Error('not found.');
+          }
+          // 更新データ
+          var d = {};
+          if(newName) d['name'] = newName;
+          if(email) d['email'] = email;
+          if(profile) d['profile'] = profile;
+          if(icon) d['icon'] = icon;
+          if(image) d['image'] = image;
+          // 更新処理
+          _model.findByIdAndUpdate(id, d)
+            .exec()
+            .onResolve((err, updated) => {
+              err ? reject(err) : resolve(new User(updated));
+            })
+        })
+    });
+  }
+
+  /**
+   * 削除
+   * @param id
+   * @returns {Promise<User>}
+   */
+  static remove(id:string):Promise < boolean > {
+    return new Promise < boolean >((resolve, reject) => {
+      _model.findByIdAndRemove(id)
+        .exec()
+        .onResolve((err, deleted) => {
           err ? reject(err) : resolve(true);
         })
-    })
+    });
+  }
+
+  private static makeKeywordQuery(keyword:String):any {
+    if(!keyword) return {};
+
+    var query = [];
+    keyword.split(' ')
+      .forEach((k) => {
+        query.push(User.makeRegKeyword(k));
+      });
+    return query
+  }
+
+  private static makeRegKeyword(keyword):any {
+    var reg = new RegExp(keyword, 'i');
+    return {
+      $or: [{
+              name: reg
+            }, {
+              profile: reg
+            }]
+    };
   }
 
   /**
@@ -165,32 +268,36 @@ class User extends BaseModel {
   constructor(user:IUser) {
     super();
     if(user) {
-      util.extend(this, user.toObject());
+      util.extend(this, user);
+    }
+  }
+
+  get json():AuthorDTO {
+    return <AuthorDTO > {
+      id: this.account,
+      name: this.name,
+      profile: this.profile,
+      email: this.email,
+      icon: this.icon,
+      image: this.image
     }
   }
 
   /**
-   * 関係付けられたAuthorを取得
-   * @returns {Promise<Author>}
+   * ログイン方法の一覧を取得
+   * @returns {Promise<AuthorDTO>}
    */
-  findAuthor():Promise < Author > {
-    return Author.findById(this.authorId);
+  gerRelatedUsers():Promise < AuthorDTO > {
+    return Provider.findByUserId(this.account)
+      .then(users => {
+        var d = this.json;
+        d.account = users.map(u => {
+          return u.json;
+        });
+        return d;
+      });
   }
 
-  get image():string {
-    if(Array.isArray(this.photos)) {
-      return this.photos.length > 0 ? this.photos[0] : null;
-    }
-    return this.photos;
-  }
-
-  get json():any {
-    return {
-      provider: this.provider,
-      image: this.image,
-      show: this.show
-    };
-  }
 }
 
 export = User;

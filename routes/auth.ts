@@ -2,8 +2,8 @@
 
 import express = require('express');
 import passport = require('passport');
-import Author = require('../models/Author');
-import User = require('../models/User');
+import Author = require('../models/User');
+import User = require('../models/Provider');
 
 class Auth {
 
@@ -60,7 +60,7 @@ class Auth {
       passport.authenticate('twitter', {
         failureRedirect: '/'
       }), (req: express.Request, res: express.Response) => {
-        Author.findById(req.user.authorId)
+        Author.findById(req.user.userId)
           .then(author => {
             // ユーザ登録済みの場合
             if (author.isValid) {
