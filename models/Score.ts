@@ -35,13 +35,9 @@ var _schema = new mongoose.Schema({
     type: String,
     require: true
   },
-  authorId: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  },
-  authorName: {
-    type: String,
-    require: true
   },
   star: {
     type: Number,
@@ -65,8 +61,7 @@ var _schema = new mongoose.Schema({
     next();
   });
 
-interface IScore extends mongoose.Document, Score {
-}
+interface IScore extends mongoose.Document, Score {}
 
 var _model = mongoose.model < IScore >('Score', _schema);
 
@@ -79,20 +74,19 @@ class Score extends BaseModel {
   isOriginal:boolean;
   songId:string;
   songName:string;
-  authorId:mongoose.Types.ObjectId;
-  authorName:string;
+  userId:mongoose.Types.ObjectId;
   star:number;
   isPublish:boolean;
 
-  private static createNewScore(scoreNo:number,
-                                description:string,
-                                artistId:string,
-                                artistName:string,
-                                isOriginal:boolean,
-                                songId:string,
-                                songName:string,
-                                authorId:mongoose.Types.ObjectId,
-                                authorName:string):Promise < Score > {
+  private static createNewScore = (scoreNo:number,
+                                   description:string,
+                                   artistId:string,
+                                   artistName:string,
+                                   isOriginal:boolean,
+                                   songId:string,
+                                   songName:string,
+                                   authorId:mongoose.Types.ObjectId,
+                                   authorName:string):Promise < Score > => {
 
     return new Promise < Score >((resolve, reject) => {
       _model.create({
@@ -110,12 +104,12 @@ class Score extends BaseModel {
         isPublish: false
       })
         .onResolve((err, score) => {
-          err ? reject(err) : resolve(new Score(score));
-        });
-    });
-  }
+          err ? reject(err) : resolve(new Score(score))
+        })
+    })
+  };
 
-  static createNewOriginalScore(authorId:string, songName:string, description:string):Promise < Score > {
+  static createNewOriginalScore = (authorId:string, songName:string, description:string):Promise < Score > => {
 
     // TODO
     var songId = songName;
@@ -124,42 +118,41 @@ class Score extends BaseModel {
       .then((values:any[]) => {
         var author = < Author > values[0];
         var scoreNo = < number > values[1];
-        return this.createNewScore(scoreNo,
+        return Score.createNewScore(scoreNo,
           description,
           authorId,
           author.name,
-          this.CONST.ORIGINAL,
+          Score.CONST.ORIGINAL,
           songName, //TODO songID
           songName,
           authorId,
           author.name)
-      });
-  }
+      })
+  };
 
-  static createNewExistingScore(authorId:string,
-                                artistId:string,
-                                artistName:string,
-                                songId:string,
-                                songName:string,
-                                description:string):Promise < Score > {
+  static createNewExistingScore = (authorId:string,
+                                   artistId:string,
+                                   artistName:string,
+                                   songId:string,
+                                   songName:string,
+                                   description:string):Promise < Score > => {
     return Author.findById(authorId)
       .then((author:Author) => {
 
         return Score.generateScoreNo(artistName, songName)
           .then((scoreNo:number) => {
-            return this.createNewScore(scoreNo,
+            return Score.createNewScore(scoreNo,
               description,
               artistId,
               artistName,
-              this.CONST.EXISTING,
+              Score.CONST.EXISTING,
               songId,
               songName,
               authorId,
               author.name)
-          });
-
+          })
       })
-  }
+  };
 
   /**
    * 対象の楽譜を取得
@@ -169,8 +162,7 @@ class Score extends BaseModel {
    * @returns {Promise<Score>}
    * @desc 公開中・非公開の判定は呼び出し元で実施すること。
    */
-  static find(artistName:string, songName:string, scoreNo:number):Promise < Score > {
-
+  static find = (artistName:string, songName:string, scoreNo:number):Promise < Score > => {
     return new Promise < Score >((resolve, reject) => {
       _model.findOne({
         artistName: artistName,
@@ -180,9 +172,9 @@ class Score extends BaseModel {
         .exec()
         .onResolve((err, score) => {
           err ? reject(err) : resolve(new Score(score));
-        });
-    });
-  }
+        })
+    })
+  };
 
   /**
    * 対象曲の楽譜一覧を取得（公開中のみ）
@@ -190,7 +182,7 @@ class Score extends BaseModel {
    * @param songName
    * @returns {Promise<Score>}
    */
-  static findBySong(artistName:string, songName:string, skip:number = 0, limit:number = 20):Promise < Score[] > {
+  static findBySong = (artistName:string, songName:string, skip:number = 0, limit:number = 20):Promise < Score[] > => {
 
     return new Promise < Score[] >((resolve, reject) => {
       _model.find({
@@ -205,10 +197,10 @@ class Score extends BaseModel {
         .limit(limit)
         .exec()
         .onResolve((err, scores) => {
-          err ? reject(err) : resolve(scores.map(s => new Score(s)));
-        });
-    });
-  }
+          err ? reject(err) : resolve(scores.map(s => new Score(s)))
+        })
+    })
+  };
 
   /**
    * 対象アーティストの楽譜を取得（公開中のみ）
@@ -407,9 +399,8 @@ class Score extends BaseModel {
 
   get json():ScoreDTO {
     return <ScoreDTO > {
-      author: {
-        id: this.authorName,
-        name: this.authorName
+      user: {
+        id: this.userId
       },
       song: {
         id: this.songId,

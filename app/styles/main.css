@@ -21,6 +21,10 @@ body {
 .form-group {
   margin-right: 5px;
 }
+.navbar-nav li a.authorized {
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
 
 /* footer */
 #wrap {
