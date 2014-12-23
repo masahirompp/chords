@@ -4,14 +4,6 @@
     <form role="form" action="/auth/register" method="post" class="">
       <h2 class="form-signin-heading">Chord Kitchen</h2>
 
-      <% if @message_warning?.length : %>
-      <div class="alert alert-warning alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span
-          class="sr-only">Close</span></button>
-        <%- @message_warning %>
-      </div>
-      <% end %>
-
       <p class="help-block">ユーザ登録をしてください。Chord Kitchenは無料で利用できます。ニックネームとメールアドレスは後から変更できます。</p>
 
       <div class="form-group">

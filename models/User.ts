@@ -22,8 +22,7 @@ var _schema = new mongoose.Schema({
     },
     description: String,
     icon: {
-      type: String,
-      required: true
+      type: String
     },
     twitter: mongoose.Schema.Types.Mixed,
     facebook: mongoose.Schema.Types.Mixed,
@@ -229,15 +228,13 @@ class User extends BaseModel {
    * @param profile passportから受け取ったProfile
    * @returns {Promise<User>}
    */
-  static create = (body: any, profile: passport.Profile): Promise < User > => {
+  static create = (account: string, name: string, email: string, profile: passport.Profile): Promise < User > => {
     return new Promise < User > ((resolve, reject) => {
       // todo 入力チェック
       var obj = {
-        account: body.account,
-        name: body.name,
-        email: body.email,
-        description: body.description,
-        icon: body.icon
+        account: account,
+        name: name,
+        email: email
       };
       obj[profile.provider] = profile;
       _model.create(obj)

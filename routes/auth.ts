@@ -11,12 +11,18 @@ class Auth {
 
     var router: express.Router = express.Router();
 
+    /**
+     * ログアウト
+     */
     router.get('/logout', (req, res) => {
       req.logout();
       req.flash('message_success', 'ログアウトしました。');
       res.redirect('/');
     });
 
+    /**
+     * ログイン（未ログインで認証領域へアクセスした場合にこのルートにくる）
+     */
     router.get('/login', (req, res) => {
       res.render('login', {
         title: 'ログイン | コード譜共有サイト ChordKitchen',
@@ -24,38 +30,57 @@ class Auth {
       });
     });
 
+    /**
+     * 登録画面表示
+     */
     router.get('/register', (req: express.Request, res: express.Response) => {
       res.render('register', {
         title: 'コード譜共有サイト ChordKitchen',
         keyword: '',
-        user: req.user
+        user: req.user,
+        message_success: req.flash('message_success'),
+        message_warning: req.flash('message_warning')
       });
     });
 
+    /**
+     * 登録処理
+     */
     router.post('/register', (req: express.Request, res: express.Response) => {
-      User.create(req.body, req.user.profile)
+      User.create(req.body.account, req.body.name, req.body.email, req.user.profile)
         .then(user => {
           // セッションを書き換える
-          req.user = SessionObject.makeFromUser(user);
+          req.login(user, err => {
+            req.flash('message_warning', err.toString());
+            return res.redirect('/auth/register');
+          });
 
-          // リダイレクト先が指定されていれば、リダイレクト
-          var redirectUrl = req.cookies.redirectUrl;
-          if (redirectUrl) {
-            res.clearCookie('redirectUrl');
-            return res.redirect(decodeURIComponent(redirectUrl))
-          }
-          // リダイレクト先が指定されていない場合は、トップ画面へリダイレクト
-          req.flash('message_success', 'ユーザ登録ありがとうございます。ChordKitchenをお楽しみください。');
-          res.redirect('/');
+          process.nextTick(() => {
+            // リダイレクト先が指定されていれば、リダイレクト
+            var redirectUrl = req.cookies.redirectUrl;
+            if (redirectUrl) {
+              res.clearCookie('redirectUrl');
+              return res.redirect(decodeURIComponent(redirectUrl))
+            }
+            // リダイレクト先が指定されていない場合は、トップ画面へリダイレクト
+            req.flash('message_success', 'ユーザ登録ありがとうございます。ChordKitchenをお楽しみください。');
+            res.redirect('/');
+          });
         })
         .catch(err => {
-          req.flash('message_warning', err);
+          req.flash('message_warning', err.toString());
           res.redirect('/auth/register');
         });
     });
 
+    /**
+     * twitterログイン処理
+     */
     router.get('/twitter', passport.authenticate('twitter'));
 
+    /**
+     * twitter認証後のコールバック
+     */
     router.get('/twitter/callback',
       passport.authenticate('twitter', {
         failureRedirect: '/'
