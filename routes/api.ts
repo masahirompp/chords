@@ -1,6 +1,6 @@
 /// <reference path="../tsd/tsd.d.ts" />
 import express = require('express');
-import Author = require('../models/User');
+import User = require('../models/User');
 import Score = require('../models/Score');
 import Chord = require('../models/Chord');
 import ScoreDTO = require('../dto/_ScoreDTO');
@@ -15,9 +15,8 @@ class Api {
      * /api/users GET
      */
     router.get('/users', (req: express.Request, res: express.Response) => {
-      Author.list(Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
-        .then(authors => Promise.all(authors.map(a => a.gerRelatedUsers())))
-        .then(authorList => res.json(authorList.map(a => Util.project(a, req.query.fields))))
+      User.list(Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(users => res.json(users.map(u => Util.project(u, req.query.fields))))
         .catch(err => res.json(err));
     });
 
@@ -26,9 +25,8 @@ class Api {
      * /api/users/search GET
      */
     router.get('/users/search', (req: express.Request, res: express.Response) => {
-      Author.search(req.query.q, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
-        .then(authors => Promise.all(authors.map(a => a.gerRelatedUsers())))
-        .then(authorList => res.json(authorList.map(a => Util.project(a, req.query.fields))))
+      User.search(req.query.q, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+        .then(users => res.json(users.map(u => Util.project(u, req.query.fields))))
         .catch(err => res.json(err));
     });
 
@@ -37,7 +35,7 @@ class Api {
      * /api/users/:user GET
      */
     router.get('/users/:user', (req: express.Request, res: express.Response) => {
-      Author.findByAccount(req.params.user)
+      User.findByAccount(req.params.user)
         .then(author => res.json(Util.project(author.json, req.query.fields)))
         .catch(err => res.json(err));
     });

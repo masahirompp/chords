@@ -2,8 +2,8 @@
 
 import express = require('express');
 import passport = require('passport');
-import Author = require('../models/User');
-import User = require('../models/Provider');
+import User = require('../models/User');
+import SessionObject = require('../models/SessionObject');
 
 class Auth {
 
@@ -33,11 +33,11 @@ class Auth {
     });
 
     router.post('/register', (req: express.Request, res: express.Response) => {
-      Author.create(req.param('displayName'), req.param('email'))
-        .then(author => {
-          return User.relateAuthor(req.user._id, author._id);
-        })
+      User.create(req.body, req.user.profile)
         .then(user => {
+          // セッションを書き換える
+          req.user = SessionObject.makeFromUser(user);
+
           // リダイレクト先が指定されていれば、リダイレクト
           var redirectUrl = req.cookies.redirectUrl;
           if (redirectUrl) {
@@ -60,25 +60,18 @@ class Auth {
       passport.authenticate('twitter', {
         failureRedirect: '/'
       }), (req: express.Request, res: express.Response) => {
-        Author.findById(req.user.userId)
-          .then(author => {
-            // ユーザ登録済みの場合
-            if (author.isValid) {
-              // リダイレクト先が指定されていれば、リダイレクト
-              var redirectUrl = req.cookies.redirectUrl;
-              if (redirectUrl) {
-                res.clearCookie('redirectUrl');
-                return res.redirect(decodeURIComponent(redirectUrl))
-              }
-              // リダイレクト先が指定されていない場合は、トップ画面を表示。
-              req.flash('message_success', 'ログインしました。');
-              res.redirect('/');
-              return;
-            }
+        // ユーザ未登録の場合は、登録画面へ
+        if (!req.user.isLogined) return res.redirect('/auth/register');
 
-            // ユーザ未登録の場合は、登録画面へ
-            res.redirect('/auth/register');
-          });
+        // ログイン成功して、リダイレクト先が指定されていれば、リダイレクト
+        var redirectUrl = req.cookies.redirectUrl;
+        if (redirectUrl) {
+          res.clearCookie('redirectUrl');
+          return res.redirect(decodeURIComponent(redirectUrl))
+        }
+        // リダイレクト先が指定されていない場合は、トップ画面を表示。
+        req.flash('message_success', 'ログインしました。');
+        res.redirect('/');
       });
 
     return router;

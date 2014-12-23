@@ -24,7 +24,7 @@ class Util {
     if (!value) {
       return '';
     }
-    return '?' + key + '=' + value.split(/[ 　]+/g)
+    return '?' + key + '=' + value.split(/[\s　]+/g)
       .map(d => encodeURIComponent(d))
       .join('+');
   }

@@ -3,11 +3,14 @@
 import express = require('express');
 import passport = require('passport');
 import session = require('express-session');
-import User = require('../models/Provider');
+import User = require('../models/User');
+import SessionObject = require('../models/SessionObject');
+import util = require('../util/Util');
 
 class AuthUtil {
 
-  static init(config:any, mongoose:any, app:express.Application) {
+  static init(config: any, mongoose: any, app: express.Application) {
+
     // passport
     var TwitterStrategy = require('passport-twitter')
       .Strategy;
@@ -17,20 +20,25 @@ class AuthUtil {
       callbackURL: config.auth.twitter.callbackURL
     }, (token, tokenSecret, profile, done) => {
       process.nextTick(() => {
-        User.findOrCreate(profile)
-          .then(user => done(null, user))
+        // profileからUserを生成。
+        User.findByTwitter(profile)
+          .then(user => {
+            // 必要に応じてイメージを更新
+            return user.isValid ? user.updateImage(profile) : user
+          })
+          .then(user => done(null,
+            // セッションオブジェクトを作る
+            user.isValid ?
+            SessionObject.makeFromUser(user) :
+            SessionObject.makeFromProfile(profile)))
           .catch(err => done(err));
       });
     }));
 
-    passport.serializeUser((user, done) => done(null, user._id));
+    passport.serializeUser((sessionObject, done) => done(null, sessionObject));
+    passport.deserializeUser((sessionObject, done) => done(null, sessionObject));
 
-    passport.deserializeUser((id, done) => {
-      User.findById(id)
-        .then(user => done(null, user))
-        .catch(err => done(err, null));
-    });
-
+    // session
     app.use(session({
       secret: config.server.session,
       store: require('mongoose-session')(mongoose),
@@ -44,15 +52,25 @@ class AuthUtil {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    // 認証領域へのアクセスで、匿名アクセスの場合、リダイレクト
+    // middleware
     app.use((req, res, next) => {
       var url = req.url + '/';
-      if(url.lastIndexOf('/works/', 0) === 0 || url.lastIndexOf('/api/works/', 0) === 0) {
-        if(req.isUnauthenticated()) {
+
+      if (req.isAuthenticated() && req.user.isLogined) {
+        // 認証済み＆ログイン済みの場合
+        // 再度登録処理を行う場合（不正アクセス）、トップへリダイレクトする。
+        if (util.startsWith(url, '/register/')) {
+          return res.redirect('/');
+        }
+      } else {
+        // 未ログインの場合
+        // 認証領域へのアクセスで、匿名アクセスの場合、ログイン画面へリダイレクト
+        if (util.startsWith(url, '/works/') || util.startsWith(url, '/api/works/')) {
           res.cookie('redirectUrl', req.url);
           return res.redirect('/auth/login');
         }
       }
+
       next();
     });
 

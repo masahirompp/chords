@@ -2,43 +2,41 @@
 
 import mongoose = require('mongoose');
 import uniqueValidator = require('mongoose-unique-validator');
-import BaseModel = require('./BaseModel');
-import Provider = require('./Provider');
-import AuthorDTO = require('../dto/_AuthorDTO');
+import passport = require('passport');
 import util = require('../util/Util');
+import BaseModel = require('./BaseModel');
+import AuthorDTO = require('../dto/_AuthorDTO');
 
 var _schema = new mongoose.Schema({
-  account: {
-    type: String,
-    required: true,
-    index: {
-      unique: true
+    account: {
+      type: String,
+      required: true,
+      index: {
+        unique: true
+      }
+    },
+    email: String,
+    name: {
+      type: String,
+      required: 'ニックネームを入力してください。'
+    },
+    description: String,
+    icon: {
+      type: String,
+      required: true
+    },
+    twitter: mongoose.Schema.Types.Mixed,
+    facebook: mongoose.Schema.Types.Mixed,
+    created: {
+      type: Date,
+      default: Date.now
+    },
+    updated: {
+      type: Date,
+      default: Date.now
     }
-  },
-  email: String,
-  name: {
-    type: String,
-    required: 'ニックネームを入力してください。'
-  },
-  profile: String,
-  icon: {
-    type: String,
-    required: true
-  },
-  image: {
-    type: String,
-    required: true
-  },
-  created: {
-    type: Date,
-    default: Date.now
-  },
-  updated: {
-    type: Date,
-    default: Date.now
-  }
-})
-  .plugin(< (schema:mongoose.Schema, options ?:Object) => void > uniqueValidator, {
+  })
+  .plugin( < (schema: mongoose.Schema, options ? : Object) => void > uniqueValidator, {
     message: 'そのidは既に使用されているため、使用できません。'
   })
   .pre('save', function(next) {
@@ -46,23 +44,82 @@ var _schema = new mongoose.Schema({
     next();
   });
 
-interface IUser extends mongoose.Document, User {
-}
+interface IUser extends mongoose.Document, User {}
 
-var _model = mongoose.model < IUser >('User', _schema);
+var _model = mongoose.model < IUser > ('User', _schema);
 
 class User extends BaseModel {
-  account:string; // URL等に使用する一意のID。変更不可。
-  email:string;
-  name:string;
-  profile:string;
-  icon:string;
-  image:string;
+  account: string; // URL等に使用する一意のID。変更不可。
+  email: string;
+  name: string;
+  description: string;
+  icon: string;
+  twitter: passport.Profile;
+  facebook: passport.Profile;
 
-  private static ICON = {
+  static ICON = {
     IDENTICON: 'i',
     TWITTER: 'f',
-    FACEBOOK: 'b'
+    FACEBOOK: 'b',
+    LASTFM: 'l',
+    GOOGLE: 'g'
+  };
+
+  /**
+   * コンストラクタ
+   * @param user
+   */
+  constructor(user: IUser) {
+    super();
+    if (user) {
+      util.extend(this, user.toObject());
+    }
+  }
+
+  /**
+   * イメージ取得
+   * @returns {string}
+   */
+  get image(): string {
+    if (this.icon === User.ICON.TWITTER) {
+      if (this.twitter && util.isArray(this.twitter.photos) && this.twitter.photos.length > 0) {
+        return this.twitter.photos[0].value;
+      }
+    }
+    return User.ICON.IDENTICON;
+  }
+
+  get json(): AuthorDTO {
+    return <AuthorDTO > {
+      id: this.account,
+      name: this.name,
+      description: this.description,
+      email: this.email,
+      icon: this.icon
+    }
+  }
+
+  /**
+   * イメージを更新する。
+   * このメソッドはイメージ更新は投げっぱなし。同期ですぐに更新されたインスタンスを返す。
+   * @param profile
+   * @returns {*}
+   */
+  updateImage = (profile: passport.Profile): User => {
+    if (!this.isValid) return this;
+
+    // 変わっていない場合
+    if (util.isEqual(this[profile.provider].photos, profile.photos)) return this;
+
+    // 非同期で変更
+    var instance = util.extend({}, this);
+    instance[profile.provider] = profile;
+    _model.findByIdAndUpdate(this._id, instance)
+      .exec()
+      .onReject(err => console.log(err));
+
+    // クローンしたUserインスタンスをすぐに返す。
+    return instance;
   };
 
   /**
@@ -70,16 +127,14 @@ class User extends BaseModel {
    * @param id
    * @returns {Promise<User>}
    */
-  static findById = (id:string):Promise < User > => {
-
-    return new Promise < User >((resolve, reject) => {
+  static findById = (id: string): Promise < User > => {
+    return new Promise < User > ((resolve, reject) => {
       _model.findById(id)
         .exec()
         .onResolve((err, user) => {
           err ? reject(err) : resolve(new User(user));
-        });
-    });
-
+        })
+    })
   };
 
   /**
@@ -87,34 +142,52 @@ class User extends BaseModel {
    * @param account
    * @returns {Promise<User>}
    */
-  static findByAccount(account:string):Promise < User > {
-    return new Promise < User >((resolve, reject) => {
+  static findByAccount = (account: string): Promise < User > => {
+    return new Promise < User > ((resolve, reject) => {
       _model.findOne({
-        accountId: account
-      })
-        .exec()
-        .onResolve((err, user) => {
-          err ? reject(err) : resolve(new User(user));
-        });
-    });
-  }
-
-  /**
-   * nameからAuthorを取得する。基本的にnameの存在確認用。
-   * @param name
-   * @returns {Promise<User>}
-   */
-  static findByName(name:string):Promise < User > {
-    return new Promise < User >((resolve, reject) => {
-      _model.findOne({
-        name: name
-      })
+          accountId: account
+        })
         .exec()
         .onResolve((err, user) => {
           err ? reject(err) : resolve(new User(user));
         })
-    });
-  }
+    })
+  };
+
+  /**
+   * nameからUserを取得する。基本的にnameの存在確認用。
+   * @param name
+   * @returns {Promise<User>}
+   */
+  static findByName = (name: string): Promise < User > => {
+    return new Promise < User > ((resolve, reject) => {
+      _model.findOne({
+          name: name
+        })
+        .exec()
+        .onResolve((err, user) => {
+          err ? reject(err) : resolve(new User(user));
+        })
+    })
+  };
+
+  /**
+   * twitter id でUserを取得する。
+   * @param profile
+   * @returns {Promise<User>}
+   */
+  static findByTwitter = (profile: passport.Profile): Promise < User > => {
+    return new Promise < User > ((resolve, reject) => {
+      _model.findOne({
+          'twitter.provider': profile.provider,
+          'twitter.id': profile.id
+        })
+        .exec()
+        .onResolve((err, user) => {
+          err ? reject(err) : resolve(new User(user));
+        })
+    })
+  };
 
   /**
    * ユーザの検索
@@ -123,11 +196,11 @@ class User extends BaseModel {
    * @param limit
    * @returns {Promise<User[]>}
    */
-  static search(keyword:string, skip:number = 0, limit:number = 20):Promise < User[] > {
-    return new Promise < User[] >((resolve, reject) => {
+  static search = (keyword: string, skip: number = 0, limit: number = 20): Promise < User[] > => {
+    return new Promise < User[] > ((resolve, reject) => {
       _model.find({
-        $and: User.makeKeywordQuery(keyword)
-      })
+          $and: User.makeKeywordQuery(keyword)
+        })
         .sort({
           name: 1
         })
@@ -136,9 +209,9 @@ class User extends BaseModel {
         .exec()
         .onResolve((err, user) => {
           err ? reject(err) : resolve(user.map(u => new User(u)));
-        });
-    });
-  }
+        })
+    })
+  };
 
   /**
    * 一覧表示
@@ -146,40 +219,33 @@ class User extends BaseModel {
    * @param limit
    * @returns {Promise<User[]>}
    */
-  static list(skip ?:number, limit ?:number):Promise < User[] > {
+  static list = (skip ? : number, limit ? : number): Promise < User[] > => {
     return User.search(null, skip, limit);
-  }
+  };
 
   /**
-   * 新規Author作成。情報は最低限。
-   * @param name
-   * @param email
-   * @returns {Promise<U>|Promise<Promise<User>>}
+   * ユーザ作成
+   * @param body postデータ
+   * @param profile passportから受け取ったProfile
+   * @returns {Promise<User>}
    */
-  static create(name:string, email ?:string):Promise < User > {
-
-    return this.findByName(name)
-      .then(author => {
-        if(author.isValid) {
-          throw new Error('already exists');
-        }
-        return {
-          account: util.makeUniqueId(),
-          name: name,
-          email: email || '',
-          icon: User.ICON.IDENTICON,
-          image: ''
-        };
-      })
-      .then(user => {
-        return new Promise < User >((resolve, reject) => {
-          _model.create(user)
-            .onResolve((err, u) => {
-              err ? reject(err) : resolve(new User(u));
-            })
-        });
-      });
-  }
+  static create = (body: any, profile: passport.Profile): Promise < User > => {
+    return new Promise < User > ((resolve, reject) => {
+      // todo 入力チェック
+      var obj = {
+        account: body.account,
+        name: body.name,
+        email: body.email,
+        description: body.description,
+        icon: body.icon
+      };
+      obj[profile.provider] = profile;
+      _model.create(obj)
+        .onResolve((err, user) => {
+          err ? reject(err) : resolve(new User(user))
+        })
+    });
+  };
 
   /**
    * 更新処理
@@ -192,112 +258,67 @@ class User extends BaseModel {
    * @param image
    * @returns {Promise<User>}
    */
-  static update(id:string,
-                oldName:string,
-                newName:string,
-                email:string,
-                profile:string,
-                icon:string,
-                image:string):Promise < User > {
+  static update = (id: string,
+    oldName: string,
+    newName: string,
+    email: string,
+    description: string,
+    icon: string): Promise < User > => {
 
-    return new Promise < User >((resolve, reject) => {
-      this.findById(id)
+    return new Promise < User > ((resolve, reject) => {
+      User.findById(id)
         .then(user => {
           // 存在確認
-          if(!user.isValid || user.name !== oldName) {
+          if (!user.isValid || user.name !== oldName) {
             throw new Error('not found.');
           }
           // 更新データ
           var d = {};
-          if(newName) d['name'] = newName;
-          if(email) d['email'] = email;
-          if(profile) d['profile'] = profile;
-          if(icon) d['icon'] = icon;
-          if(image) d['image'] = image;
+          if (newName) d['name'] = newName;
+          if (email) d['email'] = email;
+          if (description) d['description'] = description;
+          if (icon) d['icon'] = icon;
           // 更新処理
           _model.findByIdAndUpdate(id, d)
             .exec()
             .onResolve((err, updated) => {
-              err ? reject(err) : resolve(new User(updated));
+              err ? reject(err) : resolve(new User(updated))
             })
         })
-    });
-  }
+    })
+  };
 
   /**
    * 削除
    * @param id
    * @returns {Promise<User>}
    */
-  static remove(id:string):Promise < boolean > {
-    return new Promise < boolean >((resolve, reject) => {
+  static remove = (id: string): Promise < boolean > => {
+    return new Promise < boolean > ((resolve, reject) => {
       _model.findByIdAndRemove(id)
         .exec()
         .onResolve((err, deleted) => {
-          err ? reject(err) : resolve(true);
+          err ? reject(err) : resolve(true)
         })
-    });
-  }
+    })
+  };
 
-  private static makeKeywordQuery(keyword:String):any {
-    if(!keyword) return {};
+  private static makeKeywordQuery = (keyword: string): any => {
+    if (!keyword) return {};
+    return util.split(keyword)
+      .map(k => User.makeRegKeyword(k));
+  };
 
-    var query = [];
-    keyword.split(' ')
-      .forEach((k) => {
-        query.push(User.makeRegKeyword(k));
-      });
-    return query
-  }
-
-  private static makeRegKeyword(keyword):any {
-    var reg = new RegExp(keyword, 'i');
+  private static makeRegKeyword(keyword): any {
+    var reg = new RegExp(util.escapeRegExp(keyword), 'i');
     return {
       $or: [{
-              name: reg
-            }, {
-              profile: reg
-            }]
+        name: reg
+      }, {
+        profile: reg
+      }]
     };
   }
-
-  /**
-   * コンストラクタ
-   * @param user
-   */
-  constructor(user:IUser) {
-    super();
-    if(user) {
-      util.extend(this, user);
-    }
-  }
-
-  get json():AuthorDTO {
-    return <AuthorDTO > {
-      id: this.account,
-      name: this.name,
-      profile: this.profile,
-      email: this.email,
-      icon: this.icon,
-      image: this.image
-    }
-  }
-
-  /**
-   * ログイン方法の一覧を取得
-   * @returns {Promise<AuthorDTO>}
-   */
-  gerRelatedUsers():Promise < AuthorDTO > {
-    return Provider.findByUserId(this.account)
-      .then(users => {
-        var d = this.json;
-        d.account = users.map(u => {
-          return u.json;
-        });
-        return d;
-      });
-  }
-
 }
 
 export = User;

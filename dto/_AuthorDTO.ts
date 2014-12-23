@@ -1,7 +1,7 @@
 interface AuthorDTO {
   id: string;
   name: string;
-  profile: string;
+  description: string;
   email: string;
   icon: string;
   image: string;

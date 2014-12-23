@@ -62,7 +62,7 @@ class Chord extends BaseModel {
     })
   }
 
-    static createNewChord(scoreId: mongoose.Types.ObjectId): Promise < Chord > {
+  static createNewChord(scoreId: mongoose.Types.ObjectId): Promise < Chord > {
     return new Promise < Chord > ((resolve, reject) => {
       _model.create({
           scoreId: scoreId,

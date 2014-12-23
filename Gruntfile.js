@@ -482,6 +482,16 @@ module.exports = function(grunt) {
     grunt.task.run('cleanup');
   });
 
+  // server complie
+  grunt.registerTask('cs', [
+    'typescript:server'
+  ]);
+
+  // client complie
+  grunt.registerTask('cc', [
+    'typescript:client'
+  ]);
+
   grunt.registerTask('default', [
     'clean:app',
     'clean:server',
