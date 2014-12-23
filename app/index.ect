@@ -1,6 +1,6 @@
 <% extend 'nav' %>
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-8">
     <h1>ChordKitchen</h1>
 
     <p class="lead">コード譜共有サイト コードキッチン</p>
@@ -14,8 +14,8 @@
 
     <p>既存曲やオリジナル曲のコード譜を作成できます。</p>
   </div>
-  <div class="col-md-3">
-    <% if @user? : %>
+  <div class="col-md-4">
+    <% if @user?.isLogined : %>
     <% else : %>
     <a href="/auth/twitter"
       class="btn btn-block btn-lg btn-social btn-twitter block-ui-twitter">

@@ -1,29 +1,47 @@
-<% extend 'layout' %>
-<div id="container" class="container-fluid">
-  <form role="form" action="/auth/register" method="post" class="form-signin">
-    <h2 class="form-signin-heading">Chord Kitchen</h2>
+<% extend 'nav' %>
+<div class="row">
+  <div class="col-md-8">
+    <form role="form" action="/auth/register" method="post" class="">
+      <h2 class="form-signin-heading">Chord Kitchen</h2>
 
-    <% if @message_warning?.length : %>
-    <div class="alert alert-warning alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span
-        class="sr-only">Close</span></button>
-      <%- @message_warning %>
-    </div>
-    <% end %>
+      <% if @message_warning?.length : %>
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span
+          class="sr-only">Close</span></button>
+        <%- @message_warning %>
+      </div>
+      <% end %>
 
-    <div class="form-group">
-      <label for="displayName">ニックネーム</label>
-      <input id="displayName" type="text" name="displayName" placeholder="コードキッチン" required="required"
-             class="form-control" value="<%- @user.displayName %>">
-    </div>
-    <div class="form-group">
-      <label for="email">メールアドレス</label>
-      <input id="email" type="email" name="email" placeholder="example@chordkitchen.net"
-             autofocus="autofocus" class="form-control" value="">
-    </div>
-    <button type="submit" class="btn btn-lg btn-primary btn-block">はじめる</button>
-  </form>
-  <div class="footer">
-    <p class="text-right">Copyright @2014 ChordKitchen</p>
+      <p class="help-block">ユーザ登録をしてください。Chord Kitchenは無料で利用できます。ニックネームとメールアドレスは後から変更できます。</p>
+
+      <div class="form-group">
+        <label for="account">ユーザID（必須）</label>
+        <input id="account" type="text" name="account" placeholder="例）ChordKitchen" required="required"
+          maxlength="15" autofocus="autofocus" class="form-control" value="">
+      </div>
+      <div class="form-group">
+        <label for="name">ニックネーム（必須）</label>
+        <input id="name" type="text" name="name" placeholder="例）こーどきっちん" required="required"
+          maxlength="20" class="form-control" value="">
+      </div>
+      <div class="form-group">
+        <label for="email">メールアドレス（省略可）</label>
+        <input id="email" type="email" name="email" placeholder="例）example@chordkitchen.net"
+          maxlength="256" class="form-control" value="">
+      </div>
+      <div class="form-group">
+        <div class="checkbox">
+          <label for="rememberMe">
+            <input id="rememberMe" name="rememberMe" type="checkbox" checked> 次回から自動的にログインする
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-lg btn-primary btn-block">はじめる</button>
+    </form>
   </div>
 </div>
+<% block 'script' : %>
+<!-- build:js({app,.tmp}) /scripts/app.index.js -->
+<script src="/scripts/app.index.js"></script>
+<!-- endbuild -->
+<% end %>
