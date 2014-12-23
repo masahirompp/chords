@@ -58,8 +58,8 @@ class User extends BaseModel {
 
   static ICON = {
     IDENTICON: 'i',
-    TWITTER: 'f',
-    FACEBOOK: 'b',
+    TWITTER: 't',
+    FACEBOOK: 'f',
     LASTFM: 'l',
     GOOGLE: 'g'
   };

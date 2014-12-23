@@ -5,7 +5,7 @@ import User = require('./User');
 
 class SessionObject {
 
-  constructor(public id: string, public account: string, public name: string, public icon: string, public profile? : passport.Profile) {}
+  constructor(public id: string, public account: string, public name: string, public image: string, public profile? : passport.Profile) {}
 
   /**
    * ログイン済みか？

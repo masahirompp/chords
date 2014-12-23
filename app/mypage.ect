@@ -1,26 +1,33 @@
 <% extend 'nav' %>
 <div class="row">
   <div class="col-lg-8">
-    <div class="form-horizontal" role="form">
-      <div class="form-group">
-        <label class="col-sm-2 control-label">ニックネーム</label>
-        <div class="col-sm-10">
-          <p class="form-control-static"><%- @user.displayName %></p>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="pull-left">
+          <img src="<%- @user.image %>" alt="<%- @user.name %>" width="96px" height="96px" class="img-rounded">
+        </div>
+        <div style="margin-left: 104px;">
+          <h4><%- @user.name %>
+            <small>@<%- @user.account %></small>
+          </h4>
+          <% if @user?.description? : %>
+          <p><%- @user?.description %></p>
+          <% else : %>
+          <p class="text-muted">プロフィールは登録されていません。</p>
+          <% end %>
+          <!--<% if @user?.emails? : %>-->
+          <!--<% for email in @user.emails : %>-->
+          <!--<p><%- email %></p>-->
+          <!--<% end %>-->
+          <!--<% else : %>-->
+          <!--<p class="text-muted">メールアドレスは登録されていません。</p>-->
+          <!--<% end %>-->
         </div>
       </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label">Eメール</label>
-        <div class="col-sm-10">
-          <% if @user?.emails? : %>
-          <% for email in @user.emails : %>
-          <p class="form-control-static"><%- email %></p>
-          <% end %>
-          <% else : %>
-          <p class="form-control-static text-muted">登録されていません。</p>
-          <% end %>
-        </div>
+      <div class="panel-footer">
       </div>
     </div>
+
     <div id="searchResult"></div>
   </div>
 </div>
