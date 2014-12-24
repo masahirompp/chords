@@ -5,7 +5,7 @@ import uniqueValidator = require('mongoose-unique-validator');
 import passport = require('passport');
 import util = require('../util/Util');
 import BaseModel = require('./BaseModel');
-import AuthorDTO = require('../dto/_AuthorDTO');
+import UserDTO = require('../dto/_UserDTO');
 
 var _schema = new mongoose.Schema({
     account: {
@@ -88,13 +88,13 @@ class User extends BaseModel {
     return User.ICON.IDENTICON;
   }
 
-  get json(): AuthorDTO {
-    return <AuthorDTO > {
-      id: this.account,
+  get json(): UserDTO {
+    return <UserDTO > {
+      account: this.account,
       name: this.name,
+      image: this.image,
       description: this.description,
-      email: this.email,
-      icon: this.icon
+      email: this.email
     }
   }
 

@@ -1,7 +1,8 @@
 import SongDTO = require('./_SongDTO')
+import UserDTO = require('./_UserDTO')
 
 interface ScoreDTO {
-  user: any;
+  user: UserDTO;
   song: SongDTO;
   scoreNo: number;
   star: number;

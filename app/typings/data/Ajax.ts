@@ -1,20 +1,20 @@
 import ScoreDTO = require('../dto/ScoreDTO')
-import AuthorDTO = require('../dto/AuthorDTO')
+import UserDTO = require('../dto/UserDTO')
 import Util = require('../util/Util')
 
 class Ajax {
 
-  public static getUsers(): JQueryPromise < AuthorDTO[] > {
+  public static getUsers(): JQueryPromise < UserDTO[] > {
     return $.get('/api/users');
   }
 
-  public static searchUsers(keyword): JQueryPromise < AuthorDTO[] > {
+  public static searchUsers(keyword): JQueryPromise < UserDTO[] > {
     return $.get('/api/users/search', {
       q: keyword
     });
   }
 
-  public static getUser(id): JQueryPromise < AuthorDTO[] > {
+  public static getUser(id): JQueryPromise < UserDTO[] > {
     return $.get('/api/users/' + id);
   }
 
