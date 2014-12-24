@@ -36,7 +36,7 @@ class Api {
      */
     router.get('/users/:user', (req: express.Request, res: express.Response) => {
       User.findByAccount(req.params.user)
-        .then(author => res.json(Util.project(author.json, req.query.fields)))
+        .then(user => res.json(Util.project(user.json, req.query.fields)))
         .catch(err => res.json(err));
     });
 
@@ -45,7 +45,7 @@ class Api {
      * /api/users/:user/scores GET
      */
     router.get('/users/:user/scores', (req: express.Request, res: express.Response) => {
-      Score.findByAuthor(req.params.user, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+      Score.findByUser(req.params.user, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
@@ -56,7 +56,8 @@ class Api {
      */
     router.get('/scores', (req: express.Request, res: express.Response) => {
       Score.list(Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
-        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .then(scores => Promise.all(scores.map(score => score.jsonWithUser())))
+        .then(jsons => res.json(jsons.map(json => Util.project(json, req.query.fields))))
         .catch(err => res.json(err));
     });
 
@@ -66,7 +67,8 @@ class Api {
      */
     router.get('/scores/search', (req: express.Request, res: express.Response) => {
       Score.search(req.query.q, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
-        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .then(scores => Promise.all(scores.map(score => score.jsonWithUser())))
+        .then(jsons => res.json(jsons.map(json => Util.project(json, req.query.fields))))
         .catch(err => res.json(err));
     });
 
@@ -76,7 +78,8 @@ class Api {
      */
     router.get('/scores/:artist', (req: express.Request, res: express.Response) => {
       Score.findByArtist(req.params.artist, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
-        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .then(scores => Promise.all(scores.map(score => score.jsonWithUser())))
+        .then(jsons => res.json(jsons.map(json => Util.project(json, req.query.fields))))
         .catch(err => res.json(err));
     });
 
@@ -89,7 +92,8 @@ class Api {
           req.params.song,
           Util.toNumber(req.query.skip),
           Util.toNumber(req.query.limit))
-        .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
+        .then(scores => Promise.all(scores.map(score => score.jsonWithUser())))
+        .then(jsons => res.json(jsons.map(json => Util.project(json, req.query.fields))))
         .catch(err => res.json(err));
     });
 

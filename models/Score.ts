@@ -85,8 +85,7 @@ class Score extends BaseModel {
     isOriginal: boolean,
     songId: string,
     songName: string,
-    authorId: string,
-    authorName: string): Promise < Score > => {
+    userId: string): Promise < Score > => {
 
     return new Promise < Score > ((resolve, reject) => {
       _model.create({
@@ -98,8 +97,7 @@ class Score extends BaseModel {
           isOriginal: isOriginal,
           songId: songId,
           songName: songName,
-          authorId: authorId,
-          authorName: authorName,
+          userId: userId,
           star: 0,
           isPublish: false
         })
@@ -109,48 +107,42 @@ class Score extends BaseModel {
     })
   };
 
-  static createNewOriginalScore = (authorId: string, songName: string, description: string): Promise < Score > => {
+  static createNewOriginalScore = (userId: string, songName: string, description: string): Promise < Score > => {
 
     // TODO
     var songId = songName;
 
-    return Promise.all([User.findById(authorId), Score.generateScoreNo(authorId, songId)])
+    return Promise.all([User.findById(userId), Score.generateScoreNo(userId, songId)])
       .then((values: any[]) => {
-        var author = < User > values[0];
+        var user = < User > values[0];
         var scoreNo = < number > values[1];
         return Score.createNewScore(scoreNo,
           description,
-          authorId,
-          author.name,
+          userId,
+          user.name,
           Score.CONST.ORIGINAL,
           songName, //TODO songID
           songName,
-          authorId,
-          author.name)
+          userId)
       })
   };
 
-  static createNewExistingScore = (authorId: string,
+  static createNewExistingScore = (userId: string,
     artistId: string,
     artistName: string,
     songId: string,
     songName: string,
     description: string): Promise < Score > => {
-    return User.findById(authorId)
-      .then((author: User) => {
-
-        return Score.generateScoreNo(artistName, songName)
-          .then((scoreNo: number) => {
-            return Score.createNewScore(scoreNo,
-              description,
-              artistId,
-              artistName,
-              Score.CONST.EXISTING,
-              songId,
-              songName,
-              authorId,
-              author.name)
-          })
+    return Score.generateScoreNo(artistName, songName)
+      .then((scoreNo: number) => {
+        return Score.createNewScore(scoreNo,
+          description,
+          artistId,
+          artistName,
+          Score.CONST.EXISTING,
+          songId,
+          songName,
+          userId)
       })
   };
 
@@ -233,14 +225,14 @@ class Score extends BaseModel {
    * @param limit
    * @returns {Promise<Score[]>}
    */
-  static findByAuthor = (accountId: string, skip: number = 0, limit: number = 20): Promise < Score[] > => {
+  static findByUser = (accountId: string, skip: number = 0, limit: number = 20): Promise < Score[] > => {
 
     return new Promise < Score[] > ((resolve, reject) => {
       User.findByAccount(accountId)
-        .then(author => {
-          if (!author.isValid) return reject(new Error('not found.'))
+        .then(user => {
+          if (!user.isValid) return reject(new Error('not found.'))
           _model.find({
-              authorId: author._id,
+              userId: user._id,
               isPublish: true
             })
             .sort({
@@ -258,15 +250,15 @@ class Score extends BaseModel {
 
   /**
    * 自分が作成した作品一覧を取得
-   * @param authorId 自分のID
+   * @param userId 自分のID
    * @param skip
    * @param limit
    * @returns {Promise<Score[]>}
    */
-  static findMyWorks = (authorId: string, skip: number = 0, limit: number = 20): Promise < Score[] > => {
+  static findMyWorks = (userId: string, skip: number = 0, limit: number = 20): Promise < Score[] > => {
     return new Promise < Score[] > ((resolve, reject) => {
       _model.find({
-          authorId: authorId
+          userId: userId
         })
         .sort({
           url: 1
