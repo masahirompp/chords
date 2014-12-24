@@ -32,8 +32,9 @@
       </form>
       <ul class="nav navbar-nav navbar-right">
         <% if @user?.isLogined : %>
+        <li><a href="#" data-toggle="modal" data-target=".bs-score-modal-sm">新規コード譜作成</a></li>
         <li class="dropdown">
-          <a href="#" data-toggle="dropdown" class="dropdown-toggle authorized">
+          <a href="#" data-toggle="dropdown" class="dropdown-toggle withImage">
             <img src="<%- @user.image %>" alt="Profile and settings" width="32px" height="32px"/>
             <%- @user.name %>
             <span class="caret"></span>
@@ -83,4 +84,5 @@
   <div class="footer">
     <p class="text-right">Copyright @2014 ChordKitchen</p>
   </div>
+  <% include 'modal.ect' %>
 </div>
