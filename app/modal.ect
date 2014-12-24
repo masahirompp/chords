@@ -4,17 +4,20 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header" role="tabpanel">
-        <ul class='nav nav-justified nav-wizard' role="tablist">
-          <li class='active'><a href='#step1' data-toggle="tab">Step 1 - コード譜作成</a></li>
-          <li><a href='#step2' data-toggle="tab">Step 2 - 曲の情報</a></li>
-          <li><a href='#step3' data-toggle="tab">Step 3 - 譜面の情報</a></li>
-        </ul>
+        <h2>コード譜新規作成</h2>
       </div>
       <div class="modal-body">
+        <div class="add-margin">
+          <ul class='nav nav-justified nav-wizard' role="tablist">
+            <li class='active'><a href='#step1' data-toggle="tab">Step 1 - 曲の種類</a></li>
+            <li><a href='#step2' data-toggle="tab">Step 2 - 曲の情報</a></li>
+            <li><a href='#step3' data-toggle="tab">Step 3 - 譜面の情報</a></li>
+          </ul>
+        </div>
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="step1">
             <div class="add-margin">
-              <h4 class="">あなたが作るコード譜は既存曲ですか？オリジナル曲ですか？</h4>
+              <h4 class="">Step 1 - あなたが作るコード譜はどちらですか？</h4>
             </div>
             <div class="add-margin">
               <button class="btn btn-primary btn-lg btn-block" id="existing">既存曲</button>
