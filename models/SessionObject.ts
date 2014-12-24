@@ -11,7 +11,7 @@ class SessionObject {
    * ログイン済みか？
    * @returns {boolean}
    */
-  get isLogined() {
+  get logined() {
     return !!this.id;
   }
 

@@ -178,7 +178,6 @@ class User extends BaseModel {
   static findByTwitter = (profile: passport.Profile): Promise < User > => {
     return new Promise < User > ((resolve, reject) => {
       _model.findOne({
-          'twitter.provider': profile.provider,
           'twitter.id': profile.id
         })
         .exec()

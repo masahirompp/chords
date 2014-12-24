@@ -86,7 +86,7 @@ class Auth {
         failureRedirect: '/'
       }), (req: express.Request, res: express.Response) => {
         // ユーザ未登録の場合は、登録画面へ
-        if (!req.user.isLogined) return res.redirect('/auth/register');
+        if (!req.user.logined) return res.redirect('/auth/register');
 
         // ログイン成功して、リダイレクト先が指定されていれば、リダイレクト
         var redirectUrl = req.cookies.redirectUrl;

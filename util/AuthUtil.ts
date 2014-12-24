@@ -56,7 +56,7 @@ class AuthUtil {
     app.use((req, res, next) => {
       var url = req.url + '/';
 
-      if (req.isAuthenticated() && req.user.isLogined) {
+      if (req.isAuthenticated() && req.user.logined) {
         // 認証済み＆ログイン済みの場合
         // 再度登録処理を行う場合（不正アクセス）、トップへリダイレクトする。
         if (util.startsWith(url, '/register/')) {
