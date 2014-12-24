@@ -12,9 +12,8 @@ body {
   padding: 0.2em 0;
 }
 
-#growls.underHeader {
-  top: 70px;
-  left: 150px;
+.add-margin {
+  margin-bottom: 30px;
 }
 
 /* header */

@@ -1,12 +1,42 @@
 <!-- Small modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-score-modal-sm">Small modal
-</button>
-
-<div class="modal fade bs-score-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+<div class="modal bs-score-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
   aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      ...
+      <div class="modal-header" role="tabpanel">
+        <ul class='nav nav-justified nav-wizard' role="tablist">
+          <li class='active'><a href='#step1' data-toggle="tab">Step 1 - 曲の種類</a></li>
+          <li><a href='#step2' data-toggle="tab">Step 2 - 曲の情報</a></li>
+          <li><a href='#step3' data-toggle="tab">Step 3 - 譜面の情報</a></li>
+        </ul>
+      </div>
+      <div class="modal-body">
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="step1">
+            <div class="add-margin">
+              <h4 class="">あなたが作るコード譜は既存曲ですか？オリジナル曲ですか？</h4>
+            </div>
+            <div class="add-margin">
+              <button class="btn btn-primary btn-lg btn-block" id="existing">既存曲</button>
+              <p class="help-block">既に世の中に発表されている曲のコード譜を作成します。</p>
+            </div>
+            <div class="add-margin">
+              <button class="btn btn-primary btn-lg btn-block" id="original">オリジナル曲</button>
+              <p class="help-block">あなたのオリジナル曲のコード譜を作成します。</p>
+            </div>
+          </div>
+          <div role="tabpanel" class="tab-pane" id="step2">
+
+          </div>
+          <div role="tabpanel" class="tab-pane" id="step3">
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
     </div>
   </div>
 </div>
