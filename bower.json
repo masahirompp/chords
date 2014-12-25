@@ -9,8 +9,8 @@
     "font-awesome": "*",
     "bootstrap-social": "*",
     "bootstrap-nav-wizard": "*",
-    "bootstrap-select": "*",
-    "jquery": "*"
+    "jquery": "*",
+    "typeahead.js": "~0.10.5"
   },
   "devDependencies": {}
 }
