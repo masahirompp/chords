@@ -2,14 +2,15 @@
   "name": "client",
   "private": true,
   "dependencies": {
-    "bootstrap": "~3.2.0",
-    "requirejs": "~2.1.15",
-    "underscore": "~1.7.0",
-    "d3": "~3.4.13",
+    "bootstrap": "*",
+    "requirejs": "*",
+    "d3": "*",
     "blockui": "*",
-    "font-awesome": "~4.2.0",
-    "bootstrap-social": "~4.8.0",
-    "bootstrap-nav-wizard": "~0.0.3"
+    "font-awesome": "*",
+    "bootstrap-social": "*",
+    "bootstrap-nav-wizard": "*",
+    "bootstrap-select": "*",
+    "jquery": "*"
   },
   "devDependencies": {}
 }
