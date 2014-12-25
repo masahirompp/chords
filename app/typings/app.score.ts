@@ -1,4 +1,4 @@
-require.config( < RequireConfig > {
+require.config(< RequireConfig > {
   baseUrl: '/scripts'
 });
 
@@ -10,18 +10,15 @@ require([
   './util/ErrorHandle'
 ], (Ajax, ScoreController, Event, Util, ErrorHandle) => {
 
-  $(() => {
-    try {
-      Event.initScore();
-
-      // コード譜描画
-      Ajax.getScore(Util.splitUrl()[0], Util.splitUrl()[1], Util.splitUrl()[2])
-        .then(data => ScoreController.draw(data))
-        .fail(err => ErrorHandle.showAppError(err.responseJSON))
-        .always(() => $.unblockUI());
-    } catch (e) {
-      ErrorHandle.send(e);
-      $.unblockUI();
-    }
-  });
+  try {
+    Event.initScore();
+    // コード譜描画
+    Ajax.getScore(Util.splitUrl()[0], Util.splitUrl()[1], Util.splitUrl()[2])
+      .then(data => ScoreController.draw(data))
+      .fail(err => ErrorHandle.showAppError(err.responseJSON))
+  } catch(e) {
+    ErrorHandle.send(e);
+  } finally {
+    $.unblockUI();
+  }
 });

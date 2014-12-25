@@ -6,25 +6,19 @@ require.config( < RequireConfig > {
 
 require(['./viewmodel/Event', './viewmodel/SearchView', './data/Ajax', './util/ErrorHandle'], (Event, SearchView, Ajax, ErrorHandle) => {
 
-  $(() => {
-    try {
-      Event.initMypage();
+  try {
+    Event.initMypage();
+    Ajax.getMyScores()
+      .then((data) => {
+        SearchView.drawResult(data);
+      })
+      .fail((e) => {
+        ErrorHandle.send(e);
+      })
+  } catch (e) {
+    ErrorHandle.send(e);
+  } finally {
+    $.unblockUI();
+  }
 
-      Ajax.getMyScores()
-        .then((data) => {
-          SearchView.drawResult(data);
-        })
-        .fail((e) => {
-          ErrorHandle.send(e);
-        })
-        .always(() => {
-          $.unblockUI();
-        });
-
-      $.unblockUI();
-    } catch (e) {
-      ErrorHandle.send(e);
-      $.unblockUI();
-    }
-  });
 });

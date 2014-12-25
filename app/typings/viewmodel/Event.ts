@@ -40,12 +40,14 @@ class Event {
     $('.block-ui-logout')
       .on('click', () => {
         $.blockUI({
+          baseZ: 2000,
           message: '<div class="text-muted">ログアウトしています。</div>'
         });
       });
     $('.block-ui-twitter')
       .on('click', () => {
         $.blockUI({
+          baseZ: 2000,
           message: '<div class="text-muted">twitterに接続しています。</div>'
         });
       });
