@@ -8,6 +8,7 @@ import SearchView = require('./SearchView');
 import Util = require('../util/Util');
 import ErrorHandle = require('../util/ErrorHandle');
 import Message = require('./Message');
+import NewScore = require('../viewmodel/NewScore');
 
 class Event {
 
@@ -51,6 +52,8 @@ class Event {
           message: '<div class="text-muted">twitterに接続しています。</div>'
         });
       });
+
+    var newScore = NewScore.make($('#newScoreStepChart'));
   }
 
   private static addEventSearchBtn() {
