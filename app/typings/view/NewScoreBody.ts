@@ -2,13 +2,13 @@ class NewScoreBody {
 
   constructor(public $step1, public $step2, public $step3) {}
 
-  initalize() {
+  initialize() {
     this.$step2.hide();
     this.$step3.hide();
     this.$step1.show();
   }
 
-  change(prevStep: number, nextStep: number) {
+  slide(prevStep: number, nextStep: number) {
     this.get$step(prevStep).hide('fast');
     this.get$step(nextStep).show('fast');
   }

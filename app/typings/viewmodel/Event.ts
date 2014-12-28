@@ -53,7 +53,7 @@ class Event {
         });
       });
 
-    var newScore = NewScore.make($('#newScoreStepChart'), $('#step1'), $('#step2'));
+    var newScore = NewScore.make($('#newScoreStepChart'), $('#step1'), $('#step2'), $('#step3'));
   }
 
   private static addEventSearchBtn() {
