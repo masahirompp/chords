@@ -14,7 +14,6 @@ class NewScore {
   private isStep1OK: boolean = false;
   private isStep2OK: boolean = false;
   private isStep3OK: boolean = false;
-  private prevStep: number;
   private currentStep: number;
 
   private initializes: Function[] = [];
@@ -32,7 +31,6 @@ class NewScore {
     this.isStep1OK = false;
     this.isStep2OK = false;
     this.isStep3OK = false;
-    this.prevStep = STEP1;
     this.currentStep = STEP1;
     this.initializes.forEach(func => setTimeout(func, 0));
   }
@@ -45,11 +43,12 @@ class NewScore {
     if (this.currentStep === STEP1) {
       this.isOriginal = isOriginal;
       this.isStep1OK = true;
-      this.prevStep = this.currentStep;
+      var prev = this.currentStep;
       this.currentStep = STEP2;
-      this.notifyIsOriginal();
-      this.notifyStep1OK();
-      this.notifyCurrentStep();
+
+      this.notifyIsOriginal(this.isOriginal);
+      this.notifyStep1OK(this.isStep1OK);
+      this.notifyCurrentStep(prev, this.currentStep);
     }
   }
 
@@ -58,9 +57,10 @@ class NewScore {
    */
   step2to3() {
     if (this.currentStep === STEP2) {
-      this.prevStep = this.currentStep;
+      var prev = this.currentStep;
       this.currentStep = STEP3;
-      this.notifyCurrentStep();
+
+      this.notifyCurrentStep(prev, this.currentStep);
     }
   }
 
@@ -78,19 +78,19 @@ class NewScore {
    * @param clickedStep
    */
   clickStep(clickedStep: number) {
-    if (clickedStep === STEP1 && this.currentStep !== STEP1) {
-      this.prevStep = this.currentStep;
-      this.currentStep = clickedStep;
-    } else if (clickedStep === STEP2 && this.currentStep !== STEP2 && this.isStep1OK) {
-      this.prevStep = this.currentStep;
-      this.currentStep = clickedStep;
-    } else if (clickedStep === STEP3 && this.currentStep !== STEP3 && this.isStep2OK) {
-      this.prevStep = this.currentStep;
-      this.currentStep = clickedStep;
-    } else {
+    if (clickedStep === this.currentStep) {
       return;
     }
-    this.notifyCurrentStep();
+    if (clickedStep === STEP2 && !this.isStep1OK) {
+      return;
+    }
+    if (clickedStep === STEP3 && !this.isStep2OK) {
+      return;
+    }
+    var prev = this.currentStep;
+    this.currentStep = clickedStep;
+
+    this.notifyCurrentStep(prev, this.currentStep);
   }
 
   /**
@@ -169,24 +169,24 @@ class NewScore {
     this.observersCurrentStep.push(func.bind(receiver));
   }
 
-  private notifyIsOriginal() {
-    this.observersIsOriginal.forEach(func => setTimeout(() => func(this.isOriginal), 0));
+  private notifyIsOriginal(isOriginal: boolean) {
+    this.observersIsOriginal.forEach(func => setTimeout(() => func(isOriginal), 0));
   }
 
-  private notifyStep1OK() {
-    this.observersStep1OK.forEach(func => setTimeout(() => func(this.isStep1OK), 0));
+  private notifyStep1OK(isStep1OK: boolean) {
+    this.observersStep1OK.forEach(func => setTimeout(() => func(isStep1OK), 0));
   }
 
-  private notifyStep2OK() {
-    this.observersStep2OK.forEach(func => setTimeout(() => func(this.isStep2OK), 0));
+  private notifyStep2OK(isStep2OK: boolean) {
+    this.observersStep2OK.forEach(func => setTimeout(() => func(isStep2OK), 0));
   }
 
-  private notifyStep3OK() {
-    this.observersStep3OK.forEach(func => setTimeout(() => func(this.isStep3OK), 0));
+  private notifyStep3OK(isStep3OK: boolean) {
+    this.observersStep3OK.forEach(func => setTimeout(() => func(isStep3OK), 0));
   }
 
-  private notifyCurrentStep() {
-    this.observersCurrentStep.forEach(func => setTimeout(() => func(this.prevStep, this.currentStep), 0));
+  private notifyCurrentStep(prevStep: number, nextStep: number) {
+    this.observersCurrentStep.forEach(func => setTimeout(() => func(prevStep, nextStep), 0));
   }
 }
 
