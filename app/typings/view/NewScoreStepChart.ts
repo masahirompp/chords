@@ -11,9 +11,9 @@ class NewScoreStepChart {
     this.$step2 = $stepChart.find('li:nth-child(2)');
     this.$step3 = $stepChart.find('li:nth-child(3)');
 
-    this.$step1.click(() => newScore.clickStep(1));
-    this.$step2.click(() => newScore.clickStep(2));
-    this.$step3.click(() => newScore.clickStep(3));
+    this.$step1.on('click', () => newScore.clickStep(1));
+    this.$step2.on('click', () => newScore.clickStep(2));
+    this.$step3.on('click', () => newScore.clickStep(3));
   }
 
   activeStep1() {

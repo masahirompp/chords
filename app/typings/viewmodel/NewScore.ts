@@ -1,7 +1,8 @@
 import NewScoreStepChart = require('../view/NewScoreStepChart');
+import NewScoreBody = require('../view/NewScoreBody');
 import NewScoreStep1 = require('../view/NewScoreStep1');
 import NewScoreStep2 = require('../view/NewScoreStep2');
-import NewScoreBody = require('../view/NewScoreBody');
+import NewScoreFooter = require('../view/NewScoreFooter');
 
 var STEP1 = 1;
 var STEP2 = 2;
@@ -22,18 +23,20 @@ class NewScore {
   private step2to3Functions: Function[] = [];
   private submitFunctions: Function[] = [];
 
-  static make($stepChart: JQuery, $step1: JQuery, $step2: JQuery, $step3: JQuery): NewScore {
+  static make($stepChart: JQuery, $step1: JQuery, $step2: JQuery, $step3: JQuery, $footer: JQuery): NewScore {
     // viewとviewmodelのインスタンス生成
     var newScore = new NewScore();
     var stepChart = new NewScoreStepChart($stepChart, newScore);
     var body = new NewScoreBody($step1, $step2, $step3);
     var step1 = new NewScoreStep1($step1, newScore);
     var step2 = new NewScoreStep2($step2, newScore);
+    var footer = new NewScoreFooter($footer, newScore);
 
     // observer登録
     newScore.addInitializer(stepChart, stepChart.activeStep1);
     newScore.addInitializer(body, body.initialize);
     newScore.addInitializer(step1, step1.initialize);
+    newScore.addInitializer(footer, footer.initialize);
     newScore.addClickStep1Function(stepChart, stepChart.activeStep1);
     newScore.addClickStep1Function(body, () => body.slide(newScore.prevStep, newScore.currentStep));
     newScore.addClickStep2Function(stepChart, stepChart.activeStep2);
@@ -50,11 +53,7 @@ class NewScore {
     return newScore;
   }
 
-  constructor() {
-    this._isOriginal = false;
-    this._prevStep = STEP1;
-    this._currentStep = STEP1;
-  }
+  constructor(){}
 
   get isOriginal(): boolean {
     return this._isOriginal;
@@ -72,6 +71,11 @@ class NewScore {
    * 初期化
    */
   initialize() {
+    this._isOriginal = false;
+    this._isStep1Selected = false;
+    this._isStep2Inputed = false;
+    this._prevStep = STEP1;
+    this._currentStep = STEP1;
     this.initializers.forEach(func => setTimeout(func, 0));
   }
 

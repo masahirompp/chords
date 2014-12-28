@@ -9,8 +9,8 @@ class NewScoreStep1 {
     this.$originalBtn = $step1.find('[name="original"]');
     this.$existingBtn = $step1.find('[name="existing"]');
 
-    this.$originalBtn.click(() => newScore.step1to2(true));
-    this.$existingBtn.click(() => newScore.step1to2(false));
+    this.$originalBtn.on('click', () => newScore.step1to2(true));
+    this.$existingBtn.on('click', () => newScore.step1to2(false));
   }
 
   initialize() {
