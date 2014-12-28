@@ -17,24 +17,18 @@ class NewScoreStepChart {
   }
 
   activeStep1() {
-    this.$step1.find('a')
-      .tab('show');
     NewScoreStepChart.toActive(this.$step1);
     NewScoreStepChart.toDisable(this.$step2);
     NewScoreStepChart.toDisable(this.$step3);
   }
 
   activeStep2() {
-    this.$step2.find('a')
-      .tab('show');
     NewScoreStepChart.toNormal(this.$step1);
     NewScoreStepChart.toActive(this.$step2);
     NewScoreStepChart.toDisable(this.$step3);
   }
 
   activeStep3() {
-    this.$step3.find('a')
-      .tab('show');
     NewScoreStepChart.toNormal(this.$step1);
     NewScoreStepChart.toNormal(this.$step2);
     NewScoreStepChart.toActive(this.$step3);

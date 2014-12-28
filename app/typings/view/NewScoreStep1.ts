@@ -5,7 +5,7 @@ class NewScoreStep1 {
   private $originalBtn: JQuery;
   private $existingBtn: JQuery;
 
-  constructor($step1: JQuery, newScore: NewScore) {
+  constructor(public $step1: JQuery, newScore: NewScore) {
     this.$originalBtn = $step1.find('[name="original"]');
     this.$existingBtn = $step1.find('[name="existing"]');
 
