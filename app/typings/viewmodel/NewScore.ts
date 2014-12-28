@@ -1,5 +1,6 @@
 import NewScoreStepChart = require('../view/NewScoreStepChart');
 import NewScoreStep1 = require('../view/NewScoreStep1');
+import NewScoreStep2 = require('../view/NewScoreStep2');
 
 var STEP1 = 1;
 var STEP2 = 2;
@@ -19,11 +20,12 @@ class NewScore {
   private step2to3Functions: Function[] = [];
   private submitFunctions: Function[] = [];
 
-  static make($stepChart: JQuery, $step1: JQuery): NewScore {
+  static make($stepChart: JQuery, $step1: JQuery, $step2): NewScore {
     // viewとviewmodelのインスタンス生成
     var newScore = new NewScore();
     var stepChart = new NewScoreStepChart($stepChart, newScore);
     var step1 = new NewScoreStep1($step1, newScore);
+    var step2 = new NewScoreStep2($step2, newScore);
 
     // observer登録
     newScore.addInitializer(stepChart, stepChart.activeStep1);
@@ -32,6 +34,7 @@ class NewScore {
     newScore.addClickStep2Function(stepChart, stepChart.activeStep2);
     newScore.addStep1to2Function(stepChart, stepChart.activeStep2);
     newScore.addStep1to2Function(step1, step1.activeBtn);
+    newScore.addStep1to2Function(step2, step2.show);
     newScore.addStep2to3Function(stepChart, stepChart.activeStep3);
 
     // viewmodelの初期化

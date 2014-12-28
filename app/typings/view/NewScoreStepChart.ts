@@ -2,11 +2,11 @@ import NewScore = require('../viewmodel/NewScore')
 
 class NewScoreStepChart {
 
-  private $step1:JQuery;
-  private $step2:JQuery;
-  private $step3:JQuery;
+  private $step1: JQuery;
+  private $step2: JQuery;
+  private $step3: JQuery;
 
-  constructor($stepChart:JQuery, newScore:NewScore) {
+  constructor($stepChart: JQuery, newScore: NewScore) {
     this.$step1 = $stepChart.find('li:first');
     this.$step2 = $stepChart.find('li:nth-child(2)');
     this.$step3 = $stepChart.find('li:nth-child(3)');
@@ -17,36 +17,42 @@ class NewScoreStepChart {
   }
 
   activeStep1() {
-    this.$step1.find('a').tab('show');
+    this.$step1.find('a')
+      .tab('show');
     NewScoreStepChart.toActive(this.$step1);
     NewScoreStepChart.toDisable(this.$step2);
     NewScoreStepChart.toDisable(this.$step3);
   }
 
   activeStep2() {
-    this.$step2.find('a').tab('show');
+    this.$step2.find('a')
+      .tab('show');
     NewScoreStepChart.toNormal(this.$step1);
     NewScoreStepChart.toActive(this.$step2);
     NewScoreStepChart.toDisable(this.$step3);
   }
 
   activeStep3() {
-    this.$step3.find('a').tab('show');
+    this.$step3.find('a')
+      .tab('show');
     NewScoreStepChart.toNormal(this.$step1);
     NewScoreStepChart.toNormal(this.$step2);
     NewScoreStepChart.toActive(this.$step3);
   }
 
   private static toActive($step) {
-    $step.removeClass('disabled').addClass('active');
+    $step.removeClass('disabled')
+      .addClass('active');
   }
 
   private static toDisable($step) {
-    $step.removeClass('active').addClass('disabled');
+    $step.removeClass('active')
+      .addClass('disabled');
   }
 
   private static toNormal($step) {
-    $step.removeClass('active').removeClass('disabled');
+    $step.removeClass('active')
+      .removeClass('disabled');
   }
 
 }

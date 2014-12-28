@@ -6,7 +6,7 @@
       <div class="modal-header" role="tabpanel">
         <ul class='nav nav-justified nav-wizard' id='newScoreStepChart' role="tablist">
           <li class='active'><a href='#step1'>Step 1 - 曲の種類</a></li>
-          <li><a href='#step2-1'>Step 2 - 曲の情報</a></li>
+          <li><a href='#step2'>Step 2 - 曲の情報</a></li>
           <li><a href='#step3'>Step 3 - 譜面の情報</a></li>
         </ul>
       </div>
@@ -17,29 +17,31 @@
               <h4>Step 1 - あなたが作るコード譜はどちらですか？</h4>
             </div>
             <div class="add-margin">
-              <button class="btn btn-primary btn-lg btn-block" id="existing">既存曲</button>
+              <button class="btn btn-primary btn-lg btn-block" name="existing">既存曲</button>
               <p class="help-block">既に世の中に発表されている曲のコード譜を作成します。</p>
             </div>
             <div class="add-margin">
-              <button class="btn btn-primary btn-lg btn-block" id="original">オリジナル曲</button>
+              <button class="btn btn-primary btn-lg btn-block" name="original">オリジナル曲</button>
               <p class="help-block">あなたのオリジナル曲のコード譜を作成します。</p>
             </div>
           </div>
-          <div role="tabpanel" class="tab-pane" id="step2-1">
-            <div class="add-margin">
-              <h4>Step 2 - 曲を検索してください。</h4>
+          <div role="tabpanel" class="tab-pane" id="step2">
+            <div name="existing">
+              <div class="add-margin">
+                <h4>Step 2 - 曲を検索してください。</h4>
+              </div>
+              <div>
+                <input class="form-control" type="text" name="searchSong" id="searchSong" placeholder="曲名 アーティスト名"/>
+              </div>
+              <div class="add-margin" id="songResult"></div>
             </div>
-            <div>
-              <input class="form-control" type="text" name="searchSong" id="searchSong" placeholder="曲名 アーティスト名"/>
-            </div>
-            <div class="add-margin" id="songResult"></div>
-          </div>
-          <div role="tabpanel" class="tab-pane" id="step2-2">
-            <div class="add-margin">
-              <h4>Step 2 - 曲のタイトルを入力してください。</h4>
-            </div>
-            <div class="add-margin">
-              <input class="form-control" type="text" name="originalTitle" id="originalTitle" placeholder="タイトル"/>
+            <div name="original">
+              <div class="add-margin">
+                <h4>Step 2 - 曲のタイトルを入力してください。</h4>
+              </div>
+              <div class="add-margin">
+                <input class="form-control" type="text" name="originalTitle" id="originalTitle" placeholder="タイトル"/>
+              </div>
             </div>
           </div>
           <div role="tabpanel" class="tab-pane" id="step3">
