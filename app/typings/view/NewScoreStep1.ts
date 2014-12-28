@@ -34,8 +34,8 @@ class NewScoreStep1 {
    * 既存曲ボタン
    */
   private activeExistingBtn() {
-    this.$existingBtn.addClass('active');
     this.$originalBtn.removeClass('active');
+    this.$existingBtn.addClass('active');
   }
 }
 
