@@ -1,13 +1,15 @@
 import NewScoreStepChart = require('../view/NewScoreStepChart');
 import NewScoreStep1 = require('../view/NewScoreStep1');
 
+var STEP1 = 1;
+var STEP2 = 2;
+var STEP3 = 3;
+
 class NewScore {
 
-  static STEP1 = 1;
-  static STEP2 = 2;
-  static STEP3 = 3;
-
   private isOriginal: boolean;
+  private isStep1Selected: boolean = false;
+  private isStep2Inputed: boolean = false;
   private currentStep: number;
 
   private initializers: Function[] = [];
@@ -39,14 +41,14 @@ class NewScore {
 
   constructor() {
     this.isOriginal = false;
-    this.currentStep = NewScore.STEP1;
+    this.currentStep = STEP1;
   }
 
   /**
    * 初期化
    */
   initialize() {
-    this.initializers.forEach(func => func());
+    this.initializers.forEach(func => setTimeout(func, 0));
   }
 
   /**
@@ -54,10 +56,11 @@ class NewScore {
    * @param isOriginal
    */
   step1to2(isOriginal) {
-    if (this.currentStep === NewScore.STEP1) {
+    if (this.currentStep === STEP1) {
       this.isOriginal = isOriginal;
-      this.currentStep = NewScore.STEP2;
-      this.step1to2Functions.forEach(func => func(isOriginal));
+      this.isStep1Selected = true;
+      this.currentStep = STEP2;
+      this.step1to2Functions.forEach(func => setTimeout(() => func(this.isOriginal), 0));
     }
   }
 
@@ -65,9 +68,9 @@ class NewScore {
    * Step2からStep3へ
    */
   step2to3() {
-    if (this.currentStep === NewScore.STEP2) {
-      this.currentStep = NewScore.STEP3;
-      this.step2to3Functions.forEach(func => func());
+    if (this.currentStep === STEP2) {
+      this.currentStep = STEP3;
+      this.step2to3Functions.forEach(func => setTimeout(func, 0));
     }
   }
 
@@ -75,8 +78,8 @@ class NewScore {
    * 新規作成
    */
   submit() {
-    if (this.currentStep === NewScore.STEP3) {
-      this.submitFunctions.forEach(func => func());
+    if (this.currentStep === STEP3) {
+      this.submitFunctions.forEach(func => setTimeout(func, 0));
     }
   }
 
@@ -85,16 +88,17 @@ class NewScore {
    * @param clickedStep
    */
   clickStep(clickedStep: number) {
-    if (clickedStep === NewScore.STEP1 && this.currentStep > NewScore.STEP1) {
+    if (clickedStep === STEP1 && this.currentStep !== STEP1) {
       this.currentStep = clickedStep;
-      this.clickStep1Functions.forEach(func => func());
+      this.clickStep1Functions.forEach(func => setTimeout(func, 0));
       return;
-    } else if (clickedStep === NewScore.STEP2 && this.currentStep > NewScore.STEP2) {
+    } else if (clickedStep === STEP2 && this.currentStep !== STEP2 && this.isStep1Selected) {
       this.currentStep = clickedStep;
-      this.clickStep2Functions.forEach(func => func());
+      this.clickStep2Functions.forEach(func => setTimeout(func, 0));
       return;
+    } else if (clickedStep === STEP3 && this.currentStep !== STEP3 && this.isStep2Inputed) {
+      this.currentStep = clickedStep;
     }
-    return false;
   }
 
   addInitializer(receiver: any, func: () => void) {
