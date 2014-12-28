@@ -31,7 +31,7 @@
                 <h4>Step 2 - 曲を検索してください。</h4>
               </div>
               <div>
-                <input class="form-control" type="text" name="searchSong" id="searchSong" placeholder="曲名 アーティスト名"/>
+                <input class="form-control" type="text" name="searchSong" id="existingSong" placeholder="曲名 アーティスト名"/>
               </div>
               <div class="add-margin" id="songResult"></div>
             </div>
@@ -39,9 +39,7 @@
               <div class="add-margin">
                 <h4>Step 2 - 曲のタイトルを入力してください。</h4>
               </div>
-              <div class="add-margin">
-                <input class="form-control" type="text" name="originalTitle" id="originalTitle" placeholder="タイトル"/>
-              </div>
+              <input class="form-control" type="text" name="originalTitle" id="originalTitle" placeholder="タイトル"/>
             </div>
           </div>
           <div id="step3">
@@ -76,6 +74,8 @@
       <div class="modal-footer" id="newScoreFooter">
         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">閉じる</button>
         <button type="button" class="btn btn-default pull-left" id="resetNewScore">リセット</button>
+        <button type="button" class="btn btn-primary" id="nextStep2NewScore">次へ</button>
+        <button type="button" class="btn btn-primary" id="nextStep3NewScore">次へ</button>
         <button type="button" class="btn btn-primary" id="createNewScore">作成</button>
       </div>
     </div>

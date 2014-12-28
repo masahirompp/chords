@@ -14,7 +14,7 @@ class Util {
    * 空白文字
    * @type {RegExp}
    */
-  static SPACES = /\s+/g;
+  static SPACES = /[\s　]+/g;
   private static ESCAPE_REGEXP = /([.*+?^=!:${}()|[\]\/\\])/g;
 
   /**
@@ -22,7 +22,7 @@ class Util {
    * @param src
    */
   static trim(src: string): string {
-    return src.replace('　', ' ')
+    return src.replace(Util.SPACES, ' ')
       .trim();
   }
 

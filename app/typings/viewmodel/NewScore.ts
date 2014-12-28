@@ -39,7 +39,7 @@ class NewScore {
    * Step1からStep2へ
    * @param isOriginal
    */
-  step1to2(isOriginal) {
+  step1to2(isOriginal: boolean): void {
     if (this.currentStep === STEP1) {
       this.isOriginal = isOriginal;
       this.isStep1OK = true;
@@ -48,6 +48,7 @@ class NewScore {
 
       this.notifyIsOriginal(this.isOriginal);
       this.notifyStep1OK(this.isStep1OK);
+      this.notifyStep2OK(this.isStep2OK);
       this.notifyCurrentStep(prev, this.currentStep);
     }
   }
@@ -65,6 +66,20 @@ class NewScore {
   }
 
   /**
+   *
+   * @param title
+   */
+  validateStep2Original(title: string) {
+    this.isStep2OK = this.isStep3OK = title.length > 0;
+
+    this.notifyStep2OK(this.isStep2OK);
+  }
+
+  validateStep2Existing() {
+
+  }
+
+  /**
    * 新規作成
    */
   submit() {
@@ -73,22 +88,32 @@ class NewScore {
     }
   }
 
-  /**
-   * ステップチャート押下時の処理（前のステップ戻る）
-   * @param clickedStep
-   */
-  clickStep(clickedStep: number) {
-    if (clickedStep === this.currentStep) {
+  clickStepChart1() {
+    if (this.currentStep === STEP1) {
       return;
     }
-    if (clickedStep === STEP2 && !this.isStep1OK) {
+    this.changeStepChart(1);
+    this.notifyStep1OK(this.isStep1OK);
+  }
+
+  clickStepChart2() {
+    if (this.currentStep === STEP2 || !this.isStep1OK) {
       return;
     }
-    if (clickedStep === STEP3 && !this.isStep2OK) {
+    this.changeStepChart(2);
+    this.notifyStep2OK(this.isStep2OK);
+  }
+
+  clickStepChart3() {
+    if (this.currentStep === STEP3 || !this.isStep2OK) {
       return;
     }
+    this.changeStepChart(3);
+  }
+
+  private changeStepChart(nextStep: number) {
     var prev = this.currentStep;
-    this.currentStep = clickedStep;
+    this.currentStep = nextStep;
 
     this.notifyCurrentStep(prev, this.currentStep);
   }
@@ -135,13 +160,17 @@ class NewScore {
     this.addInitializes(stepChart, stepChart.initialize);
     this.addInitializes(body, body.initialize);
     this.addInitializes(step1, step1.initialize);
+    this.addInitializes(step2, step2.initialize);
     this.addInitializes(footer, footer.initialize);
     this.addObserverIsOriginal(step1, step1.activeBtn);
     this.addObserverIsOriginal(step2, step2.show);
     this.addObserverCurrentStep(stepChart, stepChart.updateActive);
     this.addObserverCurrentStep(body, body.slide);
+    this.addObserverCurrentStep(footer, footer.showNextStepBtn);
     this.addObserverStep1OK(stepChart, stepChart.updateStep2);
-    this.addObserverStep2OK(stepChart, stepChart.updateStep3);
+    this.addObserverStep1OK(footer, footer.showNextStep2Btn);
+    this.addObserverStep2OK(footer, footer.showNextStep3Btn);
+    this.addObserverStep3OK(stepChart, stepChart.updateStep3);
     this.addObserverStep3OK(footer, footer.showSubmitBtn);
   }
 

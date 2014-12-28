@@ -13,15 +13,15 @@ class NewScoreStepChart {
 
     this.$step1.on('click', (e) => {
       e.preventDefault();
-      newScore.clickStep(1);
+      newScore.clickStepChart1();
     });
     this.$step2.on('click', (e) => {
       e.preventDefault();
-      newScore.clickStep(2);
+      newScore.clickStepChart2();
     });
     this.$step3.on('click', (e) => {
       e.preventDefault();
-      newScore.clickStep(3);
+      newScore.clickStepChart3();
     });
   }
 
