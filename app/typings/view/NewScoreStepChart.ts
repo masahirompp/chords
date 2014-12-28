@@ -2,22 +2,18 @@ import NewScore = require('../viewmodel/NewScore')
 
 class NewScoreStepChart {
 
-  private $stepChart:JQuery;
   private $step1:JQuery;
   private $step2:JQuery;
   private $step3:JQuery;
-  private newScore:NewScore;
 
   constructor($stepChart:JQuery, newScore:NewScore) {
-    this.$stepChart = $stepChart;
     this.$step1 = $stepChart.find('li:first');
     this.$step2 = $stepChart.find('li:nth-child(2)');
     this.$step3 = $stepChart.find('li:nth-child(3)');
-    this.newScore = newScore;
 
-    this.$step1.click(() => this.newScore.clickStep(NewScore.STEP1));
-    this.$step2.click(() => this.newScore.clickStep(NewScore.STEP2));
-    this.$step3.click(() => this.newScore.clickStep(NewScore.STEP3));
+    this.$step1.click(() => newScore.clickStep(NewScore.STEP1));
+    this.$step2.click(() => newScore.clickStep(NewScore.STEP2));
+    this.$step3.click(() => newScore.clickStep(NewScore.STEP3));
   }
 
   activeStep1() {

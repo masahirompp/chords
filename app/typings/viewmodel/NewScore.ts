@@ -1,9 +1,5 @@
 import NewScoreStepChart = require('../view/NewScoreStepChart');
-
-interface observer {
-  receiver: any;
-  func: Function;
-}
+import NewScoreStep1 = require('../view/NewScoreStep1');
 
 class NewScore {
 
@@ -14,23 +10,26 @@ class NewScore {
   private isOriginal: boolean;
   private currentStep: number;
 
-  private initializers: observer[] = [];
-  private clickStep1Functions: observer[] = [];
-  private clickStep2Functions: observer[] = [];
-  private step1to2Functions: observer[] = [];
-  private step2to3Functions: observer[] = [];
-  private submitFunctions: observer[] = [];
+  private initializers: Function[] = [];
+  private clickStep1Functions: Function[] = [];
+  private clickStep2Functions: Function[] = [];
+  private step1to2Functions: Function[] = [];
+  private step2to3Functions: Function[] = [];
+  private submitFunctions: Function[] = [];
 
-  static make($stepChart: JQuery): NewScore {
+  static make($stepChart: JQuery, $step1: JQuery): NewScore {
     // viewとviewmodelのインスタンス生成
     var newScore = new NewScore();
     var stepChart = new NewScoreStepChart($stepChart, newScore);
+    var step1 = new NewScoreStep1($step1, newScore);
 
     // observer登録
     newScore.addInitializer(stepChart, stepChart.activeStep1);
+    newScore.addInitializer(step1, step1.initialize);
     newScore.addClickStep1Function(stepChart, stepChart.activeStep1);
     newScore.addClickStep2Function(stepChart, stepChart.activeStep2);
     newScore.addStep1to2Function(stepChart, stepChart.activeStep2);
+    newScore.addStep1to2Function(step1, step1.activeBtn);
     newScore.addStep2to3Function(stepChart, stepChart.activeStep3);
 
     // viewmodelの初期化
@@ -47,7 +46,7 @@ class NewScore {
    * 初期化
    */
   initialize() {
-    this.initializers.forEach(ob => ob.func.call(ob.receiver));
+    this.initializers.forEach(func => func());
   }
 
   /**
@@ -58,7 +57,7 @@ class NewScore {
     if (this.currentStep === NewScore.STEP1) {
       this.isOriginal = isOriginal;
       this.currentStep = NewScore.STEP2;
-      this.step1to2Functions.forEach(ob => ob.func.call(ob.receiver, this.isOriginal));
+      this.step1to2Functions.forEach(func => func(isOriginal));
     }
   }
 
@@ -68,7 +67,7 @@ class NewScore {
   step2to3() {
     if (this.currentStep === NewScore.STEP2) {
       this.currentStep = NewScore.STEP3;
-      this.step2to3Functions.forEach(ob => ob.func.call(ob.receiver));
+      this.step2to3Functions.forEach(func => func());
     }
   }
 
@@ -77,7 +76,7 @@ class NewScore {
    */
   submit() {
     if (this.currentStep === NewScore.STEP3) {
-      this.submitFunctions.forEach(ob => ob.func.call(ob.receiver));
+      this.submitFunctions.forEach(func => func());
     }
   }
 
@@ -88,56 +87,38 @@ class NewScore {
   clickStep(clickedStep: number) {
     if (clickedStep === NewScore.STEP1 && this.currentStep > NewScore.STEP1) {
       this.currentStep = clickedStep;
-      this.clickStep1Functions.forEach(ob => ob.func.call(ob.receiver));
+      this.clickStep1Functions.forEach(func => func());
       return;
     } else if (clickedStep === NewScore.STEP2 && this.currentStep > NewScore.STEP2) {
       this.currentStep = clickedStep;
-      this.clickStep2Functions.forEach(ob => ob.func.call(ob.receiver));
+      this.clickStep2Functions.forEach(func => func());
       return;
     }
     return false;
   }
 
   addInitializer(receiver: any, func: () => void) {
-    this.initializers.push({
-      receiver: receiver,
-      func: func
-    });
+    this.initializers.push(func.bind(receiver));
   }
 
   addClickStep1Function(receiver: any, func: () => void) {
-    this.clickStep1Functions.push({
-      receiver: receiver,
-      func: func
-    });
+    this.clickStep1Functions.push(func.bind(receiver));
   }
 
   addClickStep2Function(receiver: any, func: () => void) {
-    this.clickStep2Functions.push({
-      receiver: receiver,
-      func: func
-    });
+    this.clickStep2Functions.push(func.bind(receiver));
   }
 
   addStep1to2Function(receiver: any, func: (isOriginal: boolean) => void) {
-    this.step1to2Functions.push({
-      receiver: receiver,
-      func: func
-    });
+    this.step1to2Functions.push(func.bind(receiver));
   }
 
   addStep2to3Function(receiver: any, func: () => void) {
-    this.step2to3Functions.push({
-      receiver: receiver,
-      func: func
-    });
+    this.step2to3Functions.push(func.bind(receiver));
   }
 
   addSubmitFunction(receiver: any, func: () => void) {
-    this.submitFunctions.push({
-      receiver: receiver,
-      func: func
-    });
+    this.submitFunctions.push(func.bind(receiver));
   }
 }
 

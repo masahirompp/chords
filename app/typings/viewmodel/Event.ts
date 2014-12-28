@@ -31,7 +31,7 @@ class Event {
     Event.addEventSearchBtn();
   }
 
-  static initMypage(){
+  static initMypage() {
     Event.addCommonEvent();
   }
 
@@ -53,7 +53,7 @@ class Event {
         });
       });
 
-    var newScore = NewScore.make($('#newScoreStepChart'));
+    var newScore = NewScore.make($('#newScoreStepChart'), $('#step1'));
   }
 
   private static addEventSearchBtn() {
