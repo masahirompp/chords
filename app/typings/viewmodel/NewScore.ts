@@ -10,19 +10,98 @@ var STEP3 = 3;
 
 class NewScore {
 
-  private _isOriginal: boolean;
-  private _isStep1Selected: boolean = false;
-  private _isStep2Inputed: boolean = false;
-  private _currentStep: number;
-  private _prevStep: number;
+  private isOriginal: boolean;
+  private isStep1OK: boolean = false;
+  private isStep2OK: boolean = false;
+  private isStep3OK: boolean = false;
+  private prevStep: number;
+  private currentStep: number;
 
-  private initializers: Function[] = [];
-  private clickStep1Functions: Function[] = [];
-  private clickStep2Functions: Function[] = [];
-  private step1to2Functions: Function[] = [];
-  private step2to3Functions: Function[] = [];
-  private submitFunctions: Function[] = [];
+  private initializes: Function[] = [];
+  private observersIsOriginal: Function[] = [];
+  private observersStep1OK: Function[] = [];
+  private observersStep2OK: Function[] = [];
+  private observersStep3OK: Function[] = [];
+  private observersCurrentStep: Function[] = [];
 
+  /**
+   * 初期化
+   */
+  initialize() {
+    this.isOriginal = false;
+    this.isStep1OK = false;
+    this.isStep2OK = false;
+    this.isStep3OK = false;
+    this.prevStep = STEP1;
+    this.currentStep = STEP1;
+    this.initializes.forEach(func => setTimeout(func, 0));
+  }
+
+  /**
+   * Step1からStep2へ
+   * @param isOriginal
+   */
+  step1to2(isOriginal) {
+    if (this.currentStep === STEP1) {
+      this.isOriginal = isOriginal;
+      this.isStep1OK = true;
+      this.prevStep = this.currentStep;
+      this.currentStep = STEP2;
+      this.notifyIsOriginal();
+      this.notifyStep1OK();
+      this.notifyCurrentStep();
+    }
+  }
+
+  /**
+   * Step2からStep3へ
+   */
+  step2to3() {
+    if (this.currentStep === STEP2) {
+      this.prevStep = this.currentStep;
+      this.currentStep = STEP3;
+      this.notifyCurrentStep();
+    }
+  }
+
+  /**
+   * 新規作成
+   */
+  submit() {
+    if (this.currentStep === STEP3) {
+      // TODO
+    }
+  }
+
+  /**
+   * ステップチャート押下時の処理（前のステップ戻る）
+   * @param clickedStep
+   */
+  clickStep(clickedStep: number) {
+    if (clickedStep === STEP1 && this.currentStep !== STEP1) {
+      this.prevStep = this.currentStep;
+      this.currentStep = clickedStep;
+    } else if (clickedStep === STEP2 && this.currentStep !== STEP2 && this.isStep1OK) {
+      this.prevStep = this.currentStep;
+      this.currentStep = clickedStep;
+    } else if (clickedStep === STEP3 && this.currentStep !== STEP3 && this.isStep2OK) {
+      this.prevStep = this.currentStep;
+      this.currentStep = clickedStep;
+    } else {
+      return;
+    }
+    this.notifyCurrentStep();
+  }
+
+  /**
+   * NewScoreのviewmodelとviewを生成
+   * @param $stepChart
+   * @param $step1
+   * @param $step2
+   * @param $step3
+   * @param $footer
+   * @returns {NewScore}
+   */
   static make($stepChart: JQuery, $step1: JQuery, $step2: JQuery, $step3: JQuery, $footer: JQuery): NewScore {
     // viewとviewmodelのインスタンス生成
     var newScore = new NewScore();
@@ -33,127 +112,81 @@ class NewScore {
     var footer = new NewScoreFooter($footer, newScore);
 
     // observer登録
-    newScore.addInitializer(stepChart, stepChart.activeStep1);
-    newScore.addInitializer(body, body.initialize);
-    newScore.addInitializer(step1, step1.initialize);
-    newScore.addInitializer(footer, footer.initialize);
-    newScore.addClickStep1Function(stepChart, stepChart.activeStep1);
-    newScore.addClickStep1Function(body, () => body.slide(newScore.prevStep, newScore.currentStep));
-    newScore.addClickStep2Function(stepChart, stepChart.activeStep2);
-    newScore.addClickStep2Function(body, () => body.slide(newScore.prevStep, newScore.currentStep));
-    newScore.addStep1to2Function(stepChart, stepChart.activeStep2);
-    newScore.addStep1to2Function(body, () => body.slide(newScore.prevStep, newScore.currentStep));
-    newScore.addStep1to2Function(step1, () => step1.activeBtn(newScore.isOriginal));
-    newScore.addStep1to2Function(step2, () => step2.show(newScore.isOriginal));
-    newScore.addStep2to3Function(stepChart, stepChart.activeStep3);
-    newScore.addStep2to3Function(body, () => body.slide(newScore.prevStep, newScore.currentStep));
+    newScore.addObservers(stepChart, body, step1, step2, footer);
 
     // viewmodelの初期化
     newScore.initialize();
     return newScore;
   }
 
-  constructor(){}
-
-  get isOriginal(): boolean {
-    return this._isOriginal;
-  }
-
-  get prevStep(): number {
-    return this._prevStep;
-  }
-
-  get currentStep(): number {
-    return this._currentStep;
-  }
-
   /**
-   * 初期化
+   * オブサーバ登録
+   * @param stepChart
+   * @param body
+   * @param step1
+   * @param step2
+   * @param footer
    */
-  initialize() {
-    this._isOriginal = false;
-    this._isStep1Selected = false;
-    this._isStep2Inputed = false;
-    this._prevStep = STEP1;
-    this._currentStep = STEP1;
-    this.initializers.forEach(func => setTimeout(func, 0));
+  private addObservers(stepChart: NewScoreStepChart,
+    body: NewScoreBody,
+    step1: NewScoreStep1,
+    step2: NewScoreStep2,
+    footer: NewScoreFooter) {
+    this.addInitializes(stepChart, stepChart.initialize);
+    this.addInitializes(body, body.initialize);
+    this.addInitializes(step1, step1.initialize);
+    this.addInitializes(footer, footer.initialize);
+    this.addObserverIsOriginal(step1, step1.activeBtn);
+    this.addObserverIsOriginal(step2, step2.show);
+    this.addObserverCurrentStep(stepChart, stepChart.updateActive);
+    this.addObserverCurrentStep(body, body.slide);
+    this.addObserverStep1OK(stepChart, stepChart.updateStep2);
+    this.addObserverStep2OK(stepChart, stepChart.updateStep3);
+    this.addObserverStep3OK(footer, footer.showSubmitBtn);
   }
 
-  /**
-   * Step1からStep2へ
-   * @param isOriginal
-   */
-  step1to2(isOriginal) {
-    if (this._currentStep === STEP1) {
-      this._isOriginal = isOriginal;
-      this._isStep1Selected = true;
-      this._prevStep = this._currentStep;
-      this._currentStep = STEP2;
-      this.step1to2Functions.forEach(func => setTimeout(func, 0));
-    }
+  private addInitializes(receiver: any, func: () => void) {
+    this.initializes.push(func.bind(receiver));
   }
 
-  /**
-   * Step2からStep3へ
-   */
-  step2to3() {
-    if (this._currentStep === STEP2) {
-      this._prevStep = this._currentStep;
-      this._currentStep = STEP3;
-      this.step2to3Functions.forEach(func => setTimeout(func, 0));
-    }
+  private addObserverIsOriginal(receiver: any, func: (isOriginal: boolean) => void) {
+    this.observersIsOriginal.push(func.bind(receiver));
   }
 
-  /**
-   * 新規作成
-   */
-  submit() {
-    if (this._currentStep === STEP3) {
-      this.submitFunctions.forEach(func => setTimeout(func, 0));
-    }
+  private addObserverStep1OK(receiver: any, func: (isStep1OK: boolean) => void) {
+    this.observersStep1OK.push(func.bind(receiver));
   }
 
-  /**
-   * ステップチャート押下時の処理（前のステップ戻る）
-   * @param clickedStep
-   */
-  clickStep(clickedStep: number) {
-    if (clickedStep === STEP1 && this._currentStep !== STEP1) {
-      this._prevStep = this._currentStep;
-      this._currentStep = clickedStep;
-      this.clickStep1Functions.forEach(func => setTimeout(func, 0));
-    } else if (clickedStep === STEP2 && this._currentStep !== STEP2 && this._isStep1Selected) {
-      this._prevStep = this._currentStep;
-      this._currentStep = clickedStep;
-      this.clickStep2Functions.forEach(func => setTimeout(func, 0));
-    } else if (clickedStep === STEP3 && this._currentStep !== STEP3 && this._isStep2Inputed) {
-      this._prevStep = this._currentStep;
-      this._currentStep = clickedStep;
-    }
+  private addObserverStep2OK(receiver: any, func: (isStep2OK: boolean) => void) {
+    this.observersStep2OK.push(func.bind(receiver));
   }
 
-  addInitializer(receiver: any, func: Function) {
-    this.initializers.push(func.bind(receiver));
+  private addObserverStep3OK(receiver: any, func: (isStep3OK: boolean) => void) {
+    this.observersStep3OK.push(func.bind(receiver));
   }
 
-  addClickStep1Function(receiver: any, func: Function) {
-    this.clickStep1Functions.push(func.bind(receiver));
+  private addObserverCurrentStep(receiver: any, func: (prevStep: number, nextStep: number) => void) {
+    this.observersCurrentStep.push(func.bind(receiver));
   }
 
-  addClickStep2Function(receiver: any, func: Function) {
-    this.clickStep2Functions.push(func.bind(receiver));
+  private notifyIsOriginal() {
+    this.observersIsOriginal.forEach(func => setTimeout(() => func(this.isOriginal), 0));
   }
 
-  addStep1to2Function(receiver: any, func: Function) {
-    this.step1to2Functions.push(func.bind(receiver));
+  private notifyStep1OK() {
+    this.observersStep1OK.forEach(func => setTimeout(() => func(this.isStep1OK), 0));
   }
 
-  addStep2to3Function(receiver: any, func: Function) {
-    this.step2to3Functions.push(func.bind(receiver));
+  private notifyStep2OK() {
+    this.observersStep2OK.forEach(func => setTimeout(() => func(this.isStep2OK), 0));
   }
 
-  addSubmitFunction(receiver: any, func: Function) {
-    this.submitFunctions.push(func.bind(receiver));
+  private notifyStep3OK() {
+    this.observersStep3OK.forEach(func => setTimeout(() => func(this.isStep3OK), 0));
+  }
+
+  private notifyCurrentStep() {
+    this.observersCurrentStep.forEach(func => setTimeout(() => func(this.prevStep, this.currentStep), 0));
   }
 }
 

@@ -11,44 +11,58 @@ class NewScoreStepChart {
     this.$step2 = $stepChart.find('li:nth-child(2)');
     this.$step3 = $stepChart.find('li:nth-child(3)');
 
-    this.$step1.on('click', () => newScore.clickStep(1));
-    this.$step2.on('click', () => newScore.clickStep(2));
-    this.$step3.on('click', () => newScore.clickStep(3));
+    this.$step1.on('click', (e) => {
+      e.preventDefault();
+      newScore.clickStep(1);
+    });
+    this.$step2.on('click', (e) => {
+      e.preventDefault();
+      newScore.clickStep(2);
+    });
+    this.$step3.on('click', (e) => {
+      e.preventDefault();
+      newScore.clickStep(3);
+    });
   }
 
-  activeStep1() {
-    NewScoreStepChart.toActive(this.$step1);
-    NewScoreStepChart.toDisable(this.$step2);
-    NewScoreStepChart.toDisable(this.$step3);
+  initialize() {
+    this.updateStep2(false);
+    this.updateStep3(false);
+    this.$step1.addClass('active');
+    this.$step2.removeClass('active');
+    this.$step3.removeClass('active');
   }
 
-  activeStep2() {
-    NewScoreStepChart.toNormal(this.$step1);
-    NewScoreStepChart.toActive(this.$step2);
-    NewScoreStepChart.toDisable(this.$step3);
-  }
-
-  activeStep3() {
-    NewScoreStepChart.toNormal(this.$step1);
-    NewScoreStepChart.toNormal(this.$step2);
-    NewScoreStepChart.toActive(this.$step3);
-  }
-
-  private static toActive($step) {
-    $step.removeClass('disabled')
+  /**
+   *
+   * @param prevStep
+   * @param nextStep
+   */
+  updateActive(prevStep: number, nextStep: number) {
+    this.get$step(prevStep)
+      .removeClass('active');
+    this.get$step(nextStep)
       .addClass('active');
   }
 
-  private static toDisable($step) {
-    $step.removeClass('active')
-      .addClass('disabled');
+  updateStep2(isStep1OK: boolean) {
+    isStep1OK ? this.$step2.removeClass('disabled') : this.$step2.addClass('disabled');
   }
 
-  private static toNormal($step) {
-    $step.removeClass('active')
-      .removeClass('disabled');
+  updateStep3(isStep2OK: boolean) {
+    isStep2OK ? this.$step3.removeClass('disabled') : this.$step3.addClass('disabled');
   }
 
+  private get$step(step: number): JQuery {
+    switch (step) {
+      case 1:
+        return this.$step1;
+      case 2:
+        return this.$step2;
+      case 3:
+        return this.$step3;
+    }
+  }
 }
 
 export = NewScoreStepChart

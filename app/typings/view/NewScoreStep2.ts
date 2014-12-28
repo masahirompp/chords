@@ -14,12 +14,12 @@ class NewScoreStep2 {
     isOriginal ? this.showOriginal() : this.showExisting();
   }
 
-  showOriginal(){
+  private showOriginal(){
     this.$existing.hide();
     this.$original.show();
   }
 
-  showExisting(){
+  private showExisting(){
     this.$original.hide();
     this.$existing.show();
   }

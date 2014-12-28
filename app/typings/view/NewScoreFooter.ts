@@ -8,21 +8,20 @@ class NewScoreFooter {
   constructor($footer: JQuery, newScore: NewScore) {
     this.$submitBtn = $footer.find('#createNewScore');
     this.$resetBtn = $footer.find('#resetNewScore');
-    this.$resetBtn.on('click', () => newScore.initialize())
+
+    this.$resetBtn.on('click', (e) => {
+      e.preventDefault();
+      newScore.initialize()
+    })
   }
 
-  initialize() {
-    this.hideSubmitBtn();
+  initialize(){
+    this.showSubmitBtn(false);
   }
 
-  showSubmitBtn() {
-    this.$submitBtn.show();
+  showSubmitBtn(state: boolean) {
+    state ? this.$submitBtn.show() : this.$submitBtn.hide();
   }
-
-  hideSubmitBtn() {
-    this.$submitBtn.hide();
-  }
-
 
 }
 
