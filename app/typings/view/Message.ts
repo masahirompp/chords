@@ -22,8 +22,6 @@ class Message {
     $('.alert').alert('close');
   }
 
-
-
   /**
    *
    * @param level success, info, warning, danger

@@ -1,5 +1,6 @@
 import KeywordSearch = require('../viewmodel/KeywordSearch');
 
+
 class KeywordSearchResult {
 
   private $results:JQuery;
@@ -7,7 +8,7 @@ class KeywordSearchResult {
   constructor($results:JQuery, keywordSearch:KeywordSearch){
     this.$results = $results;
 
-    this.$results.on('click', 'tr', () => {
+    this.$results.on('click', 'tbody tr', () => {
       keywordSearch.clickDetail(this);
     })
   }
@@ -19,7 +20,6 @@ class KeywordSearchResult {
   update(data: any[]){
     // TODO
   }
-
 }
 
 export = KeywordSearchResult

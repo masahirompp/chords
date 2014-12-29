@@ -7,7 +7,7 @@ import Ajax = require('../data/Ajax');
 import SearchView = require('./SearchView');
 import Util = require('../util/Util');
 import ErrorHandle = require('../util/ErrorHandle');
-import Message = require('./Message');
+import Message = require('../view/Message');
 import NewScore = require('../viewmodel/NewScore');
 
 class Event {

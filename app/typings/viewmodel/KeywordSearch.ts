@@ -1,5 +1,6 @@
 import KeywordSearchForm = require('../view/KeywordSearchForm');
 import KeywordSearchResult = require('../view/KeywordSearchResult');
+import Message = require('../view/Message');
 import Util = require('../Util/Util');
 
 class KeywordSearch {
@@ -43,6 +44,9 @@ class KeywordSearch {
     this.results = results;
 
     this.notifyResults(this.results);
+    if(this.results.length === 0){
+      Message.showWarning('「<strong>' + this.keyword + '</strong>」の検索結果はありませんでした。');
+    }
   }
 
   static make($keywordSearchForm: JQuery, $keywordSearchResult: JQuery) {

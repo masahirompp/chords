@@ -1,4 +1,4 @@
-import Message = require('../viewmodel/Message');
+import Message = require('../view/Message');
 
 class ErrorHandle {
 
