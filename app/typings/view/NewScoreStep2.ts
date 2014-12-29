@@ -1,5 +1,5 @@
 import NewScore = require('../viewmodel/NewScore')
-import Util = require('../util/Util');
+import Helper = require('./ViewHelper');
 
 class NewScoreStep2 {
 
@@ -15,8 +15,8 @@ class NewScoreStep2 {
     this.$existingSong = this.$existing.find('#existingSong');
 
     this.$originalTitle.on('keyup', () => {
-      Util.thinOut(() => {
-        newScore.validateStep2Original(Util.trim(this.$originalTitle.val()));
+      Helper.thinOut(() => {
+        newScore.validateStep2Original(this.$originalTitle.val());
       });
     });
   }

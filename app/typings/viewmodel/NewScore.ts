@@ -3,6 +3,7 @@ import NewScoreBody = require('../view/NewScoreBody');
 import NewScoreStep1 = require('../view/NewScoreStep1');
 import NewScoreStep2 = require('../view/NewScoreStep2');
 import NewScoreFooter = require('../view/NewScoreFooter');
+import Util = require('../Util/Util');
 
 var STEP1 = 1;
 var STEP2 = 2;
@@ -15,6 +16,8 @@ class NewScore {
   private isStep2OK: boolean = false;
   private isStep3OK: boolean = false;
   private currentStep: number;
+
+  private originalTitle: string = '';
 
   private initializes: Function[] = [];
   private observersIsOriginal: Function[] = [];
@@ -32,6 +35,7 @@ class NewScore {
     this.isStep2OK = false;
     this.isStep3OK = false;
     this.currentStep = STEP1;
+    this.originalTitle = '';
     this.initializes.forEach(func => setTimeout(func, 0));
   }
 
@@ -70,7 +74,8 @@ class NewScore {
    * @param title
    */
   validateStep2Original(title: string) {
-    this.isStep2OK = this.isStep3OK = title.length > 0;
+    this.originalTitle = Util.trim(title);
+    this.isStep2OK = this.isStep3OK = this.originalTitle.length > 0;
 
     this.notifyStep2OK(this.isStep2OK);
   }
