@@ -169,8 +169,8 @@ class NewScore {
     this.addObserverCurrentStep(footer, footer.showNextStepBtn);
     this.addObserverStep1OK(stepChart, stepChart.updateStep2);
     this.addObserverStep1OK(footer, footer.showNextStep2Btn);
+    this.addObserverStep2OK(stepChart, stepChart.updateStep3);
     this.addObserverStep2OK(footer, footer.showNextStep3Btn);
-    this.addObserverStep3OK(stepChart, stepChart.updateStep3);
     this.addObserverStep3OK(footer, footer.showSubmitBtn);
   }
 
