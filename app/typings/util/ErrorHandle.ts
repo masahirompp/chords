@@ -2,6 +2,30 @@ import Message = require('../view/Message');
 
 class ErrorHandle {
 
+  /**
+   * 初期化処理。グローバルエラーハンドル
+   */
+  static init() {
+    try {
+      // global error handle
+      window.onerror = () => {
+        $.post('/api/error', arguments);
+      }
+    } catch (e) {
+      ErrorHandle.send(e);
+    } finally {
+      try{
+        $.unblockUI();
+      }catch(u){
+        ErrorHandle.send(u);
+      }
+    }
+  }
+
+  /**
+   * エラー処理
+   * @param e
+   */
   static send(e) {
     try {
       $.post('/api/error', {
@@ -15,11 +39,6 @@ class ErrorHandle {
       console.log(e.toString());
       console.log(e.stack);
     }
-  }
-
-  static showAppError(message: string) {
-    console.log(message);
-    Message.showWarning(message);
   }
 }
 

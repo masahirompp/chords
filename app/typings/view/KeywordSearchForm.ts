@@ -3,9 +3,9 @@ import KeywordSearch = require('../viewmodel/KeywordSearch');
 class KeywordSearchForm {
 
   private $input: JQuery;
-  private $btn : JQuery;
+  private $btn: JQuery;
 
-  constructor($form : JQuery, keywordSearch:KeywordSearch){
+  constructor($form: JQuery, keywordSearch: KeywordSearch) {
     this.$input = $form.find('#searchKeyword');
     this.$btn = $form.find('#searchBtn');
 
@@ -14,8 +14,12 @@ class KeywordSearchForm {
     });
   }
 
-  initialize(){
+  initialize() {
     this.$input.val('');
+  }
+
+  setKeyword(keyword: string) {
+    this.$input.val(keyword);
   }
 }
 
