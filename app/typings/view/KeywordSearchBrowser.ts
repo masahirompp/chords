@@ -1,5 +1,6 @@
 import KeywordSearch = require('../viewmodel/KeywordSearch');
 import ViewHelper = require('./ViewHelper');
+import ScoreDTO = require('../dto/ScoreDTO');
 
 class KeywordSearchBrowser {
 
@@ -9,8 +10,7 @@ class KeywordSearchBrowser {
      */
     window.addEventListener('popstate', (e: PopStateEvent) => {
       var data = ViewHelper.getQueryParams();
-      data['results'] = e.state;
-      keywordSearch.popState(data);
+      keywordSearch.popState(data.q, e.state);
     });
   }
 
@@ -19,7 +19,12 @@ class KeywordSearchBrowser {
    * @param keyword
    * @param results
    */
-  pushState(keyword: string, results: any[]) {
+  pushState(keyword: string, results: ScoreDTO[]) {
+    if (ViewHelper.getQueryParams().q === keyword) {
+      // キーワードが変わっていないなら、データだけ書き換える。
+      history.replaceState(results, null);
+      return;
+    }
     history.pushState(results, null, '/search?' + $.param({
       q: keyword
     }));
@@ -28,7 +33,7 @@ class KeywordSearchBrowser {
   /**
    * クエリパラメータから検索
    */
-  searchFromQueryParams(){
+  searchFromQueryParams() {
     var data = ViewHelper.getQueryParams();
     this.keywordSearch.submit(data.q);
   }
@@ -45,7 +50,7 @@ class KeywordSearchBrowser {
    * 画面遷移
    * @param keyword
    */
-  transition(keyword: string){
+  transition(keyword: string) {
     window.location.href = '/search?' + $.param({
       q: keyword
     });

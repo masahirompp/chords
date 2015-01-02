@@ -2,7 +2,7 @@ import KeywordSearchForm = require('../view/KeywordSearchForm');
 import KeywordSearchResult = require('../view/KeywordSearchResult');
 import KeywordSearchBrowser = require('../view/KeywordSearchBrowser');
 import Ajax = require('../data/Ajax');
-import Message = require('../view/Message');
+import ScoreDTO = require('../dto/ScoreDTO');
 import Util = require('../util/Util');
 import ErrorHandle = require('../util/ErrorHandle');
 
@@ -47,34 +47,32 @@ class KeywordSearch {
   }
 
   /**
-   * 検索結果押下
-   * @param data
-   */
-  clickDetail(data: any) {
-    // TODO
-  }
-
-  /**
    * 検索結果バインド
    * @param results
    */
-  bindResults(results: any[]) {
+  bindResults(results: ScoreDTO[]) {
     this.results = results;
-
     this.notifyResults(this.results);
-    if (this.results.length === 0) {
-      Message.showWarning('「<strong>' + this.keyword + '</strong>」の検索結果はありませんでした。');
-    }
     this.notifyKeywordResults(this.keyword, this.results);
   }
 
   /**
-   * popState
-   * @param data
+   * PopState
+   * @param keyword
+   * @param results
    */
-  popState(data: any) {
-    this.keyword = data.keyword;
-    this.results = data.results;
+  popState(keyword: string, results: ScoreDTO[]) {
+    this.keyword = keyword;
+    this.results = results;
+    this.notifyKeyword(this.keyword);
+    this.notifyResults(this.results);
+  }
+
+  /**
+   * さらに読み込む
+   */
+  more() {
+
   }
 
   /**
@@ -109,6 +107,7 @@ class KeywordSearch {
     this.addObserverKeyword(form, form.setKeyword);
     this.addObserverKeyword(browser, browser.setTitle);
     this.addObserverResults(result, result.update);
+    this.addObserverResults(result, result.showMessage);
     this.addObserverKeywordResults(browser, browser.pushState);
   }
 

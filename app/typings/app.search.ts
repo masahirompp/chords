@@ -4,18 +4,11 @@ require.config( < RequireConfig > {
   baseUrl: '/scripts'
 });
 
-require(['./viewmodel/Event',
-  './viewmodel/SearchView',
-  './util/Util',
+require(['./viewmodel/KeywordSearch',
   './util/ErrorHandle'
-], (Event, SearchView, Url, ErrorHandle) => {
-
-  var redirect = true;
+], (KeywordSearch, ErrorHandle) => {
   try {
-    Event.initSearch();
-    // 初回のみ実行
-    SearchView.$searchKeyword.val(Url.getQueryByName('q'));
-    SearchView.$searchBtn.trigger('click', redirect);
+    KeywordSearch.factory($('#keywordSearchForm'), $('#keywordSearchResult'));
   } catch (e) {
     ErrorHandle.send(e);
   } finally {

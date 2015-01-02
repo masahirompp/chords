@@ -11,6 +11,7 @@ class KeywordSearchForm {
 
     this.$btn.on('click', () => {
       keywordSearch.submit(this.$input.val());
+      return false;
     });
   }
 
