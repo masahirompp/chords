@@ -14,10 +14,6 @@ class KeywordSearchForm {
     });
   }
 
-  initialize() {
-    this.$input.val('');
-  }
-
   setKeyword(keyword: string) {
     this.$input.val(keyword);
   }

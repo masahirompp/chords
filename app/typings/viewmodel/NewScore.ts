@@ -132,7 +132,7 @@ class NewScore {
    * @param $footer
    * @returns {NewScore}
    */
-  static make($stepChart: JQuery, $step1: JQuery, $step2: JQuery, $step3: JQuery, $footer: JQuery): NewScore {
+  static factory($stepChart: JQuery, $step1: JQuery, $step2: JQuery, $step3: JQuery, $footer: JQuery): NewScore {
     // viewとviewmodelのインスタンス生成
     var newScore = new NewScore();
     var stepChart = new NewScoreStepChart($stepChart, newScore);
