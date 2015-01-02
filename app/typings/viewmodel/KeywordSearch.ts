@@ -17,13 +17,18 @@ class KeywordSearch {
   private observersResults: Function[] = [];
   private observersKeywordResults: Function[] = [];
 
+  /**
+   * コンストラクタ
+   * @param isSearchDisplay 検索画面か？
+   */
   constructor(isSearchDisplay: boolean) {
     this.isSearchDisplay = isSearchDisplay;
   }
 
+  /**
+   * 初期化
+   */
   initialize() {
-    this.keyword = '';
-    this.results = [];
     this.initializes.forEach(func => setTimeout(func, 0));
   }
 
@@ -33,13 +38,12 @@ class KeywordSearch {
    */
   submit(keyword: string) {
     this.keyword = Util.trim(keyword);
+    this.notifyKeyword(this.keyword);
 
     if (this.isSearchDisplay) {
       Ajax.searchScores(this.keyword)
         .then(scores => this.bindResults(scores));
     }
-
-    this.notifyKeyword(this.keyword);
   }
 
   /**
@@ -64,28 +68,44 @@ class KeywordSearch {
     this.notifyKeywordResults(this.keyword, this.results);
   }
 
+  /**
+   * popState
+   * @param data
+   */
   popState(data: any) {
     this.keyword = data.keyword;
     this.results = data.results;
   }
 
-  static factory($keywordSearchForm: JQuery, $keywordSearchResult ? : JQuery) {
+  /**
+   * factory method.
+   * @param $keywordSearchForm
+   * @param $keywordSearchResult
+   * @returns {KeywordSearch}
+   */
+  static factory($keywordSearchForm: JQuery, $keywordSearchResult: JQuery) {
     var keywordSearch = new KeywordSearch($keywordSearchResult.length === 1);
     var form = new KeywordSearchForm($keywordSearchForm, keywordSearch);
     var browser = new KeywordSearchBrowser(keywordSearch);
     var result = new KeywordSearchResult($keywordSearchResult, keywordSearch);
-    keywordSearch.addObsrvers(form, result, browser);
+    keywordSearch.addObservers(form, result, browser);
     keywordSearch.initialize();
 
     return keywordSearch;
   }
 
-  private addObsrvers(form: KeywordSearchForm, result: KeywordSearchResult, browser: KeywordSearchBrowser) {
+  /**
+   * オブザーバ設定
+   * @param form 検索フォーム
+   * @param result 検索結果
+   * @param browser ブラウザ検索
+   */
+  private addObservers(form: KeywordSearchForm, result: KeywordSearchResult, browser: KeywordSearchBrowser) {
     if (!this.isSearchDisplay) {
       this.addObserverKeyword(browser, browser.transition);
       return;
     }
-    this.addInitialize(result, result.initialize);
+    this.addInitialize(browser, browser.searchFromQueryParams);
     this.addObserverKeyword(form, form.setKeyword);
     this.addObserverKeyword(browser, browser.setTitle);
     this.addObserverResults(result, result.update);

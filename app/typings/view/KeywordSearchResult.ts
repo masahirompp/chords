@@ -13,10 +13,6 @@ class KeywordSearchResult {
     })
   }
 
-  initialize(){
-    this.$results.empty();
-  }
-
   update(data: any[]){
     // TODO
   }

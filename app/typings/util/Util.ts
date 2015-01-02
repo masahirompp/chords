@@ -14,8 +14,8 @@ class Util {
    * @param src
    */
   static trim(src: string): string {
-    return src.replace(Util.SPACES, ' ')
-      .trim();
+    return src ? src.replace(Util.SPACES, ' ')
+      .trim() : '';
   }
 
   /**

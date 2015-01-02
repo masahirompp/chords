@@ -3,7 +3,7 @@ import ViewHelper = require('./ViewHelper');
 
 class KeywordSearchBrowser {
 
-  constructor(keywordSearch: KeywordSearch) {
+  constructor(public keywordSearch: KeywordSearch) {
     /**
      * PopState
      */
@@ -23,6 +23,14 @@ class KeywordSearchBrowser {
     history.pushState(results, null, '/search?' + $.param({
       q: keyword
     }));
+  }
+
+  /**
+   * クエリパラメータから検索
+   */
+  searchFromQueryParams(){
+    var data = ViewHelper.getQueryParams();
+    this.keywordSearch.submit(data.q);
   }
 
   /**

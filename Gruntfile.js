@@ -157,7 +157,10 @@ module.exports = function(grunt) {
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
-          wrap: true,
+          wrap: {
+            start: '"use strict";(function() {',
+            end: '}());'
+          },
           name: 'app.index',
           mainConfigFile: '<%= config.app %>/scripts/app.index.js'
         }
@@ -170,7 +173,10 @@ module.exports = function(grunt) {
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
-          wrap: true,
+          wrap: {
+            start: '"use strict";(function() {',
+            end: '}());'
+          },
           name: 'app.search',
           mainConfigFile: '<%= config.app %>/scripts/app.search.js'
         }
@@ -183,7 +189,10 @@ module.exports = function(grunt) {
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
-          wrap: true,
+          wrap: {
+            start: '"use strict";(function() {',
+            end: '}());'
+          },
           name: 'app.score',
           mainConfigFile: '<%= config.app %>/scripts/app.score.js'
         }
@@ -196,7 +205,10 @@ module.exports = function(grunt) {
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
-          wrap: true,
+          wrap: {
+            start: '"use strict";(function() {',
+            end: '}());'
+          },
           name: 'app.mypage',
           mainConfigFile: '<%= config.app %>/scripts/app.mypage.js'
         }

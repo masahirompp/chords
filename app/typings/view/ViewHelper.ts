@@ -19,7 +19,7 @@ class ViewHelper {
    * クエリパラメータ取得
    * @returns {{}}
    */
-  static getQueryParams() {
+  static getQueryParams(): any {
     var query = window.location.search.substring(1);
     var urlParams = {};
     var match;
