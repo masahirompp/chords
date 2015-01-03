@@ -12,7 +12,7 @@ class Works {
      * マイページを表示
      */
     router.get('/', (req: express.Request, res: express.Response) => {
-      res.render('mypage', {
+      res.render('works', {
         title: 'マイページ',
         user: req.user
       });

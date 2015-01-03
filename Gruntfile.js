@@ -157,10 +157,7 @@ module.exports = function(grunt) {
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
-          wrap: {
-            start: '"use strict";(function() {',
-            end: '}());'
-          },
+          wrap: true,
           name: 'app.index',
           mainConfigFile: '<%= config.app %>/scripts/app.index.js'
         }
@@ -173,10 +170,7 @@ module.exports = function(grunt) {
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
-          wrap: {
-            start: '"use strict";(function() {',
-            end: '}());'
-          },
+          wrap: true,
           name: 'app.search',
           mainConfigFile: '<%= config.app %>/scripts/app.search.js'
         }
@@ -189,28 +183,22 @@ module.exports = function(grunt) {
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
-          wrap: {
-            start: '"use strict";(function() {',
-            end: '}());'
-          },
+          wrap: true,
           name: 'app.score',
           mainConfigFile: '<%= config.app %>/scripts/app.score.js'
         }
       },
-      // !!! build.js options for app.score.js (mypage.ect) !!!
+      // !!! build.js options for app.score.js (works.ect) !!!
       dist4: {
         options: {
-          out: '<%= config.dist %>/scripts/app.mypage.js',
+          out: '<%= config.dist %>/scripts/app.works.js',
           baseUrl: '<%= config.app %>/scripts',
           optimize: 'none',
           preserveLicenseComments: false,
           useStrict: true,
-          wrap: {
-            start: '"use strict";(function() {',
-            end: '}());'
-          },
-          name: 'app.mypage',
-          mainConfigFile: '<%= config.app %>/scripts/app.mypage.js'
+          wrap: true,
+          name: 'app.works',
+          mainConfigFile: '<%= config.app %>/scripts/app.works.js'
         }
       }
     },
@@ -221,7 +209,7 @@ module.exports = function(grunt) {
           '<%= config.dist %>/scripts/app.index.js': '<%= config.dist %>/scripts/app.index.js',
           '<%= config.dist %>/scripts/app.search.js': '<%= config.dist %>/scripts/app.search.js',
           '<%= config.dist %>/scripts/app.score.js': '<%= config.dist %>/scripts/app.score.js',
-          '<%= config.dist %>/scripts/app.mypage.js': '<%= config.dist %>/scripts/app.mypage.js'
+          '<%= config.dist %>/scripts/app.works.js': '<%= config.dist %>/scripts/app.works.js'
         }
       }
     },

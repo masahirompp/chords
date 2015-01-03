@@ -5,6 +5,6 @@ require.config( < RequireConfig > {
   baseUrl: '/scripts'
 });
 
-require(['./controller/IndexController'], (Controller) => {
+require(['./controller/WorksController'], (Controller) => {
   (new Controller()).setup();
 });

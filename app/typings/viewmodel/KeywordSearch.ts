@@ -4,7 +4,6 @@ import KeywordSearchBrowser = require('../view/KeywordSearchBrowser');
 import Ajax = require('../data/Ajax');
 import ScoreDTO = require('../dto/ScoreDTO');
 import Util = require('../util/Util');
-import ErrorHandle = require('../util/ErrorHandle');
 
 class KeywordSearch {
 

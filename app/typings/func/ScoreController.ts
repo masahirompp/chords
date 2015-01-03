@@ -8,7 +8,6 @@ import SvgStaffDef = require('./../model/SvgStaffDef')
 import ViewScale = require('./../viewmodel/ViewScale')
 import SvgDrawer = require('./../viewmodel/SvgDefDrawer')
 import StaffDrawer = require('./../viewmodel/StaffDrawer')
-import SearchView = require('./../viewmodel/SearchView')
 
 class ScoreController {
 

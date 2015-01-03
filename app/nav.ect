@@ -1,5 +1,4 @@
 <% extend 'layout' %>
-<script>$.blockUIl();</script>
 <nav role="navigation"
   class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
@@ -85,6 +84,6 @@
     <p class="text-right">Copyright @2014 ChordKitchen</p>
   </div>
   <% if @user?.logined : %>
-  <% include 'modal.ect' %>
+  <% include 'modalNewScore.ect' %>
   <% end %>
 </div>
