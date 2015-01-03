@@ -1,5 +1,3 @@
-import Map = require('./Dictionary');
-
 class Util {
 
   /**
@@ -44,33 +42,6 @@ class Util {
    */
   static startsWith(src: string, expect: string): boolean {
     return src.lastIndexOf(expect, 0) === 0
-  }
-
-  /**
-   * クエリパラメータを取得
-   * @param name
-   * @returns {string}
-   */
-  static getQueryByName(name: string): string {
-    var regex = new RegExp("[\\?&]" + name.replace(/[\[]/, "\\[")
-      .replace(/[\]]/, "\\]") + "=([^&#]*)");
-    var results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-  }
-
-  /**
-   * クエリパラメータ作成
-   * @param key
-   * @param value
-   * @returns {string}
-   */
-  static makeQueryParameter(key: string, value: string): string {
-    if (!value) {
-      return '';
-    }
-    return '?' + key + '=' + value.split(/[\s　]+/g)
-      .map(d => encodeURIComponent(d))
-      .join('+');
   }
 
   /**
