@@ -28,17 +28,10 @@ module.exports = function(grunt) {
       },
       tsclient: {
         files: ['<%= config.app %>/typings/{,*/}*.ts'],
-        tasks: ['typescript:client',
-          'copy:js2public'
-        ]
+        tasks: ['typescript:client', 'copy:js2public']
       },
       tsserver: {
-        files: ['db/*.ts',
-          'dto/*.ts',
-          'models/*.ts',
-          'routes/*.ts',
-          'util/*.ts'
-        ],
+        files: ['db/*.ts', 'dto/*.ts', 'models/*.ts', 'routes/*.ts', 'util/*.ts'],
         tasks: ['typescript:server']
       }
     },
@@ -48,11 +41,7 @@ module.exports = function(grunt) {
       options: {
         jshintrc: '.jshintrc'
       },
-      all: [
-        'Gruntfile.js',
-        'app.js',
-        'test/spec/{,*/}*.js'
-      ]
+      all: ['Gruntfile.js', 'app.js', 'test/spec/{,*/}*.js']
     },
 
     typescript: {
@@ -68,12 +57,7 @@ module.exports = function(grunt) {
         }
       },
       server: {
-        src: ['db/*.ts',
-          'dto/*.ts',
-          'models/*.ts',
-          'routes/*.ts',
-          'util/*.ts'
-        ],
+        src: ['db/*.ts', 'dto/*.ts', 'models/*.ts', 'routes/*.ts', 'util/*.ts'],
         options: {
           module: 'commonjs',
           target: 'es5',
@@ -95,19 +79,10 @@ module.exports = function(grunt) {
 
     // Run some tasks in parallel to speed up build process
     concurrent: {
-      server: [
-        'copy:styles2tmp'
-      ],
-      test: [
-        'copy:styles2tmp'
-      ],
-      dist: [
-        'copy:styles2tmp',
-        'imagemin',
-        'svgmin'
-      ]
-    },
-    // The following *-min tasks produce minified files in the dist folder
+      server: ['copy:styles2tmp'],
+      test: ['copy:styles2tmp'],
+      dist: ['copy:styles2tmp', 'imagemin', 'svgmin']
+    }, // The following *-min tasks produce minified files in the dist folder
     imagemin: {
       dist: {
         files: [{
@@ -132,11 +107,7 @@ module.exports = function(grunt) {
     // Add vendor prefixed styles
     autoprefixer: {
       options: {
-        browsers: ['> 1%',
-          'last 2 versions',
-          'Firefox ESR',
-          'Opera 12.1'
-        ]
+        browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'Opera 12.1']
       },
       dist: {
         files: [{
@@ -161,8 +132,7 @@ module.exports = function(grunt) {
           name: 'app.index',
           mainConfigFile: '<%= config.app %>/scripts/app.index.js'
         }
-      },
-      // !!! build.js options for app.search.js (search.ect) !!!
+      }, // !!! build.js options for app.search.js (search.ect) !!!
       dist2: {
         options: {
           out: '<%= config.dist %>/scripts/app.search.js',
@@ -174,8 +144,7 @@ module.exports = function(grunt) {
           name: 'app.search',
           mainConfigFile: '<%= config.app %>/scripts/app.search.js'
         }
-      },
-      // !!! build.js options for app.score.js (score.ect) !!!
+      }, // !!! build.js options for app.score.js (score.ect) !!!
       dist3: {
         options: {
           out: '<%= config.dist %>/scripts/app.score.js',
@@ -187,8 +156,7 @@ module.exports = function(grunt) {
           name: 'app.score',
           mainConfigFile: '<%= config.app %>/scripts/app.score.js'
         }
-      },
-      // !!! build.js options for app.score.js (works.ect) !!!
+      }, // !!! build.js options for app.works.js (works.ect) !!!
       dist4: {
         options: {
           out: '<%= config.dist %>/scripts/app.works.js',
@@ -218,8 +186,7 @@ module.exports = function(grunt) {
     rev: {
       dist: {
         files: {
-          src: [
-            '<%= config.dist %>/scripts/{,*/}*.js',
+          src: ['<%= config.dist %>/scripts/{,*/}*.js',
             '<%= config.dist %>/styles/{,*/}*.css',
             '<%= config.dist %>/images/{,*/}*.*',
             '<%= config.dist %>/*.png'
@@ -231,12 +198,30 @@ module.exports = function(grunt) {
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
       options: {
-        assetsDirs: ['<%= config.dist %>',
-          '<%= config.dist %>/images'
-        ]
+        assetsDirs: ['<%= config.dist %>', '<%= config.dist %>/images']
       },
-      html: ['<%= config.dist %>/{,*/}*.ect'],
+      html: ['<%= config.dist %>/layout.ect',
+        '<%= config.dist %>/index.ect',
+        '<%= config.dist %>/search.ect',
+        '<%= config.dist %>/score.ect',
+        '<%= config.dist %>/works.ect'
+      ],
       css: ['<%= config.dist %>/styles/{,*/}*.css']
+    },
+
+    htmlmin: {
+      dist2views: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= config.dist %>',
+          src: '*.ect',
+          dest: 'views'
+        }]
+      }
     },
 
     open: {
@@ -250,40 +235,25 @@ module.exports = function(grunt) {
       app: {
         files: [{
           dot: true,
-          src: [
-            '<%= config.app %>/scripts/{,*/}*.js'
-          ]
+          src: ['<%= config.app %>/scripts/{,*/}*.js']
         }]
       },
       dist: {
         files: [{
           dot: true,
-          src: [
-            '.tmp',
-            '<%= config.dist %>/*',
-            '!<%= config.dist %>/.git*'
-          ]
+          src: ['.tmp', '<%= config.dist %>/*', '!<%= config.dist %>/.git*']
         }]
       },
       views: {
         files: [{
           dot: true,
-          src: [
-            'views/*'
-          ]
+          src: ['views/*']
         }]
       },
       server: {
         files: [{
           dot: true,
-          src: [
-            '.tmp',
-            'db/*.js',
-            'dto/*.js',
-            'models/*.js',
-            'routes/*.js',
-            'util/*.js'
-          ]
+          src: ['.tmp', 'db/*.js', 'dto/*.js', 'models/*.js', 'routes/*.js', 'util/*.js']
         }]
       },
       'public': {
@@ -302,12 +272,7 @@ module.exports = function(grunt) {
           dot: false,
           cwd: '<%= config.app %>',
           dest: '<%= config.dist %>',
-          src: [
-            '*.{ico,png,txt}',
-            'images/{,*/}*.*',
-            '{,*/}*.ect',
-            'styles/fonts/{,*/}*.*'
-          ]
+          src: ['*.{ico,png,txt}', 'images/{,*/}*.*', '{,*/}*.ect', 'styles/fonts/{,*/}*.*']
         }, {
           src: 'node_modules/apache-server-configs/dist/.htaccess',
           dest: '<%= config.dist %>/.htaccess'
@@ -324,13 +289,6 @@ module.exports = function(grunt) {
           src: 'fonts/*',
           dest: '<%= config.dist %>'
         }]
-      },
-      html2tmp: {
-        expand: true,
-        dot: false,
-        cwd: '<%= config.app %>',
-        dest: '.tmp/html/',
-        src: '*.ect'
       },
       styles2tmp: {
         expand: true,
@@ -359,13 +317,7 @@ module.exports = function(grunt) {
           dot: false,
           cwd: '<%= config.app %>',
           dest: '<%= config.public %>',
-          src: [
-            '*.{ico,png,txt}',
-            'bower_components/**',
-            'images/**',
-            'scripts/**',
-            'styles/**'
-          ]
+          src: ['*.{ico,png,txt}', 'bower_components/**', 'images/**', 'scripts/**', 'styles/**']
         }, {
           expand: true,
           dot: false,
@@ -387,22 +339,10 @@ module.exports = function(grunt) {
           dot: false,
           cwd: '<%= config.dist %>',
           dest: '<%= config.public %>',
-          src: [
-            '*.{ico,png,txt}',
-            'images/{,*/}*.*',
-            'scripts/{,*/}*.*',
-            'styles/{,*/}*.*',
-            'fonts/*'
-          ]
+          src: ['*.{ico,png,txt}', 'images/{,*/}*.*', 'scripts/{,*/}*.*', 'styles/{,*/}*.*', 'fonts/*']
         }, {
           src: 'node_modules/apache-server-configs/dist/.htaccess',
           dest: '<%= config.public %>/.htaccess'
-        }, {
-          expand: true,
-          dot: false,
-          cwd: '<%= config.dist %>',
-          dest: 'views',
-          src: '*.ect'
         }]
       }
     }
@@ -413,13 +353,10 @@ module.exports = function(grunt) {
     'start the server and preview your app, --allow-remote for remote access',
     function(target) {
       if (target === 'dist') {
-        return grunt.task.run(['build',
-          'open'
-        ]);
+        return grunt.task.run(['build', 'open']);
       }
 
-      grunt.task.run([
-        'jshint',
+      grunt.task.run(['jshint',
         'clean:app',
         'clean:server',
         'clean:views',
@@ -433,20 +370,13 @@ module.exports = function(grunt) {
     });
   grunt.registerTask('server', function(target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run([target ?
-      ('serve:' + target) :
-      'serve'
-    ]);
+    grunt.task.run([target ? ('serve:' + target) : 'serve']);
   });
   grunt.registerTask('s', function(target) {
-    grunt.task.run([target ?
-      ('serve:' + target) :
-      'serve'
-    ]);
+    grunt.task.run([target ? ('serve:' + target) : 'serve']);
   });
 
-  grunt.registerTask('build', [
-    'jshint',
+  grunt.registerTask('build', ['jshint',
     'clean:app',
     'clean:dist',
     'clean:server',
@@ -464,40 +394,25 @@ module.exports = function(grunt) {
     'copy:app2dist',
     'rev',
     'usemin',
-    'copy:dist2public',
-    'copy:html2tmp'
+    'htmlmin:dist2views',
+    'copy:dist2public'
   ]);
   grunt.registerTask('b', function() {
     grunt.task.run('build');
   });
 
   // cleanup
-  grunt.registerTask('cleanup', [
-    'clean:app',
-    'clean:dist',
-    'clean:server',
-    'clean:views'
-  ]);
+  grunt.registerTask('cleanup', ['clean:app', 'clean:dist', 'clean:server', 'clean:views']);
   grunt.registerTask('cu', function() {
     grunt.task.run('cleanup');
   });
 
   // server complie
-  grunt.registerTask('cs', [
-    'typescript:server'
-  ]);
+  grunt.registerTask('cs', ['typescript:server']);
 
   // client complie
-  grunt.registerTask('cc', [
-    'typescript:client'
-  ]);
+  grunt.registerTask('cc', ['typescript:client']);
 
-  grunt.registerTask('default', [
-    'clean:app',
-    'clean:server',
-    'typescript:client',
-    'typescript:server',
-    'watch'
-  ]);
+  grunt.registerTask('default', ['clean:app', 'clean:server', 'typescript:client', 'typescript:server', 'watch']);
 
 };
