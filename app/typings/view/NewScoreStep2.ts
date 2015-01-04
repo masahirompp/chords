@@ -11,8 +11,8 @@ class NewScoreStep2 {
   constructor(public $step2: JQuery, newScore: NewScore) {
     this.$original = $step2.find('[name="original"]');
     this.$existing = $step2.find('[name="existing"]');
-    this.$originalTitle = this.$original.find('#originalTitle');
-    this.$existingSong = this.$existing.find('#existingSong');
+    this.$originalTitle = this.$original.find('#newScoreOriginalTitle');
+    this.$existingSong = this.$existing.find('#newScoreExistingSong');
 
     this.$originalTitle.on('keyup', () => {
       Helper.thinOut(() => {

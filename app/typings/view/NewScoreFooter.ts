@@ -8,10 +8,10 @@ class NewScoreFooter {
   private $nextStep3Btn: JQuery;
 
   constructor($footer: JQuery, newScore: NewScore) {
-    this.$submitBtn = $footer.find('#createNewScore');
-    this.$resetBtn = $footer.find('#resetNewScore');
-    this.$nextStep2Btn = $footer.find('#nextStep2NewScore');
-    this.$nextStep3Btn = $footer.find('#nextStep3NewScore');
+    this.$submitBtn = $footer.find('#newScoreCreate');
+    this.$resetBtn = $footer.find('#newScoreReset');
+    this.$nextStep2Btn = $footer.find('#newScoreNextStep2');
+    this.$nextStep3Btn = $footer.find('#newScoreNextStep3');
 
     this.$resetBtn.on('click', e => {
       e.preventDefault();

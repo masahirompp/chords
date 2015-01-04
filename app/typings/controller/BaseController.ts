@@ -26,7 +26,11 @@ class BaseController {
       });
 
     KeywordSearch.factory($('#keywordSearchForm'), $('#keywordSearchResult'));
-    NewScore.factory($('#newScoreStepChart'), $('#step1'), $('#step2'), $('#step3'), $('#newScoreFooter'));
+    NewScore.factory($('#newScoreStepChart'),
+      $('#newScoreStep1'),
+      $('#newScoreStep2'),
+      $('#newScoreStep3'),
+      $('#newScoreFooter'));
   }
 }
 

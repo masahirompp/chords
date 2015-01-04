@@ -3,7 +3,7 @@ import NewScoreBody = require('../view/NewScoreBody');
 import NewScoreStep1 = require('../view/NewScoreStep1');
 import NewScoreStep2 = require('../view/NewScoreStep2');
 import NewScoreFooter = require('../view/NewScoreFooter');
-import Util = require('../Util/Util');
+import Util = require('../util/Util');
 
 var STEP1 = 1;
 var STEP2 = 2;
