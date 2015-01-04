@@ -2,53 +2,62 @@ import ScoreDTO = require('../dto/ScoreDTO')
 import UserDTO = require('../dto/UserDTO')
 import Util = require('../util/Util')
 
+var cache:any = null;
 class Ajax {
 
-  public static getUsers(): JQueryPromise < UserDTO[] > {
-    return $.get('/api/users');
+  static getConfig(): JQueryPromise < any > {
+    if(cache){
+      return cache;
+    }
+    cache = $.getJSON('/api/config');
+    return cache;
   }
 
-  public static searchUsers(keyword): JQueryPromise < UserDTO[] > {
-    return $.get('/api/users/search', {
+  static getUsers(): JQueryPromise < UserDTO[] > {
+    return $.getJSON('/api/users');
+  }
+
+  static searchUsers(keyword): JQueryPromise < UserDTO[] > {
+    return $.getJSON('/api/users/search', {
       q: keyword
     });
   }
 
-  public static getUser(id): JQueryPromise < UserDTO[] > {
-    return $.get('/api/users/' + id);
+  static getUser(id): JQueryPromise < UserDTO[] > {
+    return $.getJSON('/api/users/' + id);
   }
 
-  public static getUserScores(id): JQueryPromise < ScoreDTO[] > {
-    return $.get('/api/users/' + id + '/scores');
+  static getUserScores(id): JQueryPromise < ScoreDTO[] > {
+    return $.getJSON('/api/users/' + id + '/scores');
   }
 
-  public static getScores(): JQueryPromise < ScoreDTO[] > {
-    return $.get('/api/scores');
+  static getScores(): JQueryPromise < ScoreDTO[] > {
+    return $.getJSON('/api/scores');
   }
 
-  public static searchScores(keyword: string): JQueryPromise < ScoreDTO[] > {
-    return $.get('/api/scores/search', {
+  static searchScores(keyword: string): JQueryPromise < ScoreDTO[] > {
+    return $.getJSON('/api/scores/search', {
       q: keyword
     });
   }
 
-  public static getArtistScores(artist: string): JQueryPromise < ScoreDTO[] > {
-    return $.get('/api/scores/' + Util.joinUrl(artist));
+  static getArtistScores(artist: string): JQueryPromise < ScoreDTO[] > {
+    return $.getJSON('/api/scores/' + Util.joinUrl(artist));
   }
 
-  public static getSongScores(artist: string, song: string): JQueryPromise < ScoreDTO[] > {
-    return $.get('/api/scores/' + Util.joinUrl(artist, song));
+  static getSongScores(artist: string, song: string): JQueryPromise < ScoreDTO[] > {
+    return $.getJSON('/api/scores/' + Util.joinUrl(artist, song));
   }
 
-  public static getScore(artist: string, song: string, score: string): JQueryPromise < ScoreDTO > {
+  static getScore(artist: string, song: string, score: string): JQueryPromise < ScoreDTO > {
     return $.getJSON('/api/' + Util.joinUrl(artist, song, score));
   }
 
-  public static getMyScores(): JQueryPromise < ScoreDTO[] > {
-    return $.get('/api/works');
+  static getMyScores(): JQueryPromise < ScoreDTO[] > {
+    return $.getJSON('/api/works');
   }
 
-  public static createNewOriginalScore(songName: string, description: string): JQueryPromise < ScoreDTO > {
+  static createNewOriginalScore(songName: string, description: string): JQueryPromise < ScoreDTO > {
     return $.post('/api/works', {
       isOriginal: true,
       song: songName,
@@ -56,7 +65,7 @@ class Ajax {
     });
   }
 
-  public static createNewExistingScore(artistId: string, artistName: string, songId: string, songName: string, description: string): JQueryPromise < ScoreDTO > {
+  static createNewExistingScore(artistId: string, artistName: string, songId: string, songName: string, description: string): JQueryPromise < ScoreDTO > {
     return $.post('/api/works', {
       isOriginal: false,
       artistId: artistId,
@@ -67,7 +76,7 @@ class Ajax {
     });
   }
 
-  public static getMyScore(artist: string, song: string, score: string): JQueryPromise < ScoreDTO > {
+  static getMyScore(artist: string, song: string, score: string): JQueryPromise < ScoreDTO > {
     return $.getJSON('/api/works/' + Util.joinUrl(artist, song, score));
   }
 

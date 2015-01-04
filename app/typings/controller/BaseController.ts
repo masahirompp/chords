@@ -2,12 +2,21 @@
 /// <reference path="../../../tsd/blockui/jquery.blockUI.d.ts" />
 /// <reference path="../../../tsd/bootstrap/bootstrap.d.ts" />
 
+import Ajax = require('../data/Ajax');
 import KeywordSearch = require('../viewmodel/KeywordSearch');
 import NewScore = require('../viewmodel/NewScore');
 
 class BaseController {
 
   setupNav() {
+
+    KeywordSearch.factory($('#keywordSearchForm'), $('#keywordSearchResult'));
+    NewScore.factory($('#newScoreStepChart'),
+      $('#newScoreStep1'),
+      $('#newScoreStep2'),
+      $('#newScoreStep3'),
+      $('#newScoreFooter'));
+
     $('.btn')
       .tooltip();
     $('.block-ui-logout')
@@ -25,12 +34,6 @@ class BaseController {
         });
       });
 
-    KeywordSearch.factory($('#keywordSearchForm'), $('#keywordSearchResult'));
-    NewScore.factory($('#newScoreStepChart'),
-      $('#newScoreStep1'),
-      $('#newScoreStep2'),
-      $('#newScoreStep3'),
-      $('#newScoreFooter'));
   }
 }
 

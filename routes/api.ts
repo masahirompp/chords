@@ -7,8 +7,15 @@ import ScoreDTO = require('../dto/_ScoreDTO');
 import Util = require('../util/Util');
 
 class Api {
-  static init(): express.Router {
+  static init(config: any): express.Router {
     var router: express.Router = express.Router();
+
+    /**
+     * クライアント設定値取得
+     */
+    router.get('/config', (req: express.Request, res: express.Response) => {
+      res.json(config.client);
+    });
 
     /**
      * ユーザ一覧

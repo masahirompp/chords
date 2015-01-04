@@ -1,3 +1,6 @@
+/// <reference path="../../../tsd/typeahead/typeahead.d.ts" />
+
+import LastFm = require('../data/LastFm');
 import NewScore = require('../viewmodel/NewScore')
 import Helper = require('./ViewHelper');
 
@@ -19,6 +22,8 @@ class NewScoreStep2 {
         newScore.validateStep2Original(this.$originalTitle.val());
       });
     });
+
+    this.setupTypeahead();
   }
 
   initialize() {
@@ -39,8 +44,33 @@ class NewScoreStep2 {
     this.$original.hide();
     this.$existing.show();
     setTimeout(() => this.$existingSong.focus(), 100);
+    setTimeout(this.setSuggestHeight.bind(this), 1000);
   }
 
+  private setupTypeahead() {
+    LastFm.getInstance()
+      .then(lastFm => {
+        var tracks = lastFm.makeBloodhoundTrackSearch();
+        tracks.initialize();
+        this.$existingSong.typeahead({
+          highlight: true
+        }, {
+          name: 'track',
+          displayKey: 'name',
+          source: tracks.ttAdapter()
+        });
+      });
+  }
+
+  private setSuggestHeight() {
+    var top = this.$existingSong.offset()
+      .top;
+    if (top) {
+      var height = $(document).height() - top - 50;
+      this.$existing.find('.tt-dropdown-menu')
+        .css('max-height', height + 'px');
+    }
+  }
 }
 
 export = NewScoreStep2

@@ -1,21 +1,31 @@
-var baseUrl = 'http://ws.audioscrobbler.com/2.0/?';
-var key = 'a22bfd482489ef54c386b5975e9aa195';
+/// <reference path="../../../tsd/typeahead/typeahead.d.ts" />
+
+import Ajax = require('./Ajax');
 
 /**
  * LastFM API のラッパー
  */
 class LastFm {
 
+  static getInstance() {
+    return Ajax.getConfig()
+      .then(config => {
+        return new LastFm(config.lastfm.api_key, 'http://ws.audioscrobbler.com/2.0/?');
+      });
+  }
+
+  constructor(public api_key, public baseUrl) {}
+
   /**
    * 曲取得
    * @param id
    * @returns {JQueryXHR}
    */
-  static findSong(id: string) {
-    return $.getJSON(baseUrl + $.param({
+  findSong(id: string) {
+    return $.getJSON(this.baseUrl + $.param({
       method: 'track.getinfo',
       mbid: id,
-      api_key: key,
+      api_key: this.api_key,
       format: 'json'
     }));
   }
@@ -25,80 +35,38 @@ class LastFm {
    * @param id
    * @returns {JQueryXHR}
    */
-  static findArtist(id: string) {
-    return $.getJSON(baseUrl + $.param({
+  findArtist(id: string) {
+    return $.getJSON(this.baseUrl + $.param({
       method: 'artist.getinfo',
       mbid: id,
-      api_key: key,
+      api_key: this.api_key,
       format: 'json'
     }));
   }
 
   /**
-   *
-   * @param keyword
-   * @param page
-   * @returns {JQueryXHR}
+   * トラック検索のsuggest生成
+   * @returns {Bloodhound}
    */
-  static searchSong(keyword: string, page: number = 1) {
-    return $.getJSON(baseUrl + $.param({
-        method: 'track.search',
-        track: keyword,
-        page: page,
-        limit: 10,
-        api_key: key,
-        format: 'json'
-      }))
-      .done(d => d.results.trackmatches.track);
+  makeBloodhoundTrackSearch(): Bloodhound < any > {
+    return new Bloodhound({
+      datumTokenizer: d => {
+        return Bloodhound.tokenizers.whitespace(d.name);
+      },
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      limit: 30,
+      remote: {
+        url: this.baseUrl + $.param({
+          method: 'track.search',
+          track: 'QUERY',
+          api_key: this.api_key,
+          format: 'json'
+        }),
+        wildcard: 'QUERY',
+        filter: d => d.results.trackmatches.track
+      }
+    });
   }
-
-  /**
-   *
-   * @param keyword
-   * @param page
-   * @returns {JQueryXHR}
-   */
-  static searchArtist(keyword: string, page: number = 1) {
-    return $.getJSON(baseUrl + $.param({
-        method: 'artist.search',
-        artist: keyword,
-        page: page,
-        limit: 10,
-        api_key: key,
-        format: 'json'
-      }))
-      .done(d => d.results.artistmatches.artist);
-  }
-
-  /**
-   *
-   * @param keyword
-   * @param page
-   * @returns {JQueryXHR}
-   */
-  static getArtistTopTrack(keyword: string, page: number = 1) {
-    return $.getJSON(baseUrl + $.param({
-        method: 'artist.gettoptracks',
-        artist: keyword,
-        autocorrect: 1,
-        page: page,
-        limit: 10,
-        api_key: key,
-        format: 'json'
-      }))
-      .done(d => d.toptracks.track);
-  }
-
-  /**
-   * 曲名、アーティスト名の両方から曲を検索
-   * @param keyword
-   * @param page
-   */
-  static search(keyword: string, page: number = 1) {
-    return $.when(LastFm.searchSong(keyword, page), LastFm.getArtistTopTrack(keyword, page))
-      .done((s1, s2) => s1.concat(s2));
-  }
-
 }
 
 export = LastFm
