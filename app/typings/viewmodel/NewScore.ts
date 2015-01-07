@@ -13,11 +13,9 @@ class NewScore {
 
   private isOriginal: boolean;
   private isStep1OK: boolean = false;
-  private isStep2OK: boolean = false;
+  private isStep2OK: any = null; // original title or existing data
   private isStep3OK: boolean = false;
   private currentStep: number;
-
-  private originalTitle: string = '';
 
   private initializes: Function[] = [];
   private observersIsOriginal: Function[] = [];
@@ -35,7 +33,6 @@ class NewScore {
     this.isStep2OK = false;
     this.isStep3OK = false;
     this.currentStep = STEP1;
-    this.originalTitle = '';
     this.initializes.forEach(func => setTimeout(func, 0));
   }
 
@@ -74,14 +71,21 @@ class NewScore {
    * @param title
    */
   validateStep2Original(title: string) {
-    this.originalTitle = Util.trim(title);
-    this.isStep2OK = this.isStep3OK = this.originalTitle.length > 0;
+    this.isStep2OK = Util.trim(title);
+    this.isStep3OK = !!this.isStep2OK;
 
     this.notifyStep2OK(this.isStep2OK);
   }
 
-  validateStep2Existing() {
+  /**
+   *
+   * @param data
+   */
+  validateStep2Existing(data: any) {
+    this.isStep2OK = data;
+    this.isStep3OK = !!this.isStep2OK;
 
+    this.notifyStep2OK(this.isStep2OK);
   }
 
   /**

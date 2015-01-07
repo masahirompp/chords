@@ -62,8 +62,8 @@ class LastFm {
           api_key: this.api_key,
           format: 'json'
         }),
-        wildcard: 'QUERY',
-        filter: d => d.results.trackmatches.track
+        replace: (url: string, query: string) => url.replace('QUERY', query.replace(/[\s　]+/g, '')),
+        filter: d => d.results['opensearch:totalResults'] ? d.results.trackmatches.track : []
       }
     });
   }
