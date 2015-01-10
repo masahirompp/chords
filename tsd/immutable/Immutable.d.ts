@@ -18,7 +18,7 @@
  * and from plain Javascript types.
  */
 
-declare module 'immutable' {
+declare module Immutable {
 
   /**
    * Deeply converts plain JS objects and arrays to Immutable Maps and Lists.
