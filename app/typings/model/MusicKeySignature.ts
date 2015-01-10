@@ -40,7 +40,64 @@ class MusicKeySignature {
   static Bfm = new MusicKeySignature(Key.B, Tonarity.MAJOR, [Key.B, Key.Es, Key.As, Key.Des, Key.Ges]);
   static Bm = new MusicKeySignature(Key.H, Tonarity.MAJOR, [Key.Fis, Key.Cis]);
 
+  static MajorList = [
+    MusicKeySignature.C,
+    MusicKeySignature.Cs,
+    MusicKeySignature.Df,
+    MusicKeySignature.D,
+    MusicKeySignature.Ef,
+    MusicKeySignature.E,
+    MusicKeySignature.F,
+    MusicKeySignature.Fs,
+    MusicKeySignature.G,
+    MusicKeySignature.Af,
+    MusicKeySignature.A,
+    MusicKeySignature.Bf,
+    MusicKeySignature.B,
+    MusicKeySignature.Cf
+  ];
+
+  static MinorList = [
+    MusicKeySignature.Cm,
+    MusicKeySignature.Csm,
+    MusicKeySignature.Dm,
+    MusicKeySignature.Dsm,
+    MusicKeySignature.Efm,
+    MusicKeySignature.Em,
+    MusicKeySignature.Fm,
+    MusicKeySignature.Fsm,
+    MusicKeySignature.Gm,
+    MusicKeySignature.Gsm,
+    MusicKeySignature.Afm,
+    MusicKeySignature.Am,
+    MusicKeySignature.Asm,
+    MusicKeySignature.Bfm,
+    MusicKeySignature.Bm
+  ];
+
+  /**
+   * 文字列(Fmなど)からMusicKeySignatureを取得
+   * @param keySignatureString
+   * @returns {MusicKeySignature}
+   */
+  static factory(keySignatureString: string) {
+  }
+
+  /**
+   *
+   * @param tonic 主音
+   * @param tonarity 調性（major or minor）
+   * @param signature 調号
+   */
   constructor(public tonic: Key, public tonarity: Tonarity, public signature: Key[]) {}
+
+  /**
+   * 調を返す。
+   * @returns {string} C#m, B♭など
+   */
+  get value(): string {
+    return this.tonic.value + this.tonarity.value;
+  }
 
 }
 
