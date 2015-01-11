@@ -11,7 +11,7 @@
     "bootstrap-nav-wizard": "*",
     "jquery": "*",
     "typeahead.js": "~0.10.5",
-    "immutable": "~3.4.1"
+    "immutable": "3.5.0"
   },
   "devDependencies": {}
 }
