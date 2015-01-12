@@ -52,7 +52,8 @@ export function combination < T, S, R > (array1: any, array2: any, func: (src1: 
   var result: R[] = [];
   array1.forEach(src1 => {
     array2.forEach(src2 => {
-      result.push(func(src1, src2))
+      var tmp = func(src1, src2);
+      if (tmp) result.push(tmp);
     });
   });
   return result;
