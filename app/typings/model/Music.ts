@@ -1,6 +1,5 @@
 /// <reference path="../../../tsd/immutable/immutable.d.ts" />
 
-import Immutable = require('immutable');
 import Util = require('../util/Util');
 
 /**

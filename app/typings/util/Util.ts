@@ -1,4 +1,4 @@
-import Immutable = require('immutable')
+/// <reference path="../../../tsd/immutable/immutable.d.ts" />
 
 var SPACES = /[\s　]+/g; // 空白文字
 var ESCAPE_REGEXP = /([.*+?^=!:${}()|[\]\/\\])/g; // 正規表現でエスケープが必要な文字
