@@ -1,5 +1,8 @@
 /// <reference path="../../../tsd/immutable/immutable.d.ts" />
 
+import Immutable = require('immutable');
+import Util = require('../util/Util');
+
 /**
  * オクターブ
  * @type {number}
@@ -21,50 +24,42 @@ interface BaseValue {
 interface Temperament extends BaseValue {
   position: number;
 }
-var TEMPERAMENT: Immutable.Map < string, Temperament > = Immutable.fromJS({
-  C: {
-    value: 'C',
-    inputs: ['c', 'C'],
-    sign: 'C',
-    position: 0
-  },
-  D: {
-    value: 'D',
-    inputs: ['d', 'C'],
-    sign: 'D',
-    position: 2
-  },
-  E: {
-    value: 'E',
-    inputs: ['e', 'E'],
-    sign: 'E',
-    position: 4
-  },
-  F: {
-    value: 'F',
-    inputs: ['f', 'F'],
-    sign: 'F',
-    position: 5
-  },
-  G: {
-    value: 'G',
-    inputs: ['g', 'G'],
-    sign: 'G',
-    position: 7
-  },
-  A: {
-    value: 'A',
-    inputs: ['a', 'A'],
-    sign: 'A',
-    position: 9
-  },
-  B: {
-    value: 'B',
-    inputs: ['b', 'B'],
-    sign: 'B',
-    position: 11
-  }
-});
+var TEMPERAMENT = Immutable.List < Temperament > ([{
+  value: 'C',
+  inputs: ['c', 'C'],
+  sign: 'C',
+  position: 0
+}, {
+  value: 'D',
+  inputs: ['d', 'C'],
+  sign: 'D',
+  position: 2
+}, {
+  value: 'E',
+  inputs: ['e', 'E'],
+  sign: 'E',
+  position: 4
+}, {
+  value: 'F',
+  inputs: ['f', 'F'],
+  sign: 'F',
+  position: 5
+}, {
+  value: 'G',
+  inputs: ['g', 'G'],
+  sign: 'G',
+  position: 7
+}, {
+  value: 'A',
+  inputs: ['a', 'A'],
+  sign: 'A',
+  position: 9
+}, {
+  value: 'B',
+  inputs: ['b', 'B'],
+  sign: 'B',
+  position: 11
+}]);
 
 /**
  * 変化記号
@@ -72,26 +67,27 @@ var TEMPERAMENT: Immutable.Map < string, Temperament > = Immutable.fromJS({
 export interface Accidental extends BaseValue {
   relative: number;
 }
-export var ACCIDENTAL: Immutable.Map < string, Accidental > = Immutable.fromJS({
-  Natural: {
-    value: 'Natural',
-    inputs: [''],
-    sign: '',
-    relative: 0
-  },
-  Sharped: {
-    value: 'Sharped',
-    inputs: ['s', 'S'],
-    sign: '#',
-    relative: 1
-  },
-  Flatted: {
-    value: 'Flatted',
-    inputs: ['f', 'F'],
-    sign: '♭',
-    relative: -1
-  }
-});
+export var ACCIDENTAL = Immutable.List < Accidental > ([{
+  value: 'Natural',
+  inputs: [''],
+  sign: '',
+  relative: 0
+}, {
+  value: 'Sharped',
+  inputs: ['s', 'S'],
+  sign: '#',
+  relative: 1
+}, {
+  value: 'Flatted',
+  inputs: ['f', 'F'],
+  sign: '♭',
+  relative: -1
+}]);
+
+var normalizePosition = (position: number) => {
+  while (position < 0) position = position + OCTAVE;
+  return position % OCTAVE;
+};
 
 /**
  * 音高
@@ -101,187 +97,152 @@ export interface Pitch extends BaseValue {
   baseAccidental: Accidental;
   position: number;
 }
-export var PITCH: Immutable.Map < string, Pitch > = Immutable.fromJS((() => {
-  var pitches = {};
-  TEMPERAMENT.forEach(t => {
-    ACCIDENTAL.forEach(a => {
-      pitches[t.value + a.value] = {
-        base: t,
-        baseAccidental: a,
-        position: normalizePosition(t.position + a.relative),
-        value: t.value + a.value,
-        inputs: combineInputs(t, a),
-        sign: t.sign + a.sign
-      }
-    })
-  });
-  return pitches;
-})());
-
-var normalizePosition = (position: number) => {
-  while (position < 0) position = position + OCTAVE;
-  return position % OCTAVE;
-};
-
-var combineInputs = (...inputs: BaseValue[]) => {
-  return inputs.reduce((base1, base2) => {
-      var combined = {
-        value: '',
-        inputs: [],
-        sign: ''
-      };
-      base1.inputs.forEach(i1 => {
-        base2.inputs.forEach(i2 => {
-          combined.inputs.push(i1 + i2);
-        })
-      });
-      return combined;
-    })
-    .inputs;
-};
+export var PITCH = Immutable.List < Pitch > (Util.combination(TEMPERAMENT, ACCIDENTAL, (t, a) => {
+  return {
+    base: t,
+    baseAccidental: a,
+    position: normalizePosition(t.position + a.relative),
+    value: t.value + a.inputs[0],
+    inputs: Util.combination(t.inputs, a.inputs, (i1, i2) => i1 + i2),
+    sign: t.sign + a.sign
+  }
+}));
 
 /**
  * 第三音
  */
 interface Triad extends BaseValue {}
-var TRIAD: Immutable.Map < string, Triad > = Immutable.fromJS({
-  Major: {
-    value: 'Major',
-    inputs: [''],
-    sign: ''
-  },
-  Minor: {
-    value: 'Minor',
-    inputs: ['m'],
-    sign: 'm'
-  },
-  Augmented: {
-    value: 'Augmented',
-    inputs: ['a', 'aug'],
-    sign: 'aug'
-  },
-  Diminished: {
-    value: 'Diminished',
-    inputs: ['d', 'dim'],
-    sign: 'dim'
-  },
-  Sus2: {
-    value: 'Sus2',
-    inputs: ['sus2', 's2'],
-    sign: 'sus2'
-  },
-  Sus4: {
-    value: 'Sus4',
-    inputs: ['sus4', 's4'],
-    sign: 'sus4'
-  }
-});
+var TRIAD = Immutable.List < Triad > ([{
+  value: 'Major',
+  inputs: [''],
+  sign: ''
+}, {
+  value: 'Minor',
+  inputs: ['m'],
+  sign: 'm'
+}, {
+  value: 'Augmented',
+  inputs: ['a', 'aug'],
+  sign: 'aug'
+}, {
+  value: 'Diminished',
+  inputs: ['d', 'dim'],
+  sign: 'dim'
+}, {
+  value: 'Sus2',
+  inputs: ['sus2', 's2'],
+  sign: 'sus2'
+}, {
+  value: 'Sus4',
+  inputs: ['sus4', 's4'],
+  sign: 'sus4'
+}]);
 
 /**
  * 四和音
  */
 interface Tetrad extends BaseValue {}
-var TETRAD: Immutable.Map < string, Tetrad > = Immutable.fromJS({
-  6: {
-    value: '6',
-    inputs: ['6'],
-    sign: '6'
-  },
-  7: {
-    value: '7',
-    inputs: ['7'],
-    sign: '7'
-  },
-  M7: {
-    value: 'M7',
-    inputs: ['M7'],
-    sign: 'M7'
-  },
-  NoTetrad: {
-    value: 'NoTetrad',
-    inputs: [''],
-    sign: ''
-  }
-});
+var TETRAD = Immutable.List < Tetrad > ([{
+  value: '6',
+  inputs: ['6'],
+  sign: '6'
+}, {
+  value: '7',
+  inputs: ['7'],
+  sign: '7'
+}, {
+  value: 'M7',
+  inputs: ['M7'],
+  sign: 'M7'
+}, {
+  value: 'NoTetrad',
+  inputs: [''],
+  sign: ''
+}]);
 
 /**
  * 五和音
  */
 interface Pentad extends BaseValue {}
-var PENTAD: Immutable.Map < string, Pentad > = Immutable.fromJS({
-  9: {
-    value: '9',
-    inputs: ['9'],
-    sign: '9'
-  },
-  11: {
-    value: '11',
-    inputs: ['11'],
-    sign: '11'
-  },
-  13: {
-    value: '13',
-    inputs: ['13'],
-    sign: '13'
-  },
-  NoPentad: {
-    value: 'NoPentad',
-    inputs: [''],
-    sign: ''
-  }
-});
+var PENTAD = Immutable.List < Pentad > ([{
+  value: '9',
+  inputs: ['9'],
+  sign: '9'
+}, {
+  value: '11',
+  inputs: ['11'],
+  sign: '11'
+}, {
+  value: '13',
+  inputs: ['13'],
+  sign: '13'
+}, {
+  value: 'NoPentad',
+  inputs: [''],
+  sign: ''
+}]);
 
 /**
  * 追加音
  */
 interface Added extends BaseValue {}
-var ADDED: Immutable.Map < string, Added > = Immutable.fromJS({
-  Add9: {
-    value: 'Add9',
-    inputs: ['add9'],
-    sign: 'add9'
-  },
-  Add11: {
-    value: 'Add11',
-    inputs: ['add11'],
-    sign: 'add11'
-  },
-  NoAdded: {
-    value: 'NoAdded',
-    inputs: [''],
-    sign: ''
-  }
-});
+var ADDED = Immutable.List < Added > ([{
+  value: 'Add9',
+  inputs: ['add9'],
+  sign: 'add9'
+}, {
+  value: 'Add11',
+  inputs: ['add11'],
+  sign: 'add11'
+}, {
+  value: 'NoAdded',
+  inputs: [''],
+  sign: ''
+}]);
 
 /**
  * 第五音
  */
 interface Fifth extends BaseValue {}
-var FIFTH: Immutable.Map < string, Fifth > = Immutable.fromJS({
-  Flatted5: {
-    value: 'Flatted5',
-    inputs: ['-5'],
-    sign: '-5'
-  },
-  Augmented5: {
-    value: 'Augmented5',
-    inputs: ['+5'],
-    sign: '+5'
-  },
-  NoFifth: {
-    value: 'NoFifth',
-    inputs: [''],
-    sign: ''
-  }
-});
+var FIFTH = Immutable.List < Fifth > ([{
+  value: 'Flatted5',
+  inputs: ['-5'],
+  sign: '-5'
+}, {
+  value: 'Augmented5',
+  inputs: ['+5'],
+  sign: '+5'
+}, {
+  value: 'NoFifth',
+  inputs: [''],
+  sign: ''
+}]);
 
 /**
  * テンション
  */
 interface Tension extends BaseValue {}
-var TENSION: Immutable.Map<string,Tension> = Immutable.fromJS({
+var TENSION_BASE = Immutable.List < Tension > ([{
+  value: 'T9',
+  inputs: ['t9', 'T9'],
+  sign: '9'
+}, {
+  value: 'T11',
+  inputs: ['t11', 'T11'],
+  sign: '11'
+}, {
+  value: 'T13',
+  inputs: ['t13', 'T13'],
+  sign: '13'
+}]);
 
-});
+var TENSION = Immutable.List < Tension > (Util.combination(TENSION_BASE, ACCIDENTAL, (t, a) => {
+  return {
+    value: t.value + a.inputs[0],
+    inputs: Util.combination(t.inputs, a.inputs, (i1, i2) => i1 + i2),
+    sign: a.sign + t.sign
+  };
+}));
 
 /**
  * 和音

@@ -1,3 +1,4 @@
+import Music = require('../model/Music');
 import NewScoreStepChart = require('../view/NewScoreStepChart');
 import NewScoreBody = require('../view/NewScoreBody');
 import NewScoreStep1 = require('../view/NewScoreStep1');
@@ -23,6 +24,8 @@ class NewScore {
   private observersStep2OK: Function[] = [];
   private observersStep3OK: Function[] = [];
   private observersCurrentStep: Function[] = [];
+
+  private keySignature = Music.PITCH;
 
   /**
    * 初期化
