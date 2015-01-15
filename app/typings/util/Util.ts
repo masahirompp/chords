@@ -1,5 +1,3 @@
-/// <reference path="../../../tsd/immutable/immutable.d.ts" />
-
 var SPACES = /[\s　]+/g; // 空白文字
 var ESCAPE_REGEXP = /([.*+?^=!:${}()|[\]\/\\])/g; // 正規表現でエスケープが必要な文字
 
@@ -46,9 +44,7 @@ export function startsWith(src: string, expect: string): boolean {
  * @param array2
  * @param func
  */
-export function combination < T, S, R > (array1: Immutable.List < T > , array2: Immutable.List < S > , func: (src1: T, src2: S) => R): R[];
-export function combination < T, S, R > (array1: T[], array2: S[], func: (src1: T, src2: S) => R): R[];
-export function combination < T, S, R > (array1: any, array2: any, func: (src1: T, src2: S) => R): R[] {
+export function combination < T, S, R > (array1: T[], array2: S[], func: (src1: T, src2: S) => R): R[] {
   var result: R[] = [];
   array1.forEach(src1 => {
     array2.forEach(src2 => {

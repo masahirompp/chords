@@ -10,8 +10,7 @@
     "bootstrap-social": "*",
     "bootstrap-nav-wizard": "*",
     "jquery": "*",
-    "typeahead.js": "~0.10.5",
-    "immutable": "3.5.0"
+    "typeahead.js": "~0.10.5"
   },
   "devDependencies": {}
 }
