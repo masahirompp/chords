@@ -25,8 +25,6 @@ class NewScore {
   private observersStep3OK: Function[] = [];
   private observersCurrentStep: Function[] = [];
 
-  private keySignature = Music.HARMONICSET;
-
   /**
    * 初期化
    */
