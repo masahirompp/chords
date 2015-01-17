@@ -113,33 +113,29 @@ export module Pitch {
   export interface IPitch extends IBaseValue {
     position: number;
   }
-  var PITCH: IPitch[] = Util.combination(TEMPERAMENT, ACCIDENTAL, (t, a) => {
+  var PITCH = Immutable.Seq < IPitch > (Util.combination(TEMPERAMENT, ACCIDENTAL, (t, a) => {
     return {
       position: normalizePosition(t.position + a.relative),
       input: t.input + a.input,
       sign: t.sign + a.sign
     }
-  });
-
-  export function all() {
-    return PITCH;
-  }
+  }));
 
   export function findByInput(input: string) {
-    return PITCH.filter(p => p.input === input);
+    return PITCH.find(p => p.input === input);
   }
 
   export function findBySign(sign: string) {
-    return PITCH.filter(p => p.sign === sign);
+    return PITCH.find(p => p.sign === sign);
   }
 }
 
-export module Chord {
+/**
+ * 和音
+ */
+module Harmony {
 
-  /**
-   *
-   */
-  export enum HarmonicType {
+  enum HarmonicType {
     MAJOR,
     MAJOR6,
     DOMINANT7,
@@ -150,15 +146,12 @@ export module Chord {
     DIMINISH
   }
 
-  interface IHarmonic extends IBaseValue {
+  export interface IHarmony extends IBaseValue {
     type: HarmonicType;
     relatives: number[]; // 構成音の相対位置
   }
 
-  /**
-   * 和音
-   */
-  var HARMONY: IHarmonic[] = [{
+  var HARMONY = Immutable.Seq < IHarmony > ([{
     input: '',
     sign: '',
     relatives: [P1, M3, P5],
@@ -308,16 +301,31 @@ export module Chord {
     sign: 'dim9',
     relatives: [P1, m3, D5, M6, M9],
     type: HarmonicType.DIMINISH
-  }];
+  }]);
 
-  /**
-   * テンション
-   */
+  export function findByInput(input: string) {
+    return HARMONY.find(h => h.input === input);
+  }
+
+  export function findBySign(sign: string) {
+    return HARMONY.find(h => h.sign === sign);
+  }
+}
+
+/**
+ * テンション
+ */
+module Tension {
+
   interface ITension extends IBaseValue {
     relatives: number[];
     covered: number[];
   }
-  var TENSION: ITension[] = [{
+  export interface ITensions {
+    tensions: ITension[];
+  }
+
+  var TENSION = Immutable.Seq < ITension > ([{
     input: 'f9',
     sign: '♭9',
     relatives: [f9],
@@ -352,25 +360,99 @@ export module Chord {
     sign: '13',
     relatives: [f13],
     covered: [f9, n9, s9, n11, s11, n13]
-  }];
+  }]);
 
-  /**
-   * コード
-   */
-  export interface IChord {
-    input: string;
-    sign: string;
-    relatives: number[];
+  export function findByInput(input: string): ITensions {
+    return {
+      tensions: input ? input.split(',')
+        .map(i => TENSION.find(t => t.input === i)) : []
+    }
   }
 
+  export function findBySign(sign: string): ITensions {
+    return {
+      tensions: sign ? sign.split(',')
+        .map(s => TENSION.find(t => t.sign === s)) : []
+    }
+  }
+
+  export function toInput(tension: ITensions) {
+    return tension.tensions.length ? '(' + tension.tensions.map(t => t.input)
+      .join(',') + ')' : '';
+  }
+
+  export function toSign(tension: ITensions) {
+    return tension.tensions.length ? '(' + tension.tensions.map(t => t.sign)
+      .join(',') + ')' : '';
+  }
+
+  export function inputToSign(input: string) {
+    return toSign(findByInput(input));
+  }
+
+  export function singToInput(sign: string) {
+    return toInput(findBySign(sign));
+  }
+}
+
+/**
+ * コード
+ */
+export module Chord {
+
+  export interface IChord {
+    root: Pitch.IPitch;
+    harmony: Harmony.IHarmony;
+    tension: Tension.ITensions;
+    bass: Pitch.IPitch;
+  }
+
+  var toSign = (chord: IChord) => {
+    return chord.root.sign + chord.harmony.sign + Tension.toSign(chord.tension) + (chord.bass ? 'on' + chord.bass.sign : '');
+  };
+
+  var toInput = (chord: IChord) => {
+    return chord.root.input + chord.harmony.input + Tension.toInput(chord.tension) + (chord.bass ? 'on' + chord.bass.input : '');
+  };
+
+  var regInput = /^([a-g][sf]?)([adgijmsu245679\-]*)(\(([sf139,]+)\))?(on([a-g][sf]?))?$/;
+  var regSign = /^([A-G][#♭]?)([adgijmMsu245679\-]*)(\(([#♭139,]+)\))?(on([A-G][#♭]?))?$/;
+
+  export function findByInput(input: string): IChord {
+    var tmp = regInput.exec(input);
+    return {
+      root: Pitch.findByInput(tmp[1]),
+      harmony: Harmony.findByInput(tmp[2]),
+      tension: Tension.findByInput(tmp[4]),
+      bass: Pitch.findByInput(tmp[6])
+    };
+  }
+
+  export function findBySign(sign: string): IChord {
+    var tmp = regSign.exec(sign);
+    return {
+      root: Pitch.findBySign(tmp[1]),
+      harmony: Harmony.findBySign(tmp[2]),
+      tension: Tension.findBySign(tmp[4]),
+      bass: Pitch.findBySign(tmp[6])
+    };
+  }
+
+  export function inputToSign(input: string) {
+    return toSign(findByInput(input));
+  }
+
+  export function signToInput(sign: string) {
+    return toInput(findBySign(sign));
+  }
 }
 
 /**
  * 調号
  */
 export module Signature {
-  
-  var MAJOR = {
+
+  var MAJOR = Immutable.Seq({
     c: [],
     cs: ['fs', 'cs', 'gs', 'ds', 'as', 'es', 'bs'],
     df: ['bf', 'ef', 'af', 'df', 'gf'],
@@ -386,24 +468,23 @@ export module Signature {
     bf: ['bf', 'ef'],
     b: ['fs', 'cs', 'gs', 'ds', 'as'],
     cf: ['bf', 'ef', 'af', 'df', 'gf', 'cf', 'ff']
-  };
+  });
 
-  var MINOR = {
-    c: ['bf, ef, af'],
-    cs: ['fs, cs, gs, ds'],
-    d: ['bf'],
-    ds: ['fs, cs, gs, ds, as, es'],
-    ef: ['bf, ef, af, df, gf, cf'],
-    e: ['fs'],
-    f: ['bf, ef, af, df'],
-    fs: ['fs, cs, gs'],
-    g: ['bf, ef'],
-    gs: ['fs, cs, gs, ds, as'],
-    af: ['bf, ef, af, df, gf, cf, ff'],
-    a: [],
-    as: ['fs, cs, gs, ds, as, es, bs'],
-    bf: ['bf, ef, af, df, gf'],
-    b: ['fs, cs']
-  };
-
+  var MINOR = Immutable.Seq({
+    cm: ['bf, ef, af'],
+    csm: ['fs, cs, gs, ds'],
+    dm: ['bf'],
+    dsm: ['fs, cs, gs, ds, as, es'],
+    efm: ['bf, ef, af, df, gf, cf'],
+    em: ['fs'],
+    fm: ['bf, ef, af, df'],
+    fsm: ['fs, cs, gs'],
+    gm: ['bf, ef'],
+    gsm: ['fs, cs, gs, ds, as'],
+    afm: ['bf, ef, af, df, gf, cf, ff'],
+    am: [],
+    asm: ['fs, cs, gs, ds, as, es, bs'],
+    bfm: ['bf, ef, af, df, gf'],
+    bm: ['fs, cs']
+  });
 }
