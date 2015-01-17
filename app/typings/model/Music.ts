@@ -452,7 +452,7 @@ export module Chord {
  */
 export module Signature {
 
-  var MAJOR = Immutable.Seq({
+  var SIGNATURE = Immutable.Seq({
     c: [],
     cs: ['fs', 'cs', 'gs', 'ds', 'as', 'es', 'bs'],
     df: ['bf', 'ef', 'af', 'df', 'gf'],
@@ -467,10 +467,7 @@ export module Signature {
     a: ['fs', 'cs', 'gs'],
     bf: ['bf', 'ef'],
     b: ['fs', 'cs', 'gs', 'ds', 'as'],
-    cf: ['bf', 'ef', 'af', 'df', 'gf', 'cf', 'ff']
-  });
-
-  var MINOR = Immutable.Seq({
+    cf: ['bf', 'ef', 'af', 'df', 'gf', 'cf', 'ff'],
     cm: ['bf, ef, af'],
     csm: ['fs, cs, gs, ds'],
     dm: ['bf'],
@@ -487,4 +484,14 @@ export module Signature {
     bfm: ['bf, ef, af, df, gf'],
     bm: ['fs, cs']
   });
+
+  export function KeySigns(): Immutable.Iterable < number, string > {
+    return SIGNATURE.keySeq()
+      .map(Chord.inputToSign);
+  }
+
+  export function getSignatureFromSign(sign: string) {
+
+  }
+
 }
