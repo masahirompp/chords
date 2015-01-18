@@ -11,7 +11,8 @@
     "bootstrap-nav-wizard": "*",
     "jquery": "*",
     "typeahead.js": "~0.10.5",
-    "immutable": "~3.6.2"
+    "immutable": "~3.6.2",
+    "TsMonad": "https://github.com/cbowdon/TsMonad.git"
   },
   "devDependencies": {}
 }

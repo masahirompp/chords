@@ -1,4 +1,5 @@
 /// <reference path="../../../tsd/immutable/Immutable.d.ts" />
+/// <reference path="../../../tsd/tsmonad/tsmonad.d.ts" />
 
 import Util = require('../util/Util');
 
@@ -405,16 +406,28 @@ export module Chord {
   export interface IChord {
     root: Pitch.IPitch;
     harmony: Harmony.IHarmony;
-    tension: Tension.ITensions;
-    bass: Pitch.IPitch;
+    tension: TsMonad.Maybe < Tension.ITensions > ;
+    bass: TsMonad.Maybe < Pitch.IPitch > ;
   }
 
   var toSign = (chord: IChord) => {
-    return <string > chord.root.sign + < string > chord.harmony.sign + Tension.toSign(chord.tension) + (chord.bass ? 'on' + < string > chord.bass.sign : '');
+    return <string > chord.root.sign + < string > chord.harmony.sign + chord.tension.caseOf({
+      just: Tension.toSign,
+      nothing: () => ''
+    }) + chord.bass.caseOf({
+      just: b => 'on' + b.sign,
+      nothing: () => ''
+    })
   };
 
   var toInput = (chord: IChord) => {
-    return <string > chord.root.input + < string > chord.harmony.input + Tension.toInput(chord.tension) + (chord.bass ? 'on' + < string > chord.bass.input : '');
+    return <string > chord.root.input + < string > chord.harmony.input + chord.tension.caseOf({
+      just: Tension.toInput,
+      nothing: () => ''
+    }) + chord.bass.caseOf({
+      just: b => 'on' + b.input,
+      nothing: () => ''
+    })
   };
 
   var regInput = /^([a-g][sf]?)([adgijmsu245679\-]*)(\(([sf139,]+)\))?(on([a-g][sf]?))?$/;
@@ -425,8 +438,8 @@ export module Chord {
     return {
       root: Pitch.findByInput(tmp[1]),
       harmony: Harmony.findByInput(tmp[2]),
-      tension: Tension.findByInput(tmp[4]),
-      bass: Pitch.findByInput(tmp[6])
+      tension: TsMonad.Maybe.maybe(Tension.findByInput(tmp[4])),
+      bass: TsMonad.Maybe.maybe(Pitch.findByInput(tmp[6]))
     };
   }
 
@@ -435,8 +448,8 @@ export module Chord {
     return {
       root: Pitch.findBySign(tmp[1]),
       harmony: Harmony.findBySign(tmp[2]),
-      tension: Tension.findBySign(tmp[4]),
-      bass: Pitch.findBySign(tmp[6])
+      tension: TsMonad.Maybe.maybe(Tension.findBySign(tmp[4])),
+      bass: TsMonad.Maybe.maybe(Pitch.findBySign(tmp[6]))
     };
   }
 
