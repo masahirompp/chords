@@ -7,7 +7,10 @@ class NewScoreStep3 {
   private $musicalTime: JQuery;
   private $key: JQuery;
 
-  constructor($step3: JQuery, newScore: NewScore) {}
+  constructor($step3: JQuery, newScore: NewScore) {
+    this.$newScoreKey = $()
+
+  }
 
 }
 

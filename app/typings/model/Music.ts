@@ -41,9 +41,11 @@ var normalizePosition = (position: number) => {
 /**
  * 入力と出力のペア
  */
+interface IInput extends String {}
+interface ISign extends String {}
 interface IBaseValue {
-  input: string; // ユーザ入力値
-  sign: string; // 表示値
+  input: IInput; // ユーザ入力値
+  sign: ISign; // 表示値
 }
 
 /**
@@ -57,7 +59,7 @@ export module Pitch {
   interface ITemperament extends IBaseValue {
     position: number;
   }
-  var TEMPERAMENT: ITemperament[] = [{
+  var TEMPERAMENT = < ITemperament[] > [{
     input: 'c',
     sign: 'C',
     position: P1
@@ -93,7 +95,7 @@ export module Pitch {
   interface IAccidental extends IBaseValue {
     relative: number;
   }
-  var ACCIDENTAL: IAccidental[] = [{
+  var ACCIDENTAL = < IAccidental[] > [{
     input: '',
     sign: '',
     relative: 0
@@ -116,16 +118,16 @@ export module Pitch {
   var PITCH = Immutable.Seq < IPitch > (Util.combination(TEMPERAMENT, ACCIDENTAL, (t, a) => {
     return {
       position: normalizePosition(t.position + a.relative),
-      input: t.input + a.input,
-      sign: t.sign + a.sign
+      input: < string > t.input + < string > a.input,
+      sign: < string > t.sign + < string > a.sign
     }
   }));
 
-  export function findByInput(input: string) {
+  export function findByInput(input: IInput) {
     return PITCH.find(p => p.input === input);
   }
 
-  export function findBySign(sign: string) {
+  export function findBySign(sign: ISign) {
     return PITCH.find(p => p.sign === sign);
   }
 }
@@ -303,11 +305,11 @@ module Harmony {
     type: HarmonicType.DIMINISH
   }]);
 
-  export function findByInput(input: string) {
+  export function findByInput(input: IInput) {
     return HARMONY.find(h => h.input === input);
   }
 
-  export function findBySign(sign: string) {
+  export function findBySign(sign: ISign) {
     return HARMONY.find(h => h.sign === sign);
   }
 }
@@ -362,14 +364,14 @@ module Tension {
     covered: [f9, n9, s9, n11, s11, n13]
   }]);
 
-  export function findByInput(input: string): ITensions {
+  export function findByInput(input: IInput): ITensions {
     return {
       tensions: input ? input.split(',')
         .map(i => TENSION.find(t => t.input === i)) : []
     }
   }
 
-  export function findBySign(sign: string): ITensions {
+  export function findBySign(sign: ISign): ITensions {
     return {
       tensions: sign ? sign.split(',')
         .map(s => TENSION.find(t => t.sign === s)) : []
@@ -386,11 +388,11 @@ module Tension {
       .join(',') + ')' : '';
   }
 
-  export function inputToSign(input: string) {
+  export function inputToSign(input: IInput) {
     return toSign(findByInput(input));
   }
 
-  export function singToInput(sign: string) {
+  export function singToInput(sign: ISign) {
     return toInput(findBySign(sign));
   }
 }
@@ -408,18 +410,18 @@ export module Chord {
   }
 
   var toSign = (chord: IChord) => {
-    return chord.root.sign + chord.harmony.sign + Tension.toSign(chord.tension) + (chord.bass ? 'on' + chord.bass.sign : '');
+    return <string > chord.root.sign + < string > chord.harmony.sign + Tension.toSign(chord.tension) + (chord.bass ? 'on' + < string > chord.bass.sign : '');
   };
 
   var toInput = (chord: IChord) => {
-    return chord.root.input + chord.harmony.input + Tension.toInput(chord.tension) + (chord.bass ? 'on' + chord.bass.input : '');
+    return <string > chord.root.input + < string > chord.harmony.input + Tension.toInput(chord.tension) + (chord.bass ? 'on' + < string > chord.bass.input : '');
   };
 
   var regInput = /^([a-g][sf]?)([adgijmsu245679\-]*)(\(([sf139,]+)\))?(on([a-g][sf]?))?$/;
   var regSign = /^([A-G][#♭]?)([adgijmMsu245679\-]*)(\(([#♭139,]+)\))?(on([A-G][#♭]?))?$/;
 
-  export function findByInput(input: string): IChord {
-    var tmp = regInput.exec(input);
+  export function findByInput(input: IInput): IChord {
+    var tmp = regInput.exec( < string > input);
     return {
       root: Pitch.findByInput(tmp[1]),
       harmony: Harmony.findByInput(tmp[2]),
@@ -428,8 +430,8 @@ export module Chord {
     };
   }
 
-  export function findBySign(sign: string): IChord {
-    var tmp = regSign.exec(sign);
+  export function findBySign(sign: ISign): IChord {
+    var tmp = regSign.exec( < string > sign);
     return {
       root: Pitch.findBySign(tmp[1]),
       harmony: Harmony.findBySign(tmp[2]),
@@ -438,11 +440,11 @@ export module Chord {
     };
   }
 
-  export function inputToSign(input: string) {
+  export function inputToSign(input: IInput) {
     return toSign(findByInput(input));
   }
 
-  export function signToInput(sign: string) {
+  export function signToInput(sign: ISign) {
     return toInput(findBySign(sign));
   }
 }
@@ -490,7 +492,7 @@ export module Signature {
       .map(Chord.inputToSign);
   }
 
-  export function getSignatureFromSign(sign: string) {
+  export function getSignatureFromSign(sign: ISign) {
 
   }
 
