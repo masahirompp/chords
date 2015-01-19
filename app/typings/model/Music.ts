@@ -1,5 +1,5 @@
 /// <reference path="../../../tsd/immutable/Immutable.d.ts" />
-/// <reference path="../../../tsd/tsmonad/tsmonad.d.ts" />
+/// <reference path="../../../tsd/monapt/monapt.d.ts" />
 
 import Util = require('../util/Util');
 
@@ -42,8 +42,8 @@ var normalizePosition = (position: number) => {
 /**
  * 入力と出力のペア
  */
-interface IInput extends String {}
-interface ISign extends String {}
+type IInput = string;
+type ISign = string;
 interface IBaseValue {
   input: IInput; // ユーザ入力値
   sign: ISign; // 表示値
@@ -119,8 +119,8 @@ export module Pitch {
   var PITCH = Immutable.Seq < IPitch > (Util.combination(TEMPERAMENT, ACCIDENTAL, (t, a) => {
     return {
       position: normalizePosition(t.position + a.relative),
-      input: < string > t.input + < string > a.input,
-      sign: < string > t.sign + < string > a.sign
+      input: t.input + a.input,
+      sign: t.sign + a.sign
     }
   }));
 
@@ -406,27 +406,27 @@ export module Chord {
   export interface IChord {
     root: Pitch.IPitch;
     harmony: Harmony.IHarmony;
-    tension: TsMonad.Maybe < Tension.ITensions > ;
-    bass: TsMonad.Maybe < Pitch.IPitch > ;
+    tension: monapt.Option < Tension.ITensions > ;
+    bass: monapt.Option < Pitch.IPitch > ;
   }
 
   var toSign = (chord: IChord) => {
-    return <string > chord.root.sign + < string > chord.harmony.sign + chord.tension.caseOf({
-      just: Tension.toSign,
-      nothing: () => ''
-    }) + chord.bass.caseOf({
-      just: b => 'on' + b.sign,
-      nothing: () => ''
+    return chord.root.sign + chord.harmony.sign + chord.tension.match({
+      Some: Tension.toSign,
+      None: () => ''
+    }) + chord.bass.match({
+      Some: b => 'on' + b.sign,
+      None: () => ''
     })
   };
 
   var toInput = (chord: IChord) => {
-    return <string > chord.root.input + < string > chord.harmony.input + chord.tension.caseOf({
-      just: Tension.toInput,
-      nothing: () => ''
-    }) + chord.bass.caseOf({
-      just: b => 'on' + b.input,
-      nothing: () => ''
+    return <string > chord.root.input + chord.harmony.input + chord.tension.match({
+      Some: Tension.toInput,
+      None: () => ''
+    }) + chord.bass.match({
+      Some: b => 'on' + b.input,
+      None: () => ''
     })
   };
 
@@ -434,22 +434,22 @@ export module Chord {
   var regSign = /^([A-G][#♭]?)([adgijmMsu245679\-]*)(\(([#♭139,]+)\))?(on([A-G][#♭]?))?$/;
 
   export function findByInput(input: IInput): IChord {
-    var tmp = regInput.exec( < string > input);
+    var tmp = regInput.exec( input);
     return {
       root: Pitch.findByInput(tmp[1]),
       harmony: Harmony.findByInput(tmp[2]),
-      tension: TsMonad.Maybe.maybe(Tension.findByInput(tmp[4])),
-      bass: TsMonad.Maybe.maybe(Pitch.findByInput(tmp[6]))
+      tension: new monapt.Some(Tension.findByInput(tmp[4])),
+      bass: new monapt.Some(Pitch.findByInput(tmp[6]))
     };
   }
 
   export function findBySign(sign: ISign): IChord {
-    var tmp = regSign.exec( < string > sign);
+    var tmp = regSign.exec( sign);
     return {
       root: Pitch.findBySign(tmp[1]),
       harmony: Harmony.findBySign(tmp[2]),
-      tension: TsMonad.Maybe.maybe(Tension.findBySign(tmp[4])),
-      bass: TsMonad.Maybe.maybe(Pitch.findBySign(tmp[6]))
+      tension: new monapt.Some(Tension.findBySign(tmp[4])),
+      bass: new monapt.Some(Pitch.findBySign(tmp[6]))
     };
   }
 

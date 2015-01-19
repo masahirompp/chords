@@ -54,6 +54,6 @@
     "strip-ansi": "latest",
     "supports-color": "latest",
     "time-grunt": "latest",
-    "typescript": "^1.3.0"
+    "typescript": "^1.4.1"
   }
 }

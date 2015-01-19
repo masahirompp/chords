@@ -111,20 +111,18 @@ class Score extends BaseModel {
 
     // TODO
     var songId = songName;
-
-    return Promise.all([User.findById(userId), Score.generateScoreNo(userId, songId)])
-      .then((values: any[]) => {
-        var user = < User > values[0];
-        var scoreNo = < number > values[1];
-        return Score.createNewScore(scoreNo,
-          description,
-          userId,
-          user.name,
-          Score.CONST.ORIGINAL,
-          songName, //TODO songID
-          songName,
-          userId)
-      })
+    return User.findById(userId)
+      .then(user => {
+        return Score.generateScoreNo(userId, songId)
+          .then(scoreNo => Score.createNewScore(scoreNo,
+            description,
+            userId,
+            user.name,
+            Score.CONST.ORIGINAL,
+            songName, //TODO songID
+            songName,
+            userId))
+      });
   };
 
   static createNewExistingScore = (userId: string,

@@ -60,7 +60,7 @@ module.exports = function(grunt) {
         src: ['db/*.ts', 'dto/*.ts', 'models/*.ts', 'routes/*.ts', 'util/*.ts'],
         options: {
           module: 'commonjs',
-          target: 'es5',
+          target: 'es6',
           sourceMap: false,
           declaration: false
         }
