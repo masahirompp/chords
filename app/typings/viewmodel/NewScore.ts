@@ -3,6 +3,7 @@ import NewScoreStepChart = require('../view/NewScoreStepChart');
 import NewScoreBody = require('../view/NewScoreBody');
 import NewScoreStep1 = require('../view/NewScoreStep1');
 import NewScoreStep2 = require('../view/NewScoreStep2');
+import NewScoreStep3 = require('../view/NewScoreStep3');
 import NewScoreFooter = require('../view/NewScoreFooter');
 import Util = require('../util/Util');
 
@@ -144,10 +145,11 @@ class NewScore {
     var body = new NewScoreBody($step1, $step2, $step3);
     var step1 = new NewScoreStep1($step1, newScore);
     var step2 = new NewScoreStep2($step2, newScore);
+    var step3 = new NewScoreStep3($step3, newScore);
     var footer = new NewScoreFooter($footer, newScore);
 
     // observer登録
-    newScore.addObservers(stepChart, body, step1, step2, footer);
+    newScore.addObservers(stepChart, body, step1, step2,step3, footer);
 
     // viewmodelの初期化
     newScore.initialize();
@@ -166,11 +168,15 @@ class NewScore {
     body: NewScoreBody,
     step1: NewScoreStep1,
     step2: NewScoreStep2,
+    step3: NewScoreStep3,
     footer: NewScoreFooter) {
     this.addInitializes(stepChart, stepChart.initialize);
     this.addInitializes(body, body.initialize);
     this.addInitializes(step1, step1.initialize);
     this.addInitializes(step2, step2.initialize);
+    this.addInitializes(step3, () => {
+      step3.initialize(Music.Signature.KeySigns());
+    });
     this.addInitializes(footer, footer.initialize);
     this.addObserverIsOriginal(step1, step1.activeBtn);
     this.addObserverIsOriginal(step2, step2.show);

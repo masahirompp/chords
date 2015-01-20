@@ -436,8 +436,8 @@ export module Chord {
     return {
       root: Pitch.findByInput(tmp[1]),
       harmony: Harmony.findByInput(tmp[2]),
-      tension: new monapt.Some(Tension.findByInput(tmp[4])),
-      bass: new monapt.Some(Pitch.findByInput(tmp[6]))
+      tension: monapt.Option(Tension.findByInput(tmp[4])),
+      bass: monapt.Option(Pitch.findByInput(tmp[6]))
     };
   }
 
@@ -446,8 +446,8 @@ export module Chord {
     return {
       root: Pitch.findBySign(tmp[1]),
       harmony: Harmony.findBySign(tmp[2]),
-      tension: new monapt.Some(Tension.findBySign(tmp[4])),
-      bass: new monapt.Some(Pitch.findBySign(tmp[6]))
+      tension: monapt.Option(Tension.findBySign(tmp[4])),
+      bass: monapt.Option(Pitch.findBySign(tmp[6]))
     };
   }
 
@@ -498,9 +498,10 @@ export module Signature {
     bm: ['fs, cs']
   });
 
-  export function KeySigns(): Immutable.Iterable < number, string > {
+  export function KeySigns(): string[] {
     return SIGNATURE.keySeq()
-      .map(Chord.inputToSign);
+      .map(Chord.inputToSign)
+      .toArray();
   }
 
   export function getSignatureFromSign(sign: string): Pitch.IPitch[] {
