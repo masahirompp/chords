@@ -85,7 +85,10 @@ class Score extends BaseModel {
     isOriginal: boolean,
     songId: string,
     songName: string,
-    userId: string): Promise < Score > => {
+    userId: string,
+    key: string,
+    musicalTime: string): Promise < Score > => {
+    console.log(arguments);
 
     return new Promise < Score > ((resolve, reject) => {
       _model.create({
@@ -102,12 +105,22 @@ class Score extends BaseModel {
           isPublish: false
         })
         .onResolve((err, score) => {
-          err ? reject(err) : resolve(new Score(score))
+          if (err) {
+            return reject(err)
+          }
+          Chord.createNewChord(score._id, key, musicalTime)
+            .then(chord => resolve(new Score(score)))
+            .catch(reject);
         })
     })
   };
 
-  static createNewOriginalScore = (userId: string, songName: string, description: string): Promise < Score > => {
+  static createNewOriginalScore = (userId: string,
+    songName: string,
+    description: string,
+    key: string,
+    musicalTime: string): Promise < Score > => {
+    console.log(arguments);
 
     // TODO
     var songId = songName;
@@ -119,9 +132,11 @@ class Score extends BaseModel {
             userId,
             user.name,
             Score.CONST.ORIGINAL,
-            songName, //TODO songID
+            songId,
             songName,
-            userId))
+            userId,
+            key,
+            musicalTime))
       });
   };
 
@@ -130,7 +145,8 @@ class Score extends BaseModel {
     artistName: string,
     songId: string,
     songName: string,
-    description: string): Promise < Score > => {
+    description: string, key: string, musicalTime: string): Promise < Score > => {
+    console.log(arguments);
     return Score.generateScoreNo(artistName, songName)
       .then((scoreNo: number) => {
         return Score.createNewScore(scoreNo,
@@ -140,7 +156,9 @@ class Score extends BaseModel {
           Score.CONST.EXISTING,
           songId,
           songName,
-          userId)
+          userId,
+          key,
+          musicalTime)
       })
   };
 
@@ -422,7 +440,7 @@ class Score extends BaseModel {
       .then(chord => {
         var d = this.json;
         d.chords = chord.chords;
-        d.option = chord.option;
+        d.settings = chord.settings;
         return d;
       });
   }

@@ -8,7 +8,7 @@ interface ScoreDTO {
   star: number;
   description: string;
   chords : Array<Array<string>>;
-  option : any;
+  settings : any;
 }
 
 export = ScoreDTO

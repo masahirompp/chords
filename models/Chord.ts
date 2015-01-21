@@ -13,9 +13,9 @@ var _schema = new mongoose.Schema({
     chords: {
       type: Array
     },
-    option: {
-      type: mongoose.Schema.Types.Mixed,
-      require: true
+    settings: {
+      key: String,
+      musicalTime: String
     },
     created: {
       type: Date,
@@ -37,7 +37,7 @@ var _model = mongoose.model < IChord > ('Chord', _schema);
 
 class Chord extends BaseModel {
   chords: Array < Array < string >> ;
-  option: any;
+  settings: any;
 
   /**
    * コンストラクタ
@@ -62,12 +62,15 @@ class Chord extends BaseModel {
     })
   }
 
-  static createNewChord(scoreId: mongoose.Types.ObjectId): Promise < Chord > {
+    static createNewChord(scoreId: mongoose.Types.ObjectId, key: string, musicalTime: string): Promise < Chord > {
     return new Promise < Chord > ((resolve, reject) => {
       _model.create({
           scoreId: scoreId,
           chords: [],
-          option: {}
+          settings: {
+            key: key,
+            musicalTime: musicalTime
+          }
         })
         .onResolve((err, chord) => {
           err ? reject(err) : resolve(new Chord(chord));

@@ -2,11 +2,11 @@ import ScoreDTO = require('../dto/ScoreDTO')
 import UserDTO = require('../dto/UserDTO')
 import Util = require('../util/Util')
 
-var cache:any = null;
+var cache: any = null;
 class Ajax {
 
   static getConfig(): JQueryPromise < any > {
-    if(cache){
+    if (cache) {
       return cache;
     }
     cache = $.getJSON('/api/config');
@@ -57,22 +57,28 @@ class Ajax {
     return $.getJSON('/api/works');
   }
 
-  static createNewOriginalScore(songName: string, description: string): JQueryPromise < ScoreDTO > {
+  static createNewOriginalScore(songName: string, description: string, key: string, musicalTime: string): JQueryPromise < ScoreDTO > {
+    console.log(arguments);
     return $.post('/api/works', {
       isOriginal: true,
       song: songName,
-      description: description
+      description: description,
+      key: key,
+      musicalTime: musicalTime
     });
   }
 
-  static createNewExistingScore(artistId: string, artistName: string, songId: string, songName: string, description: string): JQueryPromise < ScoreDTO > {
+  static createNewExistingScore(artistId: string, artistName: string, songId: string, songName: string, description: string, key: string, musicalTime: string): JQueryPromise < ScoreDTO > {
+    console.log(arguments);
     return $.post('/api/works', {
-      isOriginal: false,
+      isOriginal: null,
       artistId: artistId,
       artistName: artistName,
       songId: songId,
       songName: songName,
-      description: description
+      description: description,
+      key: key,
+      musicalTime: musicalTime
     });
   }
 

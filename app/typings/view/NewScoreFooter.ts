@@ -25,6 +25,10 @@ class NewScoreFooter {
       e.preventDefault();
       newScore.step2to3();
     });
+    this.$submitBtn.on('click', e => {
+      e.preventDefault();
+      newScore.submit();
+    })
   }
 
   initialize() {

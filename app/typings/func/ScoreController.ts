@@ -13,7 +13,7 @@ class ScoreController {
 
   public static draw(data:ScoreDTO) {
 
-    var settings:StaffSettings = new StaffSettings(data.option);
+    var settings:StaffSettings = new StaffSettings(data.settings);
     var viewScale:ViewScale = new ViewScale();
     var staffManager = new StaffManager(settings);
     var chords = ScoreChords.factory(data.chords);

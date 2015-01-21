@@ -11,6 +11,10 @@ class NewScoreStep3 {
     this.$newScoreKey = $step3.find('#newScoreKey');
     this.$description = $step3.find('#newScoreDescription');
     this.$musicalTime = $step3.find('#newScoreMusicalTime');
+
+    this.$newScoreKey.on('change', e => newScore.setKey(this.$newScoreKey.val()));
+    this.$musicalTime.on('change', e => newScore.setMusicalTime(this.$musicalTime.val()));
+    this.$description.on('change', e => newScore.setDescription(this.$description.val()));
   }
 
   initialize(keys: () => Music.Signature.Keys) {

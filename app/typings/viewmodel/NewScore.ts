@@ -1,4 +1,5 @@
 import Music = require('../model/Music');
+import Ajax = require('../data/Ajax');
 import NewScoreStepChart = require('../view/NewScoreStepChart');
 import NewScoreBody = require('../view/NewScoreBody');
 import NewScoreStep1 = require('../view/NewScoreStep1');
@@ -18,6 +19,9 @@ class NewScore {
   private isStep2OK: any = null; // original title or existing data
   private isStep3OK: boolean = false;
   private currentStep: number;
+  private musicalTime: string;
+  private key: string;
+  private description: string;
 
   private initializes: Function[] = [];
   private observersIsOriginal: Function[] = [];
@@ -35,6 +39,8 @@ class NewScore {
     this.isStep2OK = false;
     this.isStep3OK = false;
     this.currentStep = STEP1;
+    this.key = 'C';
+    this.musicalTime = 'triple';
     this.initializes.forEach(func => setTimeout(func, 0));
   }
 
@@ -92,12 +98,28 @@ class NewScore {
     this.notifyStep2OK(this.isStep2OK);
   }
 
+  setDescription(desc: string) {
+    this.description = desc;
+  }
+
+  setMusicalTime(time: string) {
+    this.musicalTime = time;
+  }
+
+  setKey(key: string) {
+    this.key = key;
+  }
+
   /**
    * 新規作成
    */
   submit() {
-    if (this.currentStep === STEP3) {
-      // TODO
+    if (this.isStep1OK && this.isStep2OK && this.isStep3OK) {
+      if (this.isOriginal) {
+        Ajax.createNewOriginalScore(this.isStep2OK, Util.trim(this.description), this.key, this.musicalTime);
+      } else {
+        Ajax.createNewExistingScore('', this.isStep2OK.artist, this.isStep2OK.mbid, this.isStep2OK.name, Util.trim(this.description), this.key, this.musicalTime);
+      }
     }
   }
 

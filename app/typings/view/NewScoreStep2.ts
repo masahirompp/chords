@@ -25,6 +25,7 @@ class NewScoreStep2 {
     });
 
     this.$existingSong.on('typeahead:selected', (e, d) => {
+      console.log(d);
       newScore.validateStep2Existing(d);
     });
   }
