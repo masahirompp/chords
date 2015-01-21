@@ -63,8 +63,10 @@ class NewScore {
     if (this.currentStep === STEP2) {
       var prev = this.currentStep;
       this.currentStep = STEP3;
+      this.isStep3OK = true;
 
       this.notifyCurrentStep(prev, this.currentStep);
+      this.notifyStep3OK(this.isStep3OK);
     }
   }
 
@@ -149,7 +151,7 @@ class NewScore {
     var footer = new NewScoreFooter($footer, newScore);
 
     // observer登録
-    newScore.addObservers(stepChart, body, step1, step2,step3, footer);
+    newScore.addObservers(stepChart, body, step1, step2, step3, footer);
 
     // viewmodelの初期化
     newScore.initialize();
@@ -175,7 +177,7 @@ class NewScore {
     this.addInitializes(step1, step1.initialize);
     this.addInitializes(step2, step2.initialize);
     this.addInitializes(step3, () => {
-      step3.initialize(Music.Signature.KeySigns());
+      step3.initialize(Music.Signature.KeySigns);
     });
     this.addInitializes(footer, footer.initialize);
     this.addObserverIsOriginal(step1, step1.activeBtn);

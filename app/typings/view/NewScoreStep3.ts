@@ -1,3 +1,4 @@
+import Music = require('../model/Music')
 import NewScore = require('../viewmodel/NewScore')
 
 class NewScoreStep3 {
@@ -12,10 +13,12 @@ class NewScoreStep3 {
     this.$musicalTime = $step3.find('#newScoreMusicalTime');
   }
 
-  initialize(Keys:string[]) {
-    Keys.forEach(k => {
-      this.$newScoreKey.append('<option>' + k + '</option>');
-    })
+  initialize(keys: () => Music.Signature.Keys) {
+    keys()
+      .toArray()
+      .forEach(k => {
+        this.$newScoreKey.append('<option>' + k + '</option>');
+      })
   }
 
 }

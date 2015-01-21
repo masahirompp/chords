@@ -498,10 +498,10 @@ export module Signature {
     bm: ['fs, cs']
   });
 
-  export function KeySigns(): string[] {
-    return SIGNATURE.keySeq()
-      .map(Chord.inputToSign)
-      .toArray();
+  export interface Keys extends Immutable.Iterable < string, string > {}
+
+  export function KeySigns(): Keys {
+    return SIGNATURE.map((v, k) => Chord.inputToSign(k));
   }
 
   export function getSignatureFromSign(sign: string): Pitch.IPitch[] {
