@@ -134,21 +134,20 @@ class Api {
      * /api/works
      */
     router.post('/works', (req: express.Request, res: express.Response) => {
-      console.log(req.body);
       var ps = req.body.isOriginal ?
-        Score.createNewOriginalScore(req.user.userId,
+        Score.createNewOriginalScore(req.user.id,
           req.body.song,
           req.body.description,
           req.body.key,
           req.body.musicalTime) :
-        Score.createNewExistingScore(req.user.userId,
+        Score.createNewExistingScore(req.user.id,
           req.body.artistId,
           req.body.artistName,
           req.body.songId,
           req.body.songName,
           req.body.description,
           req.body.key,
-          req.body.musicalTime)
+          req.body.musicalTime);
         ps.then(score => res.json(score.json))
         .catch(err => res.json(err));
     });

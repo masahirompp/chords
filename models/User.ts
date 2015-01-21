@@ -130,9 +130,7 @@ class User extends BaseModel {
     return new Promise < User > ((resolve, reject) => {
       _model.findById(id)
         .exec()
-        .onResolve((err, user) => {
-          err ? reject(err) : resolve(new User(user));
-        })
+        .onResolve((err, user) => err ? reject(err) : resolve(new User(user)))
     })
   };
 

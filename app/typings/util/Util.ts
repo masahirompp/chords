@@ -60,7 +60,7 @@ export function combination < T, S, R > (array1: T[], array2: S[], func: (src1: 
  * @param paths
  * @returns {string}
  */
-export function joinUrl(...paths: string[]): string {
+export function joinUrl(...paths: any[]): string {
   return paths.map(path => encodeURIComponent(path))
     .join('/');
 }

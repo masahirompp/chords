@@ -115,11 +115,20 @@ class NewScore {
    */
   submit() {
     if (this.isStep1OK && this.isStep2OK && this.isStep3OK) {
-      if (this.isOriginal) {
-        Ajax.createNewOriginalScore(this.isStep2OK, Util.trim(this.description), this.key, this.musicalTime);
-      } else {
-        Ajax.createNewExistingScore('', this.isStep2OK.artist, this.isStep2OK.mbid, this.isStep2OK.name, Util.trim(this.description), this.key, this.musicalTime);
-      }
+      (this.isOriginal ?
+        Ajax.createNewOriginalScore(this.isStep2OK,
+          Util.trim(this.description),
+          this.key,
+          this.musicalTime) :
+        Ajax.createNewExistingScore('',
+          this.isStep2OK.artist,
+          this.isStep2OK.mbid,
+          this.isStep2OK.name,
+          Util.trim(this.description),
+          this.key,
+          this.musicalTime))
+      .then(score => window.location.href = Util.joinUrl('works', score.song.artist.name, score.song.name, score.scoreNo))
+        .fail(err => console.log(err));
     }
   }
 

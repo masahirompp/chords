@@ -16,7 +16,7 @@ class SessionObject {
   }
 
   /**
-   * Profilekからセッションオブジェクト生成。未登録の場合に使用する。
+   * Profileからセッションオブジェクト生成。未登録の場合に使用する。
    * @param profile
    * @returns {SessionObject}
    */
