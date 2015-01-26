@@ -63,7 +63,7 @@ class LastFm {
           format: 'json'
         }),
         replace: (url: string, query: string) => url.replace('QUERY', query.replace(/[\s　]+/g, '')),
-        filter: d => d.results['opensearch:totalResults'] ? d.results.trackmatches.track : []
+        filter: d => d.results['opensearch:totalResults'] !== '0' ? d.results.trackmatches.track : []
       }
     });
   }
