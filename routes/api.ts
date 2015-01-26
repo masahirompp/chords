@@ -124,7 +124,7 @@ class Api {
      * /api/works
      */
     router.get('/works', (req: express.Request, res: express.Response) => {
-      Score.findMyWorks(req.user.userId, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
+      Score.findMyWorks(req.user.id, Util.toNumber(req.query.skip), Util.toNumber(req.query.limit))
         .then(scores => res.json(scores.map(score => Util.project(score.json, req.query.fields))))
         .catch(err => res.json(err));
     });
