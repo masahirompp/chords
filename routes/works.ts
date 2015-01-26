@@ -36,7 +36,7 @@ class Works {
      * 譜面編集画面
      */
     router.get('/:artist/:song/:score', (req: express.Request, res: express.Response) => {
-      res.render('score', {
+      res.render('edit', {
         title: req.params.artist + ' ' + req.params.song + ' (' + req.params.id + ') | ChordKitchen',
         keyword: '',
         user: req.user

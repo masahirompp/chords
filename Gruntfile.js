@@ -168,6 +168,18 @@ module.exports = function(grunt) {
           name: 'app.works',
           mainConfigFile: '<%= config.app %>/scripts/app.works.js'
         }
+      }, // !!! build.js options for app.edit.js (edit.ect) !!!
+      dist5: {
+        options: {
+          out: '<%= config.dist %>/scripts/app.edit.js',
+          baseUrl: '<%= config.app %>/scripts',
+          optimize: 'none',
+          preserveLicenseComments: false,
+          useStrict: true,
+          wrap: true,
+          name: 'app.edit',
+          mainConfigFile: '<%= config.app %>/scripts/app.edit.js'
+        }
       }
     },
 
@@ -204,7 +216,8 @@ module.exports = function(grunt) {
         '<%= config.dist %>/index.ect',
         '<%= config.dist %>/search.ect',
         '<%= config.dist %>/score.ect',
-        '<%= config.dist %>/works.ect'
+        '<%= config.dist %>/works.ect',
+        '<%= config.dist %>/edit.ect'
       ],
       css: ['<%= config.dist %>/styles/{,*/}*.css']
     },

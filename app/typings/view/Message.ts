@@ -18,8 +18,9 @@ class Message {
     Message.showMessage('danger', message);
   }
 
-  static remove():void{
-    $('.alert').alert('close');
+  static remove(): void {
+    $('.alert')
+      .alert('close');
   }
 
   /**
@@ -32,7 +33,7 @@ class Message {
       .$container
       .prepend('<div class="alert alert-' + level + ' alert-dismissible" role="alert">' +
         '<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span>' +
-        '<span class="sr-only">Close</span></button>' + message + '</div>');
+        '<span class="sr-only">Close</span></button>' + decodeURIComponent(message) + '</div>');
   }
 }
 
