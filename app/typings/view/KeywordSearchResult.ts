@@ -1,5 +1,5 @@
 import KeywordSearch = require('../viewmodel/KeywordSearch');
-import Message = require('../view/Message');
+import Message = require('./Message');
 import ViewHelper = require('./ViewHelper');
 import ScoreDTO = require('../dto/ScoreDTO');
 
