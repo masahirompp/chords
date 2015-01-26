@@ -127,7 +127,7 @@ class NewScore {
           Util.trim(this.description),
           this.key,
           this.musicalTime))
-      .then(score => window.location.href = Util.joinUrl('works', score.song.artist.name, score.song.name, score.scoreNo))
+      .then(score => window.location.href = Util.joinUrl('/works', score.song.artist.name, score.song.name, score.scoreNo))
         .fail(err => console.log(err));
     }
   }
