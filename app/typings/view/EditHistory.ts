@@ -1,0 +1,5 @@
+class EditHistory {
+
+}
+
+export = EditHistory

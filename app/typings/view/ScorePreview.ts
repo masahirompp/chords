@@ -1,0 +1,5 @@
+class ScorePreview {
+
+}
+
+export = ScorePreview
