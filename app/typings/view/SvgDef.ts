@@ -1,0 +1,5 @@
+class SvgDef {
+
+}
+
+export = SvgDef

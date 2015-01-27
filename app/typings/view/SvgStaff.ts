@@ -1,0 +1,5 @@
+class SvgStaff {
+
+}
+
+export = SvgStaff
