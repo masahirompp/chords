@@ -16,6 +16,15 @@
         var should = chai.should();
     </script>
 
+    <script src="bower_components/requirejs/require.js"></script>
+    <script>
+      require.config({
+        'paths': {
+          'underscore': 'bower_components/underscore/underscore-min.js'
+        }
+      });
+    </script>
+
     <!-- include source files here... -->
 
     <!-- include spec files here... -->
