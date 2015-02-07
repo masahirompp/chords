@@ -5,3 +5,4 @@
 /// <reference path="express-session/express-session.d.ts" />
 /// <reference path="mongoose/mongoose.d.ts" />
 /// <reference path="mongoose-unique-validator/mongoose-unique-validator.d.ts" />
+/// <reference path="underscore/underscore.d.ts" />

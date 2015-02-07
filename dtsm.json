@@ -37,6 +37,9 @@
     },
     "bootstrap/bootstrap.d.ts": {
       "ref": "aaf45c99861ea0e5838f076627609058a85e6b4b"
+    },
+    "underscore/underscore.d.ts": {
+      "ref": "42c8a3b74c05f6887ce21dd63c6234e424f9f8fe"
     }
   }
 }
