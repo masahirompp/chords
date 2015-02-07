@@ -3,7 +3,6 @@ import KeywordSearchResult = require('../view/KeywordSearchResult');
 import KeywordSearchBrowser = require('../view/KeywordSearchBrowser');
 import Ajax = require('../data/Ajax');
 import ScoreDTO = require('../dto/ScoreDTO');
-import Util = require('../util/Util');
 
 class KeywordSearch {
 
@@ -36,7 +35,7 @@ class KeywordSearch {
    * @param keyword
    */
   submit(keyword: string) {
-    this.keyword = Util.trim(keyword);
+    this.keyword = keyword;
     this.notifyKeyword(this.keyword);
 
     if (this.isSearchDisplay) {

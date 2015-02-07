@@ -1,3 +1,4 @@
+import ViewHelper = require('ViewHelper')
 import KeywordSearch = require('../viewmodel/KeywordSearch');
 
 class KeywordSearchForm {
@@ -10,7 +11,7 @@ class KeywordSearchForm {
     this.$btn = $form.find('#searchBtn');
 
     this.$btn.on('click', () => {
-      keywordSearch.submit(this.$input.val());
+      keywordSearch.submit(ViewHelper.trim(this.$input.val()));
       return false;
     });
   }

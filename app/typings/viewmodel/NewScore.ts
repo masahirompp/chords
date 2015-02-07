@@ -81,7 +81,7 @@ class NewScore {
    * @param title
    */
   validateStep2Original(title: string) {
-    this.isStep2OK = Util.trim(title);
+    this.isStep2OK = title;
     this.isStep3OK = !!this.isStep2OK;
 
     this.notifyStep2OK(this.isStep2OK);
@@ -117,14 +117,14 @@ class NewScore {
     if (this.isStep1OK && this.isStep2OK && this.isStep3OK) {
       (this.isOriginal ?
         Ajax.createNewOriginalScore(this.isStep2OK,
-          Util.trim(this.description),
+          this.description,
           this.key,
           this.musicalTime) :
         Ajax.createNewExistingScore('',
           this.isStep2OK.artist,
           this.isStep2OK.mbid,
           this.isStep2OK.name,
-          Util.trim(this.description),
+          this.description,
           this.key,
           this.musicalTime))
       .then(score => window.location.href = Util.joinUrl('/works', score.song.artist.name, score.song.name, score.scoreNo))

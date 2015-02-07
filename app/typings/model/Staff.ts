@@ -1,3 +1,5 @@
+/// <reference path="../../../tsd/d3/d3.d.ts" />
+
 /**
  * 全体
  */
@@ -56,6 +58,28 @@ module CLEF {
 
   export function get(clef: TYPE) {
     return clef === TYPE.G ? G : F;
+  }
+}
+
+/**
+ * D3.Scale Util
+ */
+module Scale {
+
+  // TODO memoize
+
+  function getScale(browserWidth: number) {
+    return d3.scale.linear()
+      .domain([0, A4_WIDTH])
+      .range([0, browserWidth]);
+  }
+
+  export function calc(browserWidth: number, x: number) {
+    return Math.floor(getScale(browserWidth)(x) * 100) / 100; // 小数点第二位まで求める。
+  }
+
+  export function floor(browserWidth: number, x: number) {
+    return Math.floor(getScale(browserWidth)(x));
   }
 }
 

@@ -20,7 +20,7 @@ class NewScoreStep2 {
 
     this.$originalTitle.on('keyup', () => {
       Helper.thinOut(() => {
-        newScore.validateStep2Original(this.$originalTitle.val());
+        newScore.validateStep2Original(Helper.trim(this.$originalTitle.val()));
       });
     });
 

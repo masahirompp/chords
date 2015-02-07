@@ -1,5 +1,6 @@
 import Music = require('../model/Music')
 import NewScore = require('../viewmodel/NewScore')
+import ViewHelper = require('ViewHelper')
 
 class NewScoreStep3 {
 
@@ -14,7 +15,7 @@ class NewScoreStep3 {
 
     this.$newScoreKey.on('change', e => newScore.setKey(this.$newScoreKey.val()));
     this.$musicalTime.on('change', e => newScore.setMusicalTime(this.$musicalTime.val()));
-    this.$description.on('change', e => newScore.setDescription(this.$description.val()));
+    this.$description.on('change', e => newScore.setDescription(ViewHelper.trim(this.$description.val())));
   }
 
   initialize(keys: () => Music.Signature.Keys) {
