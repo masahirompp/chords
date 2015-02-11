@@ -2,7 +2,7 @@
 
 import LastFm = require('../data/LastFm');
 import NewScore = require('../viewmodel/NewScore')
-import Helper = require('./ViewHelper');
+import ViewHelper = require('./ViewHelper');
 
 class NewScoreStep2 {
 
@@ -19,8 +19,8 @@ class NewScoreStep2 {
     this.setupTypeahead();
 
     this.$originalTitle.on('keyup', () => {
-      Helper.thinOut(() => {
-        newScore.validateStep2Original(Helper.trim(this.$originalTitle.val()));
+      ViewHelper.thinOut(() => {
+        newScore.validateStep2Original(ViewHelper.trim(this.$originalTitle.val()));
       });
     });
 

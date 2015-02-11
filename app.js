@@ -40,6 +40,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
+// test
+if(config.server.debug){
+  app.use(express.static(path.join(__dirname, 'test')));
+}
+
 // auth
 var passport = require('./util/AuthUtil')
   .init(config, mongoose, app);

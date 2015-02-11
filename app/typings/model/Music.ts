@@ -86,7 +86,7 @@ var findTension = _.memoize(findByInputSign(Tension));
 var regInput = /^([a-g][sf]?)([adgijmsu245679\-]*)(\(([sf139,]+)\))?(on([a-g][sf]?))?$/;
 var regSign = /^([A-G][#♭]?)([adgijmMsu245679\-]*)(\(([#♭139,]+)\))?(on([A-G][#♭]?))?$/;
 
-var execRegChord = Util.dispatch(regInput.exec, regSign.exec);
+var execRegChord = Util.dispatch(Util.invoker('exec', regInput.exec), Util.invoker('exec', regSign.exec));
 
 /**
  *

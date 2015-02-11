@@ -1,4 +1,4 @@
-import Interval = require('Interval');
+import Interval = require('./Interval');
 
 var Temperament = [{
   input: 'c',

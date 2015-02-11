@@ -1,7 +1,5 @@
 /// <reference path="../../../tsd/underscore/underscore.d.ts" />
 
-import _ = require('underscore');
-
 /**
  *
  * @param thing
@@ -332,31 +330,30 @@ export function repeatedly(times: number, fun) {
 //  };
 //}
 
-// _.invoke
-///**
-// *  対象オブジェクト(target)でメソッドを実行する関数を返す。
-// * @param name
-// * @param method
-// * @returns {Function}
-// * @example
-// *  var rev = invoker('reverse',Array.prototype.reverse);
-// *  _.map([[1,2,3],[4,5]],rev)
-// *  => [[3,2,1],[5,4]]
-// */
-//export function invoker(name: string, method: Function) {
-//  return function(target /* ,args... */ ) {
-//    if (!existy(target)) {
-//      fail('Must provide a target');
-//    }
-//
-//    var targetMethod = target[name];
-//    var args = _.rest(arguments);
-//
-//    return doWhen((existy(targetMethod) && method === targetMethod), function() {
-//      return targetMethod.apply(target, args);
-//    });
-//  };
-//}
+/**
+*  対象オブジェクト(target)でメソッドを実行する関数を返す。
+* @param name
+* @param method
+* @returns {Function}
+* @example
+*  var rev = invoker('reverse',Array.prototype.reverse);
+*  _.map([[1,2,3],[4,5]],rev)
+*  => [[3,2,1],[5,4]]
+*/
+export function invoker(name: string, method: Function) {
+  return function(target /* ,args... */ ) {
+    if (!existy(target)) {
+      fail('Must provide a target');
+    }
+
+    var targetMethod = target[name];
+    var args = _.rest(arguments);
+
+    return doWhen((existy(targetMethod) && method === targetMethod), function() {
+      return targetMethod.apply(target, args);
+    });
+  };
+}
 
 /**
  * 最初に値を返す関数の結果を返す関数を返す

@@ -1,6 +1,6 @@
 import Music = require('../model/Music')
 import NewScore = require('../viewmodel/NewScore')
-import ViewHelper = require('ViewHelper')
+import ViewHelper = require('./ViewHelper')
 
 class NewScoreStep3 {
 

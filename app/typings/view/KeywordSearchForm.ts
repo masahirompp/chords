@@ -1,4 +1,4 @@
-import ViewHelper = require('ViewHelper')
+import ViewHelper = require('./ViewHelper')
 import KeywordSearch = require('../viewmodel/KeywordSearch');
 
 class KeywordSearchForm {

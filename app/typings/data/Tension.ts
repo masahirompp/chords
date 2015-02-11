@@ -1,4 +1,4 @@
-import Interval = require('Interval');
+import Interval = require('./Interval');
 
 var Tension = [{
   input: 'f9',

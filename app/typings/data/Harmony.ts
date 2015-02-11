@@ -1,5 +1,5 @@
-import Interval = require('Interval');
-import HarmonicType = require('HarmonicType');
+import Interval = require('./Interval');
+import HarmonicType = require('./HarmonicType');
 
 var Harmony = [{
   input: '',
