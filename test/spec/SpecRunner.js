@@ -8,7 +8,7 @@ require.config({
 });
 
 define(function(require) {
-  //var mocha = require('mocha');
+  'use strict';
   var chai = require('chai');
   var should = chai.should();
   mocha.setup('bdd');

@@ -14,8 +14,17 @@ export function fail(thing) {
  * @returns {Function}
  */
 export function complement(pred: Function) {
-  return function() {
-    return !pred.apply(null, _.toArray(arguments));
+  return _.partial(complementBind(pred), null);
+}
+
+/**
+ * 逆を返す関数を返す
+ * @param pred
+ * @returns {Function}
+ */
+export function complementBind(pred: Function) {
+  return function(context, ...args) {
+    return !pred.apply(context, args);
   };
 }
 
@@ -79,6 +88,7 @@ export function orify(...funs: Function[]) {
     }
     return re(_.rest(rFuns), rArgs);
   }
+
   return function(...args) {
     return re(funs, args);
   }
@@ -90,10 +100,7 @@ export function orify(...funs: Function[]) {
  * @return {boolean}
  */
 export function isArrayLike(x) {
-  if (!_.isObject(x)) {
-    return false;
-  }
-  return x.length === +x.length;
+  return _.isObject(x);
 }
 
 /**
@@ -105,8 +112,20 @@ export function isArrayLike(x) {
  *  splat(fun)([1,2,3]) => A
  */
 export function splat(fun: Function) {
-  return function(array: any[]) {
-    return fun.apply(null, array);
+  return _.partial(splatBind(fun), null);
+}
+
+/**
+ * カンマ区切りの引数を期待する関数に、配列で引数を渡すようにする。
+ * @param fun
+ * @returns {Function}
+ * @example
+ *  fun(1,2,3) => A
+ *  splat(fun)([1,2,3]) => A
+ */
+export function splatBind(fun: Function) {
+  return function(context, array: any[]) {
+    return fun.apply(context, array);
   };
 }
 
@@ -119,8 +138,20 @@ export function splat(fun: Function) {
  *  unsplat(fun)(1,2,3) => A
  */
 export function unsplat(fun: Function) {
-  return function() {
-    return fun.call(null, _.toArray(arguments));
+  return _.partial(unsplatBind(fun), null);
+}
+
+/**
+ * 引数として配列を期待する関数に、カンマ区切りで引数を渡すように変換する
+ * @param fun
+ * @returns {Function}
+ * @example
+ *  fun([1,2,3]) => A
+ *  unsplat(fun)(1,2,3) => A
+ */
+export function unsplatBind(fun: Function) {
+  return function(context) {
+    return fun.call(context, _.toArray(arguments));
   };
 }
 
@@ -132,8 +163,20 @@ export function unsplat(fun: Function) {
  * @return {any}
  */
 export function doWhen(cond, action: Function, ...args: any[]) {
+  return doWhenBind(null, cond, action, args)
+}
+
+/**
+ * condがtrueの場合のみactionを実行する
+ * @param context
+ * @param cond
+ * @param action
+ * @param args
+ * @return {any}
+ */
+export function doWhenBind(context, cond, action: Function, ...args: any[]) {
   if (truthy(cond)) {
-    return action.apply(action, args);
+    return action.apply(context, args);
   }
   return void 0;
 }
@@ -145,11 +188,21 @@ export function doWhen(cond, action: Function, ...args: any[]) {
  * @return {function(): any}
  */
 export function fnull(fun: Function, ...defaults) {
-  return function( /* args... */ ) {
-    var args = _.map(arguments, function(e, i) {
+  return _.partial(fnullBind.apply(null, arguments), null);
+}
+
+/**
+ * 引数の既定値を設定した関数を返す
+ * @param fun
+ * @param defaults
+ * @return {function(any): any}
+ */
+export function fnullBind(fun: Function, ...defaults) {
+  return function(context, ...args) {
+    var args = _.map(args, function(e, i) {
       return existy(e) ? e : defaults[i];
     });
-    return fun.apply(null, args);
+    return fun.apply(context, args);
   };
 }
 
@@ -160,8 +213,18 @@ export function fnull(fun: Function, ...defaults) {
  * @return {function(any): (...any|any)}
  */
 export function invokeOrElse(fun, defaultValue) {
-  return function(...args) {
-    var result = fun.apply(fun, args);
+  return _.partial(invokeOrElseBind(fun, defaultValue), null);
+}
+
+/**
+ * 関数を実行し、結果がなければ既定値を返す関数を返す。
+ * @param fun
+ * @param defaultValue 既定値
+ * @return {function(any): (...any|any)}
+ */
+export function invokeOrElseBind(fun, defaultValue) {
+  return function(context, ...args) {
+    var result = fun.apply(context, args);
     if (existy(result)) {
       return result;
     }
@@ -177,8 +240,29 @@ export function invokeOrElse(fun, defaultValue) {
  */
 export function lazyInvoke(fun, ...args: any[]) {
   return function() {
-    return fun.apply(fun, args);
+    return fun.apply(null, args);
   }
+}
+
+/**
+ * 関数をポリモーフィックにする。
+ * 引数の型(値 or array like)により、戻り値の型が変わる。
+ * @param fun
+ * @return {function(any, ...[any]): (any[]|any)}
+ * @example
+ *  polymorphic(truthy)('aaa') => true;
+ *  polymorphic(truthy)(['aaa', 'bbb']) => [true, true]
+ *  polymorphic(truthy)({m: 'aaa', n: null}) => [true, false]
+ */
+export function polymorphic(fun) {
+  return function(target, ...args) {
+    if (isArrayLike(target)) {
+      return _.map(target, function(value) { /* keyなどの第二引数以降は渡さない */
+        return fun.apply(null, construct(value, args));
+      });
+    }
+    return fun.apply(null, arguments); /* arguments = construct(target, args) */
+  };
 }
 
 /**
@@ -191,14 +275,14 @@ export function lazyInvoke(fun, ...args: any[]) {
  *  polymorphic(toUpperCase)(['aaa', 'bbb']) => ['AAA', 'BBB']
  *  polymorphic(toUpperCase)({m: 'aaa', n: 'bbb'}) => ['AAA', 'BBB']
  */
-export function polymorphic(fun) {
-  return function(target, ...args) {
-    if (isArrayLike(target)) {
-      return _.map(target, function(value) { /* keyなどの第二引数以降は渡さない */
-        return fun.apply(this, construct(value, args));
+export function polymorphicBind(fun) {
+  return function(context, ...args) {
+    if (isArrayLike(context)) {
+      return _.map(context, function(value) { /* keyなどの第二引数以降は渡さない */
+        return fun.apply(value, construct(value, args));
       });
     }
-    return fun.apply(target, arguments); /* arguments = construct(target, args) */
+    return fun.apply(context, args);
   };
 }
 
@@ -293,6 +377,7 @@ export function rePlucker(field: string) {
       return _.map(obj, re);
     }
   }
+
   return _.compose(_.compact, _.flatten, re) /* (obj) */ ;
 }
 
@@ -331,15 +416,15 @@ export function repeatedly(times: number, fun) {
 //}
 
 /**
-*  対象オブジェクト(target)でメソッドを実行する関数を返す。
-* @param name
-* @param method
-* @returns {Function}
-* @example
-*  var rev = invoker('reverse',Array.prototype.reverse);
-*  _.map([[1,2,3],[4,5]],rev)
-*  => [[3,2,1],[5,4]]
-*/
+ *  対象オブジェクト(target)でメソッドを実行する関数を返す。
+ * @param name
+ * @param method
+ * @returns {Function}
+ * @example
+ *  var rev = invoker('reverse',Array.prototype.reverse);
+ *  _.map([[1,2,3],[4,5]],rev)
+ *  => [[3,2,1],[5,4]]
+ */
 export function invoker(name: string, method: Function) {
   return function(target /* ,args... */ ) {
     if (!existy(target)) {
