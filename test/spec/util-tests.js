@@ -64,6 +64,23 @@ define(function(require) {
       });
     });
 
+    describe('polymorphic', function() {
+      var escape = util.polymorphic(_.escape);
+      it('escape("a&a") => "a&amp;a"', function() {
+        escape('a&a').should.equal('a&amp;a');
+      });
+      it('escape(["a&a","b&b"]) => ["a&amp;a","b&amp;b"]', function() {
+        var result = escape(['a&a', 'b&b']);
+        result[0].should.equal('a&amp;a');
+        result[1].should.equal('b&amp;b');
+      });
+      it('toUpperCase({m:"a&a",n:"b&b"}) => ["a&amp;a","b&amp;b"]', function() {
+        var result = escape({m: "a&a", n: "b&b"});
+        result[0].should.equal('a&amp;a');
+        result[1].should.equal('b&amp;b');
+      });
+    });
+
   });
 
 });

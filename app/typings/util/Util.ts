@@ -393,15 +393,15 @@ export function best(fun: Function, coll: any[]) {
   });
 }
 
-/**
- * 特定回数繰り返す
- * @param times
- * @param fun
- * @returns {*|Array}
- */
-export function repeatedly(times: number, fun) {
-  return _.map(_.range(times), fun);
-}
+///**
+// * 特定回数繰り返す
+// * @param times
+// * @param fun
+// * @returns {*|Array}
+// */
+//export function repeatedly(times: number, fun) {
+//  return _.map(_.range(times), fun);
+//}
 
 // _.constant
 ///**
@@ -644,65 +644,6 @@ export function combination(fun, ...cols: any[][]) {
   return mapcat(function(c) {
     return combination.apply(fun, construct(_.partial(fun, c), _.rest(cols)));
   }, _.first(cols));
-}
-
-
-/**
- * 遅延評価メソッドチェーン
- */
-export class LazyChain {
-  private _calls = [];
-  private _target;
-
-  /**
-   * 遅延評価メソッドチェーン
-   * @param obj
-   * @constructor
-   * @example
-   *  new LazyChain([2,1,3]).invoke('sort').force();
-   *  => [1,2,3]
-   */
-  constructor(obj) {
-    var isLC = (obj instanceof LazyChain);
-    this._calls = isLC ? cat(obj._calls, []) : [];
-    this._target = isLC ? obj._target : obj;
-  }
-
-  /**
-   * 実行するメソッドを登録
-   * @param methodName
-   * @returns {LazyChain}
-   */
-  invoke(methodName: string, ...args) {
-    this._calls.push(function(target) {
-      var meth = target[methodName];
-      return meth.apply(target, args);
-    });
-    return this;
-  }
-
-  /**
-   * 評価
-   * @returns {*}
-   */
-  force() {
-    return _.reduce(this._calls, function(target, thunk: Function) {
-      return thunk(target);
-    }, this._target);
-  }
-
-  /**
-   * _.tapと同じ位置づけ
-   * @param fun
-   * @returns {LazyChain}
-   */
-  tap(fun: Function) {
-    this._calls.push(function(target) {
-      fun(target);
-      return target;
-    });
-    return this;
-  }
 }
 
 var ESCAPE_REGEXP = /([.*+?^=!:${}()|[\]\/\\])/g; // 正規表現でエスケープが必要な文字
