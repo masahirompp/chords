@@ -382,6 +382,18 @@ export function rePlucker(field: string) {
 }
 
 /**
+ * listの各要素の対象フィールド(field)の値が、expectである要素を探す関数を返す
+ * @param list
+ * @param field
+ * @return {function(string): T}
+ */
+export function pluckAndFind(list: any[], field: string) {
+  return function(expect: string) {
+    return _.find(list, < any > _.compose(equality(expect), plucker(field)));
+  }
+}
+
+/**
  * 最も適切な値を返す。maxやminなどの抽象。
  * @param fun : x => y => boolean 比較関数
  * @param coll
@@ -416,31 +428,6 @@ export function best(fun: Function, coll: any[]) {
 //}
 
 /**
- *  対象オブジェクト(target)でメソッドを実行する関数を返す。
- * @param name
- * @param method
- * @returns {Function}
- * @example
- *  var rev = invoker('reverse',Array.prototype.reverse);
- *  _.map([[1,2,3],[4,5]],rev)
- *  => [[3,2,1],[5,4]]
- */
-export function invoker(name: string, method: Function) {
-  return function(target /* ,args... */ ) {
-    if (!existy(target)) {
-      fail('Must provide a target');
-    }
-
-    var targetMethod = target[name];
-    var args = _.rest(arguments);
-
-    return doWhen((existy(targetMethod) && method === targetMethod), function() {
-      return targetMethod.apply(target, args);
-    });
-  };
-}
-
-/**
  * 最初に値を返す関数の結果を返す関数を返す
  * @param funs
  * @return {function(...[any]): (any|any)}
@@ -452,7 +439,7 @@ export function dispatch(...funs) {
     var result;
     for (var i = 0; i < size; i++) {
       var fun = funs[i];
-      result = fun.apply(fun, args);
+      result = fun.apply(null, args);
       if (existy(result)) {
         return result;
       }

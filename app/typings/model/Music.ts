@@ -55,18 +55,6 @@ export var pitch = _.memoize(function() {
 });
 
 /**
- * listの各要素の対象フィールド(field)の値が、expectである要素を探す関数を返す
- * @param list
- * @param field
- * @return {function(string): T}
- */
-function pluckAndFind(list: any[], field: string) {
-  return function(expect: string) {
-    return _.find(list, < any > _.compose(Util.equality(expect), Util.plucker(field)));
-  }
-}
-
-/**
  * listの要素のinput/signを検索して、引数と一致する要素を返す関数を返す
  * @param list
  * @return {function(string):*}
@@ -76,17 +64,16 @@ function pluckAndFind(list: any[], field: string) {
  *  // => {input:cs, sign:c#, ...}
  */
 function findByInputSign(list: any[]) {
-  return Util.dispatch(pluckAndFind(list, 'input'), pluckAndFind(list, 'sign'));
+  return Util.dispatch(Util.pluckAndFind(list, 'input'), Util.pluckAndFind(list, 'sign'));
 }
 
-var findPitch = _.memoize(findByInputSign(pitch()));
+export var findPitch = _.memoize(findByInputSign(pitch()));
 var findHarmony = _.memoize(findByInputSign(Harmony));
 var findTension = _.memoize(findByInputSign(Tension));
 
-var regInput = /^([a-g][sf]?)([adgijmsu245679\-]*)(\(([sf139,]+)\))?(on([a-g][sf]?))?$/;
-var regSign = /^([A-G][#♭]?)([adgijmMsu245679\-]*)(\(([#♭139,]+)\))?(on([A-G][#♭]?))?$/;
-
-var execRegChord = Util.dispatch(Util.invoker('exec', regInput.exec), Util.invoker('exec', regSign.exec));
+var regInput = /^([a-g](s(?!u)|f)?)([adgijmsu245679\-]*)(\(([sf139,]+)\))?(on([a-g][sf]?))?$/;
+var regSign = /^([A-G](#|b|(♭))?)([adgijmMsu245679\-]*)(\(([#b♭139,]+)\))?(on([A-G][#b♭]?))?$/;
+var execRegChord = Util.dispatch(regInput.exec.bind(regInput), regSign.exec.bind(regSign));
 
 /**
  *
@@ -99,9 +86,9 @@ export var findChord = _.memoize(function(inputOrSign: string): IChord {
   return Util.doWhen(tmp, function() {
     return {
       root: findPitch(tmp[1]),
-      harmony: findHarmony(tmp[2]),
-      tension: Util.doWhen(tmp[4], Util.lazyInvoke(findTension, tmp[4])),
-      bass: Util.doWhen(tmp[6], Util.lazyInvoke(findPitch, tmp[6]))
+      harmony: findHarmony(tmp[3]),
+      tension: Util.doWhen(tmp[5], Util.lazyInvoke(findTension, tmp[5])),
+      bass: Util.doWhen(tmp[7], Util.lazyInvoke(findPitch, tmp[7]))
     };
   })
 });

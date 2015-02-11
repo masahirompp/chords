@@ -2,6 +2,7 @@ define(function(require) {
   'use strict';
 
   var util = require('util/Util');
+  var music = require('model/Music');
 
   describe('Util', function() {
     describe('complement', function() {
@@ -54,13 +55,11 @@ define(function(require) {
       });
       it('toUpperCase(["aaa","bbb"]) => ["AAA","BBB"]', function() {
         var result = toUpperCase(['aaa', 'bbb']);
-        result[0].should.equal('AAA');
-        result[1].should.equal('BBB');
+        result.should.eql(['AAA', 'BBB']);
       });
       it('toUpperCase({m:"aaa",n:"bbb"}) => ["AAA","BBB"]', function() {
         var result = toUpperCase({m: "aaa", n: "bbb"});
-        result[0].should.equal('AAA');
-        result[1].should.equal('BBB');
+        result.should.eql(['AAA', 'BBB']);
       });
     });
 
@@ -71,13 +70,65 @@ define(function(require) {
       });
       it('escape(["a&a","b&b"]) => ["a&amp;a","b&amp;b"]', function() {
         var result = escape(['a&a', 'b&b']);
-        result[0].should.equal('a&amp;a');
-        result[1].should.equal('b&amp;b');
+        result.should.eql(['a&amp;a', 'b&amp;b']);
       });
       it('toUpperCase({m:"a&a",n:"b&b"}) => ["a&amp;a","b&amp;b"]', function() {
         var result = escape({m: "a&a", n: "b&b"});
-        result[0].should.equal('a&amp;a');
-        result[1].should.equal('b&amp;b');
+        result.should.eql(['a&amp;a', 'b&amp;b']);
+      });
+    });
+
+    describe('plucker', function() {
+      it('util.plucker("input")({input:"aaa",sign:"bbb"}) => "aaa"', function() {
+        util.plucker('input')({input: 'aaa', sign: 'bbb'}).should.equal('aaa');
+      });
+    });
+
+    describe('rePlucker', function() {
+      it('util.rePlucker("input")({base:{input:"aaa",sign:"bbb"}, harmony:{input:"ccc",sign:"ddd"}) => ["aaa","ccc"]',
+        function() {
+          var result = util.rePlucker('input')({
+            base: {input: "aaa", sign: "bbb"}, harmony: {input: "ccc", sign: "ddd"}
+          });
+          result.should.eql(['aaa', 'ccc']);
+        });
+    });
+
+    describe('pluckAndFind', function() {
+      var pitch = music.pitch();
+      var pluckAndFind = util.pluckAndFind(pitch, 'input');
+      it('input c => {input: "c", sign: "C"}', function() {
+        pluckAndFind('c')
+          .should.eql({
+            input: 'c',
+            sign: 'C',
+            position: 0
+          });
+      });
+      it('input fs => {input: "fs", sign: "F#"}', function() {
+        pluckAndFind('fs')
+          .should.eql({
+            input: "fs",
+            sign: "F#",
+            position: 6
+          });
+      });
+      var pluckAndFind2 = util.pluckAndFind(pitch, 'sign');
+      it('sign D => {input: "d", sign: "D"}', function() {
+        pluckAndFind2('D')
+          .should.eql({
+            input: 'd',
+            sign: 'D',
+            position: 2
+          });
+      });
+      it('sign Eb => {input: "ef", sign: "Eb"}', function() {
+        pluckAndFind2('Eb')
+          .should.eql({
+            input: "ef",
+            sign: "Eb",
+            position: 3
+          });
       });
     });
 

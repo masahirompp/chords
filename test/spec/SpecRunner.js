@@ -3,7 +3,8 @@ require.config({
   paths: {
     //'mocha': '/bower_components/mocha/mocha',
     'chai': '/bower_components/chai/chai',
-    'util-tests': '/spec/util-tests'
+    'util-tests': '/spec/util-tests',
+    'music-tests': '/spec/music-tests'
   }
 });
 
@@ -14,7 +15,7 @@ define(function(require) {
   mocha.setup('bdd');
 
   require([
-    'util-tests'
+    'util-tests', 'music-tests'
   ], function(require) {
     mocha.run();
   });
