@@ -1,5 +1,6 @@
 import Music = require('../model/Music');
 import Ajax = require('../data/Ajax');
+import Signature = require('../data/Signature');
 import NewScoreStepChart = require('../view/NewScoreStepChart');
 import NewScoreBody = require('../view/NewScoreBody');
 import NewScoreStep1 = require('../view/NewScoreStep1');
@@ -208,7 +209,7 @@ class NewScore {
     this.addInitializes(step1, step1.initialize);
     this.addInitializes(step2, step2.initialize);
     this.addInitializes(step3, () => {
-      step3.initialize(Music.Signature.KeySigns);
+      step3.initialize(Music.inputToSign(_.keys(Signature)));
     });
     this.addInitializes(footer, footer.initialize);
     this.addObserverIsOriginal(step1, step1.activeBtn);

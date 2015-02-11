@@ -11,6 +11,17 @@ export function fail(thing) {
 }
 
 /**
+ * 逆を返す関数を返す
+ * @param pred
+ * @returns {Function}
+ */
+export function complement(pred: Function) {
+  return function() {
+    return !pred.apply(null, _.toArray(arguments));
+  };
+}
+
+/**
  * 存在確認
  * @param x
  * @returns {boolean}
@@ -42,10 +53,49 @@ export function truthy(x) {
   return (x !== false) && existy(x);
 }
 
+/**
+ * xと等価か判定する関数を返す
+ * @param x
+ * @return {function(any): boolean}
+ */
 export function equality(x) {
   return function(y) {
     return x === y;
   }
+}
+
+/**
+ * 指定した関数の結果が１つでもtrueの場合真の値を返す関数を返す
+ * @param funs
+ * @return {function(...[any]): any}
+ */
+export function orify(...funs: Function[]) {
+  function re(rFuns: Function[], rArgs) {
+    if (rFuns.length === 0) {
+      return void 0;
+    }
+    var fun = _.first(rFuns);
+    var result = fun.apply(null, rArgs);
+    if (truthy(result)) {
+      return result;
+    }
+    return re(_.rest(rFuns), rArgs);
+  }
+  return function(...args) {
+    return re(funs, args);
+  }
+}
+
+/**
+ * ArrayLikeなオブジェクトか(簡易)判定
+ * @param x
+ * @return {boolean}
+ */
+export function isArrayLike(x) {
+  if (!_.isObject(x)) {
+    return false;
+  }
+  return x.length === +x.length;
 }
 
 /**
@@ -57,7 +107,7 @@ export function equality(x) {
  *  splat(fun)([1,2,3]) => A
  */
 export function splat(fun: Function) {
-  return function(array) {
+  return function(array: any[]) {
     return fun.apply(null, array);
   };
 }
@@ -91,6 +141,37 @@ export function doWhen(cond, action: Function, ...args: any[]) {
 }
 
 /**
+ * 引数の既定値を設定した関数を返す
+ * @param fun
+ * @param defaults
+ * @return {function(): any}
+ */
+export function fnull(fun: Function, ...defaults) {
+  return function( /* args... */ ) {
+    var args = _.map(arguments, function(e, i) {
+      return existy(e) ? e : defaults[i];
+    });
+    return fun.apply(null, args);
+  };
+}
+
+/**
+ * 関数を実行し、結果がなければ既定値を返す関数を返す。
+ * @param fun
+ * @param defaultValue 既定値
+ * @return {function(any): (...any|any)}
+ */
+export function invokeOrElse(fun, defaultValue) {
+  return function(...args) {
+    var result = fun.apply(fun, args);
+    if (existy(result)) {
+      return result;
+    }
+    return defaultValue
+  };
+}
+
+/**
  * 即時実行関数を呼び出し時に実行すうようにする
  * @param fun
  * @param args
@@ -103,23 +184,24 @@ export function lazyInvoke(fun, ...args: any[]) {
 }
 
 /**
- * 逆を返す関数を返す
- * @param pred
- * @returns {Function}
+ * 関数をポリモーフィックにする。
+ * 引数の型(値 or array like)により、戻り値の型が変わる。
+ * @param fun
+ * @return {function(any, ...[any]): (any[]|any)}
+ * @example
+ *  polymorphic(toUpperCase)('aaa') => 'AAA';
+ *  polymorphic(toUpperCase)(['aaa', 'bbb']) => ['AAA', 'BBB']
+ *  polymorphic(toUpperCase)({m: 'aaa', n: 'bbb'}) => ['AAA', 'BBB']
  */
-export function complement(pred: Function) {
-  return function() {
-    return !pred.apply(null, _.toArray(arguments));
+export function polymorphic(fun) {
+  return function(target, ...args) {
+    if (isArrayLike(target)) {
+      return _.map(target, function(value) { /* keyなどの第二引数以降は渡さない */
+        return fun.apply(this, construct(value, args));
+      });
+    }
+    return fun.apply(target, arguments); /* arguments = construct(target, args) */
   };
-}
-
-/**
- * 真偽値反転
- * @param x
- * @returns {boolean}
- */
-export function not(x) {
-  return !x;
 }
 
 /**
@@ -165,14 +247,55 @@ export function construct(head, tail: any[]) {
 }
 
 /**
- * 特定のフィールドを返す関数を返す
+ * 対象フィールドを持つか判定する関数を返す
  * @param field
- * @returns {Function}
+ * @return {function(any): boolean}
+ */
+export function hasOwnProperty(field: string) {
+  return function(obj) {
+    return obj.hasOwnProperty(field);
+  };
+}
+
+/**
+ * 特定のフィールドの値を返す関数を返す
+ * @param field
+ * @returns {function(any): any}
+ * @example
+ *  plucker('age')({name: 'moe', age: 50, userid: 'moe1'})
+ *  => 50
+ *  _.pick({name: 'moe', age: 50, userid: 'moe1'}, 'age')
+ *  => {age: 50}
  */
 export function plucker(field: string) {
   return function(obj) {
     return (obj && obj[field]);
   };
+}
+
+/**
+ * 特定のフィールドを再帰的に探す関数を返す
+ * @param field
+ * @return {function(any): any[]}
+ * @example
+ *  rePlucker('age')({moe:{ age: 50, id: aa}, mm:{ age: 22, id bb}, nn:{ id: cc })
+ *  => [50,22]
+ */
+export function rePlucker(field: string) {
+  var hasTargetField = hasOwnProperty(field);
+
+  function re(obj) {
+    if (!existy(obj)) {
+      return void 0;
+    }
+    if (hasTargetField(obj)) {
+      return [obj[field]];
+    }
+    if (_.isObject(obj)) {
+      return _.map(obj, re);
+    }
+  }
+  return _.compose(_.compact, _.flatten, re) /* (obj) */ ;
 }
 
 /**
@@ -197,92 +320,50 @@ export function repeatedly(times: number, fun) {
   return _.map(_.range(times), fun);
 }
 
-/**
- * 常に同じ値(関数)を返す関数を返す
- * @param value
- * @returns {Function}
- */
-export function always(value) {
-  return function() {
-    return value;
-  };
-}
+// _.constant
+///**
+// * 常に同じ値(関数)を返す関数を返す
+// * @param value
+// * @returns {Function}
+// */
+//export function always(value) {
+//  return function() {
+//    return value;
+//  };
+//}
 
-/**
- *  対象オブジェクト(target)でメソッドを実行する関数を返す。
- * @param name
- * @param method
- * @returns {Function}
- * @example
- *  var rev = invoker('reverse',Array.prototype.reverse);
- *  _.map([[1,2,3],[4,5]],rev)
- *  => [[3,2,1],[5,4]]
- */
-export function invoker(name: string, method: Function) {
-  return function(target /* ,args... */ ) {
-    if (!existy(target)) {
-      fail('Must provide a target');
-    }
-
-    var targetMethod = target[name];
-    var args = _.rest(arguments);
-
-    return doWhen((existy(targetMethod) && method === targetMethod), function() {
-      return targetMethod.apply(target, args);
-    });
-  };
-}
-
-/**
- * 引数の既定値を設定した関数を返す
- * @param fun
- * @returns {Function}
- */
-export function fnull(fun: Function /* ,defaults... */ ) {
-  var defaults = _.rest(arguments);
-  return function( /* args... */ ) {
-    var args = _.map(arguments, function(e, i) {
-      return existy(e) ? e : defaults[i];
-    });
-    return fun.apply(null, args);
-  };
-}
-
-/**
- * ポリモーフィックな関数を生成
- * @returns {Function}
- * @example
- *  引数の型(StringとArray)によって計算方法を変える関数を返す例
- *  var str = dispatch(invoker('toString', Array.prototype.toString),
- *  invoker('toString', String.prototype.toString));
- *  str('a')
- *  => 'a'
- *  str([1,2,3,4])
- *  => '1,2,3,4'
- */
-export function dispatch(...funs) {
-  var size = funs.length;
-
-  /* このtargetはinvokerのtargetに相当する */
-  return function(target, ...args) {
-    var result;
-    for (var i = 0; i < size; i++) {
-      var fun = funs[i];
-      result = fun.apply(fun, construct(target, args));
-      if (existy(result)) {
-        return result;
-      }
-    }
-    return result;
-  };
-}
+// _.invoke
+///**
+// *  対象オブジェクト(target)でメソッドを実行する関数を返す。
+// * @param name
+// * @param method
+// * @returns {Function}
+// * @example
+// *  var rev = invoker('reverse',Array.prototype.reverse);
+// *  _.map([[1,2,3],[4,5]],rev)
+// *  => [[3,2,1],[5,4]]
+// */
+//export function invoker(name: string, method: Function) {
+//  return function(target /* ,args... */ ) {
+//    if (!existy(target)) {
+//      fail('Must provide a target');
+//    }
+//
+//    var targetMethod = target[name];
+//    var args = _.rest(arguments);
+//
+//    return doWhen((existy(targetMethod) && method === targetMethod), function() {
+//      return targetMethod.apply(target, args);
+//    });
+//  };
+//}
 
 /**
  * 最初に値を返す関数の結果を返す関数を返す
  * @param funs
  * @return {function(...[any]): (any|any)}
  */
-export function continuousInvoke(...funs) {
+export function dispatch(...funs) {
   var size = funs.length;
 
   return function(...args) {
@@ -360,18 +441,19 @@ export var lessThan = curry2(function(l, r) {
   return l < r;
 });
 
-/**
- *  部分適用
- *  function.bindで代用可能
- * @param fun
- * @returns {Function}
- */
-export function partial(fun: Function, ...pargs) {
-  return function( /* args... */ ) {
-    var args = cat(pargs, _.toArray(arguments));
-    return fun.apply(fun, args);
-  };
-}
+// _.partial
+///**
+// *  部分適用
+// *  function.bindで代用可能
+// * @param fun
+// * @returns {Function}
+// */
+//export function partial(fun: Function, ...pargs) {
+//  return function( /* args... */ ) {
+//    var args = cat(pargs, _.toArray(arguments));
+//    return fun.apply(fun, args);
+//  };
+//}
 
 /**
  * 検証関数
@@ -407,19 +489,20 @@ export function condition1( /* validators */ ) {
   };
 }
 
-/**
- * 配列の再帰的なフラット化
- * @param array
- * @returns {*[]}
- * @example
- *  flat([[1,2],[3,4,[5,[6],[7,8]]]]) => [1,2,3,4,5,6,7,8]
- */
-export function flat(array) {
-  if (_.isArray(array)) {
-    cat.apply(cat, _.map(array, flat));
-  }
-  return [array];
-}
+// _.flatten
+///**
+// * 配列の再帰的なフラット化
+// * @param array
+// * @returns {*[]}
+// * @example
+// *  flat([[1,2],[3,4,[5,[6],[7,8]]]]) => [1,2,3,4,5,6,7,8]
+// */
+//export function flat(array) {
+//  if (_.isArray(array)) {
+//    cat.apply(cat, _.map(array, flat));
+//  }
+//  return [array];
+//}
 
 /**
  *
@@ -442,7 +525,7 @@ export function visit(mapFun, resultFun, array) {
  * @returns {*}
  */
 export function postDepth(fun: Function, ary: any[]) {
-  return visit(partial(postDepth, fun), fun, ary);
+  return visit(_.partial(postDepth, fun), fun, ary);
 }
 
 /**
@@ -452,7 +535,7 @@ export function postDepth(fun: Function, ary: any[]) {
  * @returns {*}
  */
 export function preDepth(fun: Function, ary: any[]) {
-  return visit(partial(postDepth, fun), fun, fun(ary));
+  return visit(_.partial(preDepth, fun), fun, fun(ary));
 }
 
 /**
@@ -477,7 +560,7 @@ export function combination(fun, ...cols: any[][]) {
     return [fun()];
   }
   return mapcat(function(c) {
-    return combination.apply(fun, construct(partial(fun, c), _.rest(cols)));
+    return combination.apply(fun, construct(_.partial(fun, c), _.rest(cols)));
   }, _.first(cols));
 }
 

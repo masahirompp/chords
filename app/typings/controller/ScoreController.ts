@@ -9,9 +9,10 @@ class ScoreController {
 
   setup() {
     try {
-      (new BaseController()).setupNav();
+      (new BaseController())
+      .setupNav();
 
-      Ajax.getScore(Util.splitUrl()[0], Util.splitUrl()[1], Util.splitUrl()[2])
+      Util.splat(Ajax.getScore)(Util.splitUrl(window.location.pathname))
         .then(data => Score.draw(data))
         .fail(err => ErrorHandle.send(err));
 

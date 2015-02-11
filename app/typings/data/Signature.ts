@@ -29,6 +29,6 @@ var Signature = {
   asm: ['fs, cs, gs, ds, as, es, bs'],
   bfm: ['bf, ef, af, df, gf'],
   bm: ['fs, cs']
-}
+};
 
 export = Signature

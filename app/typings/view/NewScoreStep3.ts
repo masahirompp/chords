@@ -18,12 +18,9 @@ class NewScoreStep3 {
     this.$description.on('change', e => newScore.setDescription(ViewHelper.trim(this.$description.val())));
   }
 
-  initialize(keys: () => Music.Signature.Keys) {
-    keys()
-      .toArray()
-      .forEach(k => {
-        this.$newScoreKey.append('<option>' + k + '</option>');
-      })
+  initialize(keys) {
+    this.$newScoreKey.append(keys
+      .reduce((seed, key) => seed + '<option>' + key + '</option>', ''));
   }
 
 }
