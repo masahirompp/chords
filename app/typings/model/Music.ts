@@ -16,7 +16,7 @@ interface IChord {
     input: string;
     sign: string;
     relatives: number[];
-    type: HarmonicType;
+    type: string;
   };
   tension: {
     input: string;

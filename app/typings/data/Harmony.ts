@@ -110,17 +110,17 @@ var Harmony = [{
   input: '-5',
   sign: '-5',
   relatives: [Interval.P1, Interval.M3, Interval.D5],
-  type: HarmonicType.ALTERD
+  type: HarmonicType.ALTERED
 }, {
   input: '-57',
   sign: '-57',
   relatives: [Interval.P1, Interval.M3, Interval.D5, Interval.m7],
-  type: HarmonicType.ALTERD
+  type: HarmonicType.ALTERED
 }, {
   input: '-59',
   sign: '-59',
   relatives: [Interval.P1, Interval.M3, Interval.D5, Interval.m7, Interval.M9],
-  type: HarmonicType.ALTERD
+  type: HarmonicType.ALTERED
 }, {
   input: 'aug',
   sign: 'aug',
