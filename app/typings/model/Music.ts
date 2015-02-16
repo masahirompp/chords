@@ -5,6 +5,7 @@ import Accidental = require('../data/Accidental');
 import HarmonicType = require('../data/HarmonicType');
 import Harmony = require('../data/Harmony');
 import Tension = require('../data/Tension');
+import Signature = require('../data/Signature');
 
 interface IChord {
   root: {
@@ -124,3 +125,13 @@ export var inputToSign = Util.polymorphic(_.compose(chordToSign, findChord));
  * @type {Function}
  */
 export var signToInput = Util.polymorphic(_.compose(chordToSign, findChord));
+
+/**
+ * 対象キーの調号の一覧を取得する
+ * @param inputKey {string}
+ * @return {any|Array}
+ */
+export function getSignature(inputKey: string) {
+  return Util.plucker(inputKey)(Signature) || [];
+}
+

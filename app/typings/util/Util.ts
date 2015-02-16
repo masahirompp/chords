@@ -14,17 +14,8 @@ export function fail(thing) {
  * @returns {Function}
  */
 export function complement(pred: Function) {
-  return _.partial(complementBind(pred), null);
-}
-
-/**
- * 逆を返す関数を返す
- * @param pred
- * @returns {Function}
- */
-export function complementBind(pred: Function) {
-  return function(context, ...args) {
-    return !pred.apply(context, args);
+  return function(...args) {
+    return !pred.apply(null, args);
   };
 }
 
@@ -112,20 +103,8 @@ export function isArrayLike(x) {
  *  splat(fun)([1,2,3]) => A
  */
 export function splat(fun: Function) {
-  return _.partial(splatBind(fun), null);
-}
-
-/**
- * カンマ区切りの引数を期待する関数に、配列で引数を渡すようにする。
- * @param fun
- * @returns {Function}
- * @example
- *  fun(1,2,3) => A
- *  splat(fun)([1,2,3]) => A
- */
-export function splatBind(fun: Function) {
-  return function(context, array: any[]) {
-    return fun.apply(context, array);
+  return function(array: any[]) {
+    return fun.apply(null, array);
   };
 }
 
@@ -138,20 +117,8 @@ export function splatBind(fun: Function) {
  *  unsplat(fun)(1,2,3) => A
  */
 export function unsplat(fun: Function) {
-  return _.partial(unsplatBind(fun), null);
-}
-
-/**
- * 引数として配列を期待する関数に、カンマ区切りで引数を渡すように変換する
- * @param fun
- * @returns {Function}
- * @example
- *  fun([1,2,3]) => A
- *  unsplat(fun)(1,2,3) => A
- */
-export function unsplatBind(fun: Function) {
-  return function(context) {
-    return fun.call(context, _.toArray(arguments));
+  return function() {
+    return fun.call(null, _.toArray(arguments));
   };
 }
 
@@ -163,20 +130,8 @@ export function unsplatBind(fun: Function) {
  * @return {any}
  */
 export function doWhen(cond, action: Function, ...args: any[]) {
-  return doWhenBind(null, cond, action, args)
-}
-
-/**
- * condがtrueの場合のみactionを実行する
- * @param context
- * @param cond
- * @param action
- * @param args
- * @return {any}
- */
-export function doWhenBind(context, cond, action: Function, ...args: any[]) {
   if (truthy(cond)) {
-    return action.apply(context, args);
+    return action.apply(null, args);
   }
   return void 0;
 }
@@ -188,21 +143,11 @@ export function doWhenBind(context, cond, action: Function, ...args: any[]) {
  * @return {function(): any}
  */
 export function fnull(fun: Function, ...defaults) {
-  return _.partial(fnullBind.apply(null, arguments), null);
-}
-
-/**
- * 引数の既定値を設定した関数を返す
- * @param fun
- * @param defaults
- * @return {function(any): any}
- */
-export function fnullBind(fun: Function, ...defaults) {
-  return function(context, ...args) {
+  return function(...args) {
     var args = _.map(args, function(e, i) {
       return existy(e) ? e : defaults[i];
     });
-    return fun.apply(context, args);
+    return fun.apply(null, args);
   };
 }
 
@@ -213,18 +158,8 @@ export function fnullBind(fun: Function, ...defaults) {
  * @return {function(any): (...any|any)}
  */
 export function invokeOrElse(fun, defaultValue) {
-  return _.partial(invokeOrElseBind(fun, defaultValue), null);
-}
-
-/**
- * 関数を実行し、結果がなければ既定値を返す関数を返す。
- * @param fun
- * @param defaultValue 既定値
- * @return {function(any): (...any|any)}
- */
-export function invokeOrElseBind(fun, defaultValue) {
-  return function(context, ...args) {
-    var result = fun.apply(context, args);
+  return function(...args) {
+    var result = fun.apply(null, args);
     if (existy(result)) {
       return result;
     }
@@ -262,27 +197,6 @@ export function polymorphic(fun) {
       });
     }
     return fun.apply(null, arguments); /* arguments = construct(target, args) */
-  };
-}
-
-/**
- * 関数をポリモーフィックにする。
- * 引数の型(値 or array like)により、戻り値の型が変わる。
- * @param fun
- * @return {function(any, ...[any]): (any[]|any)}
- * @example
- *  polymorphic(toUpperCase)('aaa') => 'AAA';
- *  polymorphic(toUpperCase)(['aaa', 'bbb']) => ['AAA', 'BBB']
- *  polymorphic(toUpperCase)({m: 'aaa', n: 'bbb'}) => ['AAA', 'BBB']
- */
-export function polymorphicBind(fun) {
-  return function(context, ...args) {
-    if (isArrayLike(context)) {
-      return _.map(context, function(value) { /* keyなどの第二引数以降は渡さない */
-        return fun.apply(value, construct(value, args));
-      });
-    }
-    return fun.apply(context, args);
   };
 }
 
@@ -631,6 +545,29 @@ export function combination(fun, ...cols: any[][]) {
   return mapcat(function(c) {
     return combination.apply(fun, construct(_.partial(fun, c), _.rest(cols)));
   }, _.first(cols));
+}
+
+/**
+ * switch-case文の代用
+ * @param cases
+ * @return {function(string, ...[any]): (any|any)}
+ * @example
+ *  var cases = match({
+ *    A : funA(){console.log('a')},
+ *    B : funB(){console.log('b')}
+ *  })
+ *  cases('A');
+ *  => 'a'
+ * @description 対象処理が存在しない場合はundifinedを返す。既定値を返したいときは「invokeOrElse」と併用する。
+ */
+export function match(cases) {
+  return function(target: string, ...args) {
+    var fun = plucker(target)(cases);
+    if (_.isFunction(fun)) {
+      return fun.apply(null, args);
+    }
+    return void 0;
+  }
 }
 
 var ESCAPE_REGEXP = /([.*+?^=!:${}()|[\]\/\\])/g; // 正規表現でエスケープが必要な文字

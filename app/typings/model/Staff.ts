@@ -1,8 +1,11 @@
+import Util = require('../util/Util');
+import Music = require('./Music');
+
 /**
  * A4サイズ
  * @type {{HEIGHT: number, WIDTH: number}}
  */
-var A4 = {
+export var A4 = {
   HEIGHT: 2970,
   WIDTH: 2100
 };
@@ -44,9 +47,9 @@ var UNDERLINE_SPACE = 20;
  * @type {{STAFF: string, GRAND: string, LINE: string}}
  */
 var STAFF_TYPE = {
-  STAFF: 'staff',
-  GRAND: 'grand',
-  LINE: 'line'
+  STAFF: 'STAFF',
+  GRAND: 'GRAND',
+  LINE: 'LINE'
 };
 
 /**
@@ -142,16 +145,14 @@ function contentHeight(settings: IStaffSetting) {
  * @return {number}
  */
 function staffHeight(settings: IStaffSetting) {
-  if (settings.staffType === STAFF_TYPE.LINE) {
-    return SINGLE_STAFF_HEIGHT;
-  }
-  if (settings.staffType === STAFF_TYPE.STAFF) {
-    return settings.lineSpace * 4;
-  }
-  if (settings.staffType === STAFF_TYPE.GRAND) {
-    return settings.lineSpace * 8 + GRANDSTAFF_SPACE;
-  }
-  return 0;
+  var cases = _.object([
+    STAFF_TYPE.LINE, () => SINGLE_STAFF_HEIGHT
+  ], [
+    STAFF_TYPE.STAFF, () => settings.lineSpace * 4
+  ], [
+    STAFF_TYPE.GRAND, () => settings.lineSpace * 8 + GRANDSTAFF_SPACE
+  ]);
+  return Util.match(cases)(settings.staffType);
 }
 
 /**
@@ -188,12 +189,28 @@ function clefWidth(settings: IStaffSetting) {
 }
 
 /**
+ * 使用する音記号の一覧
+ * @param settings
+ * @return {string[]}
+ */
+export function useClefs(settings: IStaffSetting) {
+  if (settings.staffType === STAFF_TYPE.LINE || !settings.showClef) {
+    return [];
+  }
+  if (settings.staffType === STAFF_TYPE.STAFF) {
+    return [settings.clefType];
+  }
+  return [CLEF_TYPE.G, CLEF_TYPE.F];
+}
+
+/**
  * 調号の幅を返す関数を返す
  * @param settings
- * @return {function(number): number}
+ * @return {function(): number}
  */
-function keySignatureWidth(settings: IStaffSetting) {
-  return function(signatureCount: number) {
+function keySignatureWidth(settings: IStaffSetting, trackInfo: ITrackInfo) {
+  return function() {
+    var signatureCount = Music.getSignature(settings.transposition || trackInfo.originalKey);
     if (settings.staffType === STAFF_TYPE.LINE || !settings.showKeySignature || signatureCount === 0) {
       return 0;
     }
@@ -217,11 +234,46 @@ function musicalTimeWidth(settings: IStaffSetting) {
  * @param settings
  * @return {function(any, number): number}
  */
-function barWidth(settings: IStaffSetting) {
-  return function(clef, signatureCount: number) {
-    return staffWidth(settings) -
+export function barWidth(settings: IStaffSetting, trackInfo: ITrackInfo) {
+  return function(clef) {
+    return (staffWidth(settings) -
       clefWidth(settings)(clef) -
-      keySignatureWidth(settings)(signatureCount) -
-      musicalTimeWidth(settings)();
+      keySignatureWidth(settings, trackInfo)() -
+      musicalTimeWidth(settings)()) / BAR_COUNT;
   }
 }
+
+/**
+ * 一番左の小節の幅を返す関数を返す関数
+ * @param settings
+ * @param trackInfo
+ * @return {function(any): number}
+ */
+export function firstBarWidth(settings: IStaffSetting, trackInfo: ITrackInfo) {
+  return function(clef) {
+    // 全体からbarWidth3つ分を引いた残りが最初のbarWidth
+    return staffWidth(settings) - (barWidth(settings, trackInfo)(clef) * (BAR_COUNT - 1));
+  }
+}
+
+/**
+ * 五線定義の各線の高さの位置を返す。
+ * @param settings
+ * @return {number[]}
+ */
+export function defLineYs(settings: IStaffSetting) {
+  var cases = _.object([
+    // 1本線の場合は、高さの中央に1本線を引く [5]
+    STAFF_TYPE.LINE, () => [SINGLE_STAFF_HEIGHT / 2]
+  ], [
+    // 5線の場合は、lineSpaceの間を空けた先を5本引く [0,10,20,30,40]
+    STAFF_TYPE.STAFF, () => _.map(_.range(0, 4), d => settings.lineSpace * d)
+  ], [
+    // 二段組楽譜の場合 [0,10,20,30,40,100,110,120,130,140]
+    STAFF_TYPE.GRAND, () => Util.cat(
+      _.map(_.range(0, 4), d => settings.lineSpace * d),
+      _.map(_.range(0, 4), d => settings.lineSpace * d + GRANDSTAFF_SPACE))
+  ]);
+  return Util.match(cases)(settings.staffType);
+}
+
