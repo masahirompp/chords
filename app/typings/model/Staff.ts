@@ -1,22 +1,30 @@
-/// <reference path="../../../tsd/d3/d3.d.ts" />
+/**
+ * A4サイズ
+ * @type {{HEIGHT: number, WIDTH: number}}
+ */
+var A4 = {
+  HEIGHT: 2970,
+  WIDTH: 2100
+};
 
 /**
- * 全体
+ * 印刷時のの余白
+ * @type {{TOP: number, RIGHT: number, BOTTOM: number, LEFT: number}}
  */
-var A4_HEIGHT = 2970;
-var A4_WIDTH = 2100;
 var MARGIN = {
   TOP: 10,
   RIGHT: 10,
   BOTTOM: 10,
   LEFT: 10
 };
+
+
 var BAR_COUNT = 4;
 
 /**
  * 幅関連
  */
-var TITLE_BAR_WIDTH = 500;
+var TITLE_BAR_WIDTH = 1000;
 var MUSICAL_TIME_WIDTH = 50;
 var KEY_SIGNATURE_WIDTH_BASE = 10;
 var KEY_SIGNATURE_WIDTH_STEP = 10;
@@ -33,6 +41,7 @@ var UNDERLINE_SPACE = 20;
 
 /**
  * 譜面タイプ
+ * @type {{STAFF: string, GRAND: string, LINE: string}}
  */
 var STAFF_TYPE = {
   STAFF: 'staff',
@@ -41,7 +50,18 @@ var STAFF_TYPE = {
 };
 
 /**
+ * 音記号
+ * @type {{G: string, F: string}}
+ */
+var CLEF_TYPE = {
+  G: 'G',
+  F: 'F'
+};
+
+/**
  * 拍子
+ * @type {{FOUR: number, THREE: number, SIX: number}}
+ * @description 値は1小節に入る最大コード数
  */
 var MUSICAL_TIME = {
   FOUR: 8,
@@ -49,28 +69,21 @@ var MUSICAL_TIME = {
   SIX: 6
 };
 
+
 /**
- * D3.Scale Util
+ * 曲情報
  */
-module Scale {
-
-  function getScale(browserWidth: number) {
-    return d3.scale.linear()
-      .domain([0, A4_WIDTH])
-      .range([0, browserWidth]);
-  }
-
-  export function calc(browserWidth: number, x: number) {
-    return Math.floor(getScale(browserWidth)(x) * 100) / 100; // 小数点第二位まで求める。
-  }
-
-  export function floor(browserWidth: number, x: number) {
-    return Math.floor(getScale(browserWidth)(x));
-  }
+export interface ITrackInfo {
+  isOriginal: boolean;
+  title: string;
+  artist: string;
+  author: string;
+  originalKey: string; // 原曲キー
+  musicalTime: string; // 拍子
 }
 
 /**
- * 設定値
+ * 譜面設定値
  */
 export interface IStaffSetting {
   showMusicalTime: boolean; // 拍子の表示有無
@@ -78,59 +91,137 @@ export interface IStaffSetting {
   showClef: boolean; // 音号の表示(STAFF_TYPEがSTAFF,GRANDのとき必須)
   clefType: string; // 音号の種類(STAFF_TYPEがSTAFF)
   showKeySignature ? : boolean; // 調号の表示(STAFF_TYPEがSTAFF,GRANDのとき必須)
-  key: string; // キー
+  transposition ? : string; // 移調キー
   lineSpace: number; //線間の幅
-  musicalTime: string; // 拍子
   fontSize: number;
+  offset: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+    title: number;
+    section: number;
+  }
+}
+
+/**
+ * 譜面設定値の既定値
+ * @type {{showMusicalTime: boolean, staffType: string, showClef: boolean, clefType: string, showKeySignature: boolean, transposition: null, lineSpace: number, fontSize: number, offset: {top: number, right: number, bottom: number, left: number, title: number, section: number}}}
+ */
+var defaultSettings: IStaffSetting = {
+  showMusicalTime: true,
+  staffType: STAFF_TYPE.STAFF,
+  showClef: true,
+  clefType: CLEF_TYPE.G,
+  showKeySignature: true,
+  transposition: null, // 移調キー
+  lineSpace: 10,
+  fontSize: 15,
+  offset: {
+    top: 10,
+    right: 10,
+    bottom: 10,
+    left: 10,
+    title: 5,
+    section: 5
+  }
+};
+
+/**
+ * 譜面部の(1ページの)高さ
+ * @param settings
+ * @return {number}
+ */
+function contentHeight(settings: IStaffSetting) {
+  return A4.HEIGHT - MARGIN.TOP - MARGIN.BOTTOM - settings.offset.top - settings.offset.bottom;
+}
+
+/**
+ * 五線譜の高さ
+ * @param settings
+ * @return {number}
+ */
+function staffHeight(settings: IStaffSetting) {
+  if (settings.staffType === STAFF_TYPE.LINE) {
+    return SINGLE_STAFF_HEIGHT;
+  }
+  if (settings.staffType === STAFF_TYPE.STAFF) {
+    return settings.lineSpace * 4;
+  }
+  if (settings.staffType === STAFF_TYPE.GRAND) {
+    return settings.lineSpace * 8 + GRANDSTAFF_SPACE;
+  }
+  return 0;
 }
 
 /**
  * 五線譜の幅
- * @param width 紙全体の幅
- * @param marginLeft 左余白
- * @param marginRight 右余白
- * @returns {number} 五線譜の幅
+ * @param settings
+ * @return {number}
  */
-function staffWidth(width: number, marginLeft: number, marginRight: number) {
-  return width - marginLeft - marginRight;
+function staffWidth(settings: IStaffSetting) {
+  return A4.WIDTH - MARGIN.RIGHT - MARGIN.LEFT - settings.offset.right - settings.offset.left;
 }
 
 /**
- * 拍子の幅
- * @param showMusicalTime 拍子の表示
- * @returns {number}
+ * 音間によるスケール値を取得
+ * @param x
+ * @param lineSpace
+ * @return {number}
  */
-function musicalTimeWidth(showMusicalTime: boolean) {
-  return showMusicalTime ? MUSICAL_TIME_WIDTH : 0;
+function scaleSign(x, lineSpace) {
+  return x * lineSpace / BASE_LINE_SPACE;
 }
 
 /**
- * 音号の幅
- * @param staffType 譜面タイプ
- * @param showClef 音号の表示
- * @param clef 音号
- * @returns {number}
+ * 音号の幅を返す関数を返す
+ * @param settings
+ * @return {function(any): (number|number)}
  */
-function clefWidth(staffType: string, showClef: boolean, clef) {
-  if (staffType === STAFF_TYPE.LINE) {
-    return 0;
+function clefWidth(settings: IStaffSetting) {
+  return function(clef) {
+    if (settings.staffType === STAFF_TYPE.LINE) {
+      return 0;
+    }
+    return settings.showClef ? scaleSign(clef.width, settings.lineSpace) : 0;
   }
-  return showClef ? clef.width : 0;
 }
 
 /**
- * 調号の幅
- * @param staffType 譜面タイプ
- * @param showKeySignature 調号の表示
- * @param key 調
- * @returns {number}
+ * 調号の幅を返す関数を返す
+ * @param settings
+ * @return {function(number): number}
  */
-function keySignatureWidth(staffType: string, showKeySignature: boolean, key: string) {
-  if (staffType === STAFF_TYPE.LINE || !showKeySignature) {
-    return 0;
+function keySignatureWidth(settings: IStaffSetting) {
+  return function(signatureCount: number) {
+    if (settings.staffType === STAFF_TYPE.LINE || !settings.showKeySignature || signatureCount === 0) {
+      return 0;
+    }
+    return scaleSign(KEY_SIGNATURE_WIDTH_BASE + KEY_SIGNATURE_WIDTH_STEP * (signatureCount - 1), settings.lineSpace);
   }
-  var Music = require('./Music');
-  var sigunatureCount = Music.Signature.getSignatureFromSign(key)
-    .length;
-  return sigunatureCount ? KEY_SIGNATURE_WIDTH_BASE + KEY_SIGNATURE_WIDTH_STEP * (sigunatureCount - 1) : 0;
+}
+
+/**
+ * 拍子の幅を返す関数を返す
+ * @param settings
+ * @return {function(): number}
+ */
+function musicalTimeWidth(settings: IStaffSetting) {
+  return function() {
+    return settings.showMusicalTime ? scaleSign(MUSICAL_TIME_WIDTH, settings.lineSpace) : 0;
+  }
+}
+
+/**
+ * 1小節の幅を返す関数を返す関数
+ * @param settings
+ * @return {function(any, number): number}
+ */
+function barWidth(settings: IStaffSetting) {
+  return function(clef, signatureCount: number) {
+    return staffWidth(settings) -
+      clefWidth(settings)(clef) -
+      keySignatureWidth(settings)(signatureCount) -
+      musicalTimeWidth(settings)();
+  }
 }
